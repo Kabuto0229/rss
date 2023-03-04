@@ -5,13 +5,10 @@ on:
     types: [started]
   push:
     branches:
-    - main
-  schedule:
-    - cron: "0 */1 * * *"
+    - master
   workflow_dispatch:
 jobs:
   deploy:
-    if: github.repository == 'MHG-LAB/RSSBOX'
     name: Deploy Hexo Public To Pages
     runs-on: ubuntu-latest
     env:
@@ -60,7 +57,7 @@ jobs:
     - name: Deploy Github
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GH_TOKEN }}
         publish_dir: ./public
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
