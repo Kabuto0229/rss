@@ -20,11 +20,9 @@ def load_config(path):
 
 if os.path.exists('config.api.yml'):
   c=load_config('config.api.yml')
-  CORS_API = c['CORS_API']
   RSSHUB_API = c['RSSHUB_API']
 else:
-  CORS_API = sys.argv[1]
-  RSSHUB_API = sys.argv[2]
+  RSSHUB_API = sys.argv[1]
 
 # 反反爬虫
 def getRandUa():
@@ -205,18 +203,18 @@ def get_post(res,item):
       url = urlparse(link)
       loc = url.scheme+"://"+url.netloc
       # 反防盗链 cors
-      text = text.replace('src="https://','src="'+CORS_API+'/?r='+loc+'&url=https://')
-      text = text.replace('src="http://','src="'+CORS_API+'/?r='+loc+'&url=http://')
-      text = text.replace('="/','="'+CORS_API+'/?r='+loc+'&url='+loc+'/')
-      text = text.replace('="../','="'+CORS_API+'/?r='+loc+'&url='+loc+'/../')
+      text = text.replace('src="https://','src="'+'/?r='+loc+'&url=https://')
+      text = text.replace('src="http://','src="'+'/?r='+loc+'&url=http://')
+      text = text.replace('="/','="'+'/?r='+loc+'&url='+loc+'/')
+      text = text.replace('="../','="'+'/?r='+loc+'&url='+loc+'/../')
       if img:
         print(img)
-        img = img.replace('https://',CORS_API+'/?r='+loc+'&url=https://')
-        img = img.replace('http://',CORS_API+'/?r='+loc+'&url=http://')
-        img = re.compile(r'^\/').sub(CORS_API+'/?r='+loc+'&url='+loc+'/', img, 1)
-        img = img.replace('../',CORS_API+'/?r='+loc+'&url='+loc+'/../',1)
+        img = img.replace('https://','/?r='+loc+'&url=https://')
+        img = img.replace('http://','/?r='+loc+'&url=http://')
+        img = re.compile(r'^\/').sub('/?r='+loc+'&url='+loc+'/', img, 1)
+        img = img.replace('../','/?r='+loc+'&url='+loc+'/../',1)
     elif img:
-      img = img.replace('http://',CORS_API+'/?url=http://')
+      img = img.replace('http://','/?url=http://')
     if not img:
       img = 'https://picsum.photos/400/300?random='+ str(random.randint(0,10000))
 
