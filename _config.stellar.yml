@@ -1,12 +1,12 @@
 ######## Sidebar ########
 sidebar:
   logo:
-    avatar: '[config.avatar](https://mhuig.top/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
+    avatar: '[config.avatar](/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
     title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
   menu:
     post: '[RSS](/)'
-    blog: '[博客](https://blog.mhuig.top/)'
-    about: '[关于](https://mhuig.top/)'
+    # blog: '[博客](https://blog.mhuig.top/)'
+    # about: '[关于](https://mhuig.top/)'
   # Sidebar widgets
   widget_layout:
     index: [recent] # for home/wiki/categories/tags/archives/404 pages
@@ -25,11 +25,11 @@ sidebar:
       max_depth: 5
       fallback: recent # Use a backup widget when toc does not exist.
     # welcome
-    welcome:
-      layout: markdown
-      title: Welcome
-      content: | # support markdown
-        欢迎来到 MHuiGのRSS订阅
+    # welcome:
+    #   layout: markdown
+    #   title: Welcome
+    #   content: | # support markdown
+    #     欢迎来到 MHuiGのRSS订阅
 
 ######## Article ########
 article:
@@ -59,16 +59,16 @@ comments:
 
 ######## Footer ########
 footer:
-  social:
-    github:
-      icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/08a41b181ce68.svg"/>'
-      url: https://github.com/MHuiG
-    music:
-      icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/3845874.svg"/>'
-      url: https://music.163.com/#/user/home?id=63035382
-    contact:
-      icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/a1b00e20f425d.svg"/>'
-      url: /contact/
+  # social:
+  #   github:
+  #     icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/08a41b181ce68.svg"/>'
+  #     url: https://github.com/MHuiG
+  #   music:
+  #     icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/3845874.svg"/>'
+  #     url: https://music.163.com/#/user/home?id=63035382
+  #   contact:
+  #     icon: '<img src="https://static.mhuig.top/gh/cdn-x/placeholder@1.0.3/social/a1b00e20f425d.svg"/>'
+  #     url: /contact/
 
   sitemap:
     'RSS':
@@ -76,22 +76,24 @@ footer:
       - '[分类](/categories/)'
       - '[标签](/tags/)'
       - '[归档](/archives/)'
-    'Support':
-      - '[博客](https://blog.mhuig.top/)'
-      - '[API](https://api.mhuig.top/)'
-      - '[SSL Status](https://ssl.mhuig.top/)'
-      - '[Status Monitors](https://mhuig.instatus.com/)'
-    '社交':
-      - '[友链](https://blog.mhuig.top/pages/friends/)'
-      - '[留言板](https://blog.mhuig.top/pages/about/)'
-    '更多':
-      - '[关于我](https://mhuig.top/)'
-      - '[GitHub](https://github.com/MHuiG)'
-      - '[Contact](/contact/)'
-      - '[隐私政策](/privacy-policy/)'
-  content: | # 支持 Markdown 格式
-    本站由 [MHuiG](https://mhuig.top/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建，您可以在 [GitHub](https://github.com/MHG-LAB/RSSBOX) 找到本站源码
-    本博客所有文章除特别声明外，均采用 [GLWT（Good Luck With That，祝你好运）公共许可证](https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN) 许可协议，转载请注明出处。
+    # 'Support':
+    #   - '[博客](https://blog.mhuig.top/)'
+    #   - '[API](https://api.mhuig.top/)'
+    #   - '[SSL Status](https://ssl.mhuig.top/)'
+    #   - '[Status Monitors](https://mhuig.instatus.com/)'
+    # '社交':
+    #   - '[友链](https://blog.mhuig.top/pages/friends/)'
+    #   - '[留言板](https://blog.mhuig.top/pages/about/)'
+    # '更多':
+    #   - '[关于我](https://mhuig.top/)'
+    #   - '[GitHub](https://github.com/MHuiG)'
+    #   - '[Contact](/contact/)'
+    #   - '[隐私政策](/privacy-policy/)'
+  # content: | # 支持 Markdown 格式
+  #   本站由 [MHuiG](https://mhuig.top/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建，您可以在 [GitHub](https://github.com/MHG-LAB/RSSBOX) 找到本站源码
+  #   本博客所有文章除特别声明外，均采用 [GLWT（Good Luck With That，祝你好运）公共许可证](https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN) 许可协议，转载请注明出处。
+  content: |
+    This is a test site.
 
 ######## JS Plugins ########
 plugins:

@@ -4,21 +4,21 @@
 
 # Site
 title: RSSBOX
-subtitle: 'MHuiGのRSS订阅 | rssbox.mhuig.top'
-description: 'MHuiGのRSS订阅'
-keywords:  RSSBOX, RSS, RSSHub, RSS订阅, MHuiG, @MHuiG, iMHuiG
-author: MHuiG
+subtitle:
+description:
+keywords:
+author: rss
 language: zh-CN
 timezone: 'Asia/Shanghai'
 avatar: /avatar.png
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://rssbox.mhuig.top
-root: /
+url: https://kabuto0229.github.io/rss
+root: /rss/
 
 # hexo-abbrlink
 # https://github.com/rozbo/hexo-abbrlink
-permalink: rss/:abbrlink.html
+permalink: abbrlink.html
 abbrlink:
   alg: crc32  # 算法：crc16(default) and crc32
   rep: hex    # 进制：dec(default) and hex
@@ -124,22 +124,7 @@ theme: stellar
 nofollow:
   enable: true
   exclude:
-    - mhuig.top
-    - blog.mhuig.top
-    - api.mhuig.top
-    - ssl.mhuig.top
-    - blog.mhuig.top
-
-# hexo-generator-feed
-# https://github.com/hexojs/hexo-generator-feed
-feed:
-  type: atom
-  path: atom.xml
-  limit: false
-  content_limit: false
-  order_by: -date
-  icon: favicon.ico
-  autodiscovery: true
+    - kabuto0229.github.io
 
 popularPosts:
   eyeCatchImageAttributeName: cover
