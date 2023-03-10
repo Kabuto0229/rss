@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产 - RSSBOX</title>
+
+  
+    <meta name="description" content="作者：徐果、冰羽、瑶靖  自动驾驶被认为是推动智能汽车发展的里程碑式技术。数智化大潮下，大众对汽车的定义和需求都发生了巨大变化，汽车的功能已不再是简单的交通工具，而是逐渐演变为一个个“超级智能终端”。 然而，成本和效率一直是制约自动驾驶大规模商用的重要因素。得益于 Kubernetes 和云原生技术在边缘场景的拓展和应用，自动驾驶企业能够以更加高效率、低成本的方式处理数据、训练算法，将研发人员">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/453be8fd.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="作者：徐果、冰羽、瑶靖  自动驾驶被认为是推动智能汽车发展的里程碑式技术。数智化大潮下，大众对汽车的定义和需求都发生了巨大变化，汽车的功能已不再是简单的交通工具，而是逐渐演变为一个个“超级智能终端”。 然而，成本和效率一直是制约自动驾驶大规模商用的重要因素。得益于 Kubernetes 和云原生技术在边缘场景的拓展和应用，自动驾驶企业能够以更加高效率、低成本的方式处理数据、训练算法，将研发人员">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59c162634d8244508bfb2e4df4491d91~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6fab61459844ac1a4a5b4b58a0a9f15~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2023-03-07T09:09:59.000Z">
+<meta property="article:modified_time" content="2023-03-07T09:09:59.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">为什么说“云边协同”是自动驾驶发展的加速器？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">面临的挑战</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">ACK@Edge 助力元戎启行车云一体化协同</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">ACK@Edge 云边端一体化应用优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">ACK@Edge 自动驾驶解决方案助力元戎启行云边协同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">方案亮点和效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">自动驾驶的未来：云原生+边缘计算双轮驱动</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-07T09:09:59.000Z">2023-03-07</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></h1>
+<div>
+<blockquote>
+<p>作者：徐果、冰羽、瑶靖</p>
+</blockquote>
+<p>自动驾驶被认为是推动智能汽车发展的里程碑式技术。数智化大潮下，大众对汽车的定义和需求都发生了巨大变化，汽车的功能已不再是简单的交通工具，而是逐渐演变为一个个“超级智能终端”。</p>
+<p>然而，成本和效率一直是制约自动驾驶大规模商用的重要因素。得益于 Kubernetes 和云原生技术在边缘场景的拓展和应用，自动驾驶企业能够以更加高效率、低成本的方式处理数据、训练算法，将研发人员从硬件配备和日常运维管理等繁琐事务中解脱出来，把更多精力投入自动驾驶核心算法的研发及业务的增长中。</p>
+<p>本文将通过介绍元戎启行使用阿里云边缘容器服务 ACK@Edge 的实践，分享在自动驾驶网约车场景下，如何将云边一体的云原生能力快速覆盖到众多智能车载设备，有效降低自动驾驶车辆管理成本。</p>
+<h2>为什么说“云边协同”是自动驾驶发展的加速器？</h2>
+<p>元戎启行科技有限公司是一家专注于研发和应用 L4 级自动驾驶技术的科技公司，拥有自动驾驶乘用车“元启行”和自动驾驶轻卡“元启运”两大产品，主要是为车企、Tier1、出行公司等提供定制化的自动驾驶解决方案。其中，Robotaxi 出行搭载元戎启行自研 L4 级自动驾驶解决方案，通过自营车队和合作运营的模式落地。元戎启行 L4 级自动驾驶前装方案车队已投入运营，为乘客提供城市出行服务。</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>在业务快速增长的迫切需求下，车载设备在高并发场景下的性能要求与计算资源受限的矛盾、车载环境云边网络不可靠与车载业务追求可靠性的矛盾、企业迅速响应需求变化的诉求与传统运维手段低下的矛盾、云端管控车载设备以及车载设备对安全性高要求的矛盾等，都会为元戎启行进入高阶自动驾驶量产过程中的成本和效率带来挑战。</p>
+<h3>面临的挑战</h3>
+<ul>
+<li>
+<p><strong>系统可扩展性差，车载应用环境依赖冲突</strong>：在自动驾驶领域，车载业务的传统的交付模式大多数以 deb/rpm 包的方式部署，对车载运行环境的依赖性比较强，不同业务对系统库的依赖版本可能会冲突；此外，由于算法模块的数量不断增多，单个模块又需要依赖更多的模块，因此不能快速搭建与复现 bug 发生时的运行系统环境，给研发调试带来许多困扰。这些都可能给车载线上业务、路上车辆的正常运行带来隐患。</p>
+</li>
+<li>
+<p><strong>环境不一致导致研发运维效率低</strong>：实际业务中仿真与车上环境不一致，仿真环境一直保持容器环境运行，但是车上保留的则为 deb 的部署方式；此外，以 deb/rpm 包等传统的部署方式需要较多的人工干预，容易造成车辆业务部署和运行时测试及研发迭代效率低的问题。</p>
+</li>
+<li>
+<p><strong>缺少全局管控能力</strong>：对于路测车辆，许多研发人员需要在车端调试需求，由于车载运维条件有限，影响调试工作的效率；此外，线下运营的车辆越来越多，车载业务的升级、运维、监控等都面临较大挑战，需要一个从全局视角对线下运营车辆业务的统一管理和部署的能力。</p>
+</li>
+<li>
+<p><strong>缺少云端一体化交付能力</strong>：现阶段云原生在云上已经成为事实标准，自动驾驶车企可以在云上使用云原生+ AI 的能力，进行大量的AI模型训练和仿真业务的运行。但是当AI模型和仿真业务训练好后， 如何将这些制品快速高效的交付到车端，也是车企所面临的问题。若单独开发一套平台来专门维护车端应用，不仅带来额外开发和维护成本，而且和云端业务的 CI/CD 流程出现割裂，因此车企也希望通过云原生的能力管理边缘侧的车载业务，进行云端一体化交付。</p>
+</li>
+<li>
+<p><strong>车载网络安全问题</strong>：网络安全对于自动驾驶的重要性已经毋庸置疑，通常情况下车端应用始终要和云端保持通信，以监听云端下发的任务，而车端又是一个很容易和外部人员产生物理接触的环境，尤其是网约车运营形式的自动驾驶场景。如果车端被恶意侵入，入侵者有可能通过这条链路侵入云端，甚至进一步影响和云端有连接的所有车辆，这就对车端应用提出了非常高的安全诉求，显然，这会大大加重应用开发人员的负担。</p>
+</li>
+<li>
+<p><strong>弱网/断网环境下的车载业务自治能力</strong>：在以网约车运营形式的自动驾驶车辆，在线下运行时，由于车辆所处的位置的不同，很可能处于弱网或者断网的情况，在这种情况下，如何能保证车载业务在极端重启情况下稳定运行，这也是车企所急需要解决的问题。</p>
+</li>
+<li>
+<p><strong>车辆监控/日志采集</strong>：大量的运营车辆在行驶过程中，需要监控车辆的硬件温度、CPU、 内存等控件的使用率，时刻在云端监控大屏上显示，另外云端需要车辆上系统和应用的关键日志采集，用来日志分析，当前并没有通用且有效的方法去解决。</p>
+</li>
+</ul>
+<h2>ACK@Edge 助力元戎启行车云一体化协同</h2>
+<h3>ACK@Edge 云边端一体化应用优势</h3>
+<p>自动驾驶场景是云原生在云边协同场景下的很好用例：车载设备可以作为云边协同的计算节点，统一接入到云端，由云端统一管控，同时使用云原生的能力，能很好保证车载上业务之间的环境隔离问题，可以对于自动驾驶车载应用系统在云上进行统一升级更新、资源调度、运维管控，实现云端一体化交付。</p>
+<p>阿里云边缘容器服务（简称 ACK@Edge）是一款提供标准 Kubernetes 集群云端托管，支持边缘计算资源、业务快速接入、统一管理、统一运维的云原生应用平台，能够帮助用户轻松实现云边一体化协同。用户利用 ACK@Edge 通过纳管边缘节点将云上应用延伸到边缘，联动边缘和云端的数据，使得边缘节点拥有云端相同能力。在云端提供对边缘设备、边缘应用的统一 Ops 能力，保证边缘设备及边缘智能应用少运维、高可用。</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59c162634d8244508bfb2e4df4491d91~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>目前 ACK@Edge 已经全面升级为基于云原生的云边一体和云端一体架构，能够适配更多的垂直领域的边缘计算场景，另外在云端协同场景，车载设备、交通、桥梁等小终端设备的轻量化接入，加速您容器化应用的分发、运维，降低您自建运维的成本。除自动驾驶外，已广泛用于 CDN、IDC、IoT、智慧物流、工业大脑、新零售等诸多场景。</p>
+<h3>ACK@Edge 自动驾驶解决方案助力元戎启行云边协同</h3>
+<p>基于 ACK@Edge 云边一体、云端一体，Kubernetes 容器编排调度的能力，以及 ACK@Edge 在 Kubernetes 之上针对边缘场景叠加的如轻量化、OTA，边缘侧 POD 离线启停，边缘自治、边缘单元化、单元化部署、Tunnel 通道的能力，切实解决了元戎启行智能在自动驾驶领域的相关痛点，最终承载了元戎启行自动驾驶线上运营车辆，为乘客提供城市智能出行服务。</p>
+<p>ACK@Edge 在原生 Kubernetes 的基础上针对自动驾驶场景提供了独有的增强型功能：</p>
+<ul>
+<li>
+<p><strong>云端运维，远程调试</strong>：ACK@Edge 提供的 Tunnel 通道， 可以让业务人员快速查看容器日志和进入容器调试。同时利用 tunnel 通道可以将车载设备的监控信息（硬件温度，CPU/内存使用率等）统一收编到云上，为元戎云端平台提供监控和告警服务。</p>
+</li>
+<li>
+<p><strong>边缘自治</strong>：ACK@Edge 的边缘自治能力，可以在运营车辆离线、或者车辆重启这种极端情况下， 还能保证车载上的的业务能正常运行。期间，ACK@Edge  团队与元戎系统团队做了大量的断网、重启操作，最终在证明运营车辆上的业务能够正常运行。</p>
+</li>
+<li>
+<p><strong>轻量化接入</strong>：ACK@Edge 在云端场景下，提供轻量化接入的能力，边侧组件具有更少的资源占用率。更少的资源占用率可以为业务腾挪出更多的资源，提高了车载应用对摄像头视频流的处理能力，进一步提高自动驾驶车辆的反应速度。</p>
+</li>
+<li>
+<p><strong>车载应用的 OTA</strong>：由于自动驾驶场景对于车辆运行安全要求非常苛刻，对车辆上的应用升级有着非常高的要求，原生的 Kubernetes workload 的升级回滚方式还是显得比较暴力， 针对这些特殊场景，ACK@Edge 创新性的提出了针对于 POD 的 OTA，以及在离线场景下 POD 的启停管理能力，此功能可以很好的满足运营车辆的根据当时的情况按需升级，以及在极端情况下管理人员人工接入运维的需求。</p>
+</li>
+</ul>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b6fab61459844ac1a4a5b4b58a0a9f15~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<h3>方案亮点和效果</h3>
+<ul>
+<li>
+<p><strong>统一的交付标准</strong>：使用 containerd+ACK@edge 来交付应用，交付流程简单，交付物标准，减少和车端设备的耦合，且不会污染车端环境。</p>
+</li>
+<li>
+<p><strong>设备安全接入能力下沉，应用聚焦业务</strong>：Lite-kubelet（车端设备上运行的agent） 支持一机一密认证访问 MQTT，确保每台车载设备都用自己的设备证书接入至 ACK@Edge 集群，极大提高接入的安全性；且整个过程对业务层透明。</p>
+</li>
+<li>
+<p><strong>提供更丰富、灵活的设备管理能力</strong>：通过 OTA（SoftwareOverTheAir）、边缘侧 Pod 离线启停管理，提高了车载应用的发布运维效率。</p>
+</li>
+</ul>
+<p>相比较传统的云原生工作负载节点管理方式，通过将元戎启行运营车辆的车载设备以轻量化方式接入 ACK@Edge，使设备接入资源占用降低 50 %，接入安全性大幅提升。基于边缘侧 Pod 的启停、OTA 功能便捷化管理车载设备，业务发布运维效率提升 60% 以上。</p>
+<h2>自动驾驶的未来：云原生+边缘计算双轮驱动</h2>
+<p>汽车产业的自动化已经成为了不可阻挡的潮流，加速落地将会成为下一阶段的主题。相信云原生与边缘计算的结合能够帮助更多汽车企业更好地吸收云计算、大数据和 AI 的成果优势，通过有效降低自动驾驶车辆管理成本，推动解决自动驾驶量产工程难题。</p>
+<p>未来，未来 ACK@Edge 会继续深耕边缘计算领域，拓展更多的业务场景，期望推出更多的面向于垂直领域的解决方案。同时，我们也已将 ACK@Edge 全部核心代码贡献出来，成立了 OpenYurt 开源社区，并捐献给 CNCF，吸引 VMware、中国电信、浙大实验室、中国联通、中国移动等公司和组织的众多开发者参与。希望能有更多企业和开发者加入我们，通过持续凝聚社区实践，推动云原生边缘计算标准形成。</p>
+<p>点击<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.aliyun.com/product/cs/ack_edge?spm=5176.19720258.J_3207526240.38.542176f4mQH8Vd">此处</a>，了解 ACK@Edge 更多详情</p>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产" href="https://juejin.cn/post/7207707287045619771" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span><span class="desc fs12">https://juejin.cn/post/7207707287045619771</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/44244244.html">免费引入商用黑体字体系列整理及 CSS 字体引入亲妈式教程（20230306更新）<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/cc697a15.html">技术型创业公司如何把握发展与管理的节奏感？<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>使用ModSecurity保护Nginx站点 - RSSBOX</title>
+
+  
+    <meta name="description" content="# 使用 ModSecurity 保护 Nginx 站点 ModSecurity 是一个开源的跨平台 WAF (WEB 应用程序防火墙)  本次给 Nginx 安装 ModSecurity WAF 并使用 OWASP ModSecurity 规则集，基于 Ubuntu 22 (jammy) 和宝塔面板  命令的默认执行位置都为 ~(root目录) ，且均使用 root 用户执行  在执行下列步骤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用ModSecurity保护Nginx站点">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/46968cb7.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="# 使用 ModSecurity 保护 Nginx 站点 ModSecurity 是一个开源的跨平台 WAF (WEB 应用程序防火墙)  本次给 Nginx 安装 ModSecurity WAF 并使用 OWASP ModSecurity 规则集，基于 Ubuntu 22 (jammy) 和宝塔面板  命令的默认执行位置都为 ~(root目录) ，且均使用 root 用户执行  在执行下列步骤">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-20T05:27:18.000Z">
+<meta property="article:modified_time" content="2023-01-20T05:27:18.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="chou kaitaku">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text"> 准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91ssdeep"><span class="toc-text"> 编译 ssdeep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91modsecurity"><span class="toc-text"> 编译 ModSecurity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-nginx-modsecurity-%E6%94%AF%E6%8C%81%E6%A8%A1%E5%9D%97"><span class="toc-text"> 安装 Nginx ModSecurity 支持模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8owasp%E8%A7%84%E5%88%99%E9%9B%86"><span class="toc-text"> 使用 OWASP 规则集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%A7%84%E5%88%99%E9%9B%86"><span class="toc-text"> 下载并配置规则集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="toc-text"> 修改配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="toc-text"> 验证安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-text"> 参考文章</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/">技术</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/chou-kaitaku/">chou kaitaku</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-01-20T05:27:18.000Z">2023-01-20</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>使用ModSecurity保护Nginx站点</span></h1>
+<div>
+<h1 id="使用modsecurity保护nginx站点"><a class="anchor" href="#使用modsecurity保护nginx站点">#</a> 使用 ModSecurity 保护 Nginx 站点</h1>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1NwaWRlckxhYnMvTW9kU2VjdXJpdHk=">ModSecurity</span> 是一个开源的跨平台 WAF (WEB 应用程序防火墙) <br>
+本次给 Nginx 安装 ModSecurity WAF 并使用 OWASP ModSecurity 规则集，基于 Ubuntu 22 (jammy) 和宝塔面板 <br>
+命令的默认执行位置都为 <code>~(root目录)</code> ，且均使用 root 用户执行 <br>
+在执行下列步骤前，请编译安装 <code>nginx 1.23</code>  或更高版本</p>
+<h2 id="准备工作"><a class="anchor" href="#准备工作">#</a> 准备工作</h2>
+<p>执行下列指令安装前置包:</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">apt</span> <span class="token function">install</span> g++ flex bison <span class="token function">curl</span> apache2-dev doxygen libyajl-dev ssdeep liblua5.2-dev libgeoip-dev libtool dh-autoreconf libcurl4-gnutls-dev libxml2 libpcre++-dev libxml2-dev <span class="token function">git</span> liblmdb-dev libpkgconf3 lmdb-doc pkgconf zlib1g-dev libssl-dev libfuzzy-dev <span class="token parameter variable">-y</span></pre></td></tr></table></figure><h2 id="编译ssdeep"><a class="anchor" href="#编译ssdeep">#</a> 编译 ssdeep</h2>
+<div class="note info">
+<p>此步是因为博主在编译 ModSecurity 时无法识别 apt 安装的 ssdeep，可以先跳过此步，后续配置时出现问题再执行</p>
+</div>
+<p>执行下列指令即可:</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">wget</span> https://github.com/ssdeep-project/ssdeep/releases/download/release-2.14.1/ssdeep-2.14.1.tar.gz</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">tar</span> zxf ssdeep-2.14.1.tar.gz</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token builtin class-name">cd</span> ssdeep-2.14.1</pre></td></tr><tr><td data-num="4"></td><td><pre>./configure</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><h2 id="编译modsecurity"><a class="anchor" href="#编译modsecurity">#</a> 编译 ModSecurity</h2>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">wget</span> https://github.com/SpiderLabs/ModSecurity/releases/download/v3.0.8/modsecurity-v3.0.8.tar.gz</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">tar</span> xzf modsecurity-v3.0.8.tar.gz</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token builtin class-name">cd</span> modsecurity-v3.0.8</pre></td></tr><tr><td data-num="4"></td><td><pre>./build.sh</pre></td></tr></table></figure><p>出现 <code>fatal: not a git repository (or any of the parent directories): .git</code>  这条信息是可以忽略的</p>
+<p>随后:</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>./configure</pre></td></tr></table></figure><p>等到命令执行完成后，请确保 <code>---</code>  后面的内容冒号后均为 <code>enable</code> 、 <code>disable</code>  和 <code>found</code> <br>
+如果出现 <code>ssdeep: not found</code>  请参考前面的步骤执行编译安装 ssdeep<br>
+ 其他 <code>not found</code>  请使用 apt 安装对应包 (一般不会出现)</p>
+<p>然后:</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><p>即可</p>
+<h2 id="安装-nginx-modsecurity-支持模块"><a class="anchor" href="#安装-nginx-modsecurity-支持模块">#</a> 安装 Nginx ModSecurity 支持模块</h2>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">cd</span> /www/server</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">git</span> clone https://github.com/SpiderLabs/ModSecurity-nginx.git</pre></td></tr></table></figure><p>编辑 <code>/www/server/panel/install/nginx.sh</code>  文件，在 <code>./configure</code>  这一行的末端添加:</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>--add-module<span class="token operator">=</span>/www/server/ModSecurity-nginx</pre></td></tr></table></figure><p>随后:</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sh</span> /www/server/panel/install/nginx.sh <span class="token function">install</span> <span class="token number">1.23</span></pre></td></tr></table></figure><h2 id="使用owasp规则集"><a class="anchor" href="#使用owasp规则集">#</a> 使用 OWASP 规则集</h2>
+<h3 id="下载并配置规则集"><a class="anchor" href="#下载并配置规则集">#</a> 下载并配置规则集</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">mkdir</span> /www/server/nginx/conf/modsecurity</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token builtin class-name">cd</span> ModSecurity</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">cp</span> modsecurity.conf-recommended /www/server/nginx/conf/modsecurity/modsecurity.conf</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">cp</span> unicode.mapping /www/server/nginx/conf/modsecurity</pre></td></tr></table></figure><p>下载规则:</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">wget</span> http://www.modsecurity.cn/download/corerule/owasp-modsecurity-crs-3.3-dev.zip</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">unzip</span> owasp-modsecurity-crs-3.3-dev.zip</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token builtin class-name">cd</span> owasp-modsecurity-crs-3.3-dev</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">cp</span> crs-setup.conf.example /www/server/nginx/conf/modsecurity/crs-setup.conf</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">cp</span> <span class="token parameter variable">-r</span> rules/ /www/server/nginx/conf/modsecurity</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token builtin class-name">cd</span> /www/server/nginx/conf/modsecurity/rules/</pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token function">cp</span> REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example.back</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token function">cp</span> RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example.back</pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token function">cp</span> RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example.back RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token function">cp</span> REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example.back REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf</pre></td></tr></table></figure><h3 id="修改配置"><a class="anchor" href="#修改配置">#</a> 修改配置</h3>
+<p>修改 nginx 配置，在 <code>http</code>  层添加如下配置:</p>
+<figure class="highlight nginx"><figcaption data-lang="nginx"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token directive"><span class="token keyword">modsecurity</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token directive"><span class="token keyword">modsecurity_rules_file</span> /www/server/nginx/conf/modsecurity/modsecurity.conf</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>编辑 <code>modsecurity.conf</code> , 将 <code>SecRuleEngine DetectionOnly</code>  修改为 <code>SecRuleEngine On</code> ，并在后面添加如下内容:</p>
+<figure class="highlight raw"><figcaption data-lang></figcaption><table><tr><td data-num="1"></td><td><pre>Include /www/server/nginx/conf/modsecurity/crs-setup.conf</pre></td></tr><tr><td data-num="2"></td><td><pre>Include /www/server/nginx/conf/modsecurity/rules/*.conf</pre></td></tr></table></figure><h2 id="验证安装"><a class="anchor" href="#验证安装">#</a> 验证安装</h2>
+<p>打开如下地址:</p>
+<figure class="highlight raw"><figcaption data-lang></figcaption><table><tr><td data-num="1"></td><td><pre>&lt;url&gt;/?param=*&gt;&lt;script&gt;alert(1)&lt;/script&gt;</pre></td></tr></table></figure><p>请将 <code>&lt;url&gt;</code>  替换为你的测试地址 (不需要带括号)<br>
+ 如果出现 <code>403</code>  则安装成功</p>
+<h2 id="参考文章"><a class="anchor" href="#参考文章">#</a> 参考文章</h2>
+<ul>
+<li><span class="exturl" data-url="aHR0cHM6Ly9raWZhcnVuaXguY29tL2luc3RhbGwtbW9kc2VjdXJpdHktMy13aXRoLW5naW54LW9uLXVidW50dS8=">Install ModSecurity 3 with Nginx on Ubuntu 22.04</span></li>
+<li><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NjI2MDQzL2FydGljbGUvZGV0YWlscy8xMDUwMjc0MDQ=">WAF 简介及 ModSecurity-nginx 搭建</span></li>
+</ul>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="使用ModSecurity保护Nginx站点" href="https://www.kaitaku.xyz/webbuild/nginx-modsec/" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">使用ModSecurity保护Nginx站点</span><span class="desc fs12">https://www.kaitaku.xyz/webbuild/nginx-modsec/</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/8340e342.html">BF添加输入页数跳转<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/7d945be2.html">家·烟花·红包封面<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/f4bb3a92.html" title="Hexo主题shokaX文档"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1486"></div><span class="title">Hexo主题shokaX文档</span></a><a class="item" href="/rss/792b58b9.html" title="ShokaX常见问题"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9665"></div><span class="title">ShokaX常见问题</span></a><a class="item" href="/rss/728cc83a.html" title="Hexo-Indexnow插件使用教程"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3161"></div><span class="title">Hexo-Indexnow插件使用教程</span></a><a class="item" href="/rss/3cdfd9b0.html" title="shokaX主题插件文档"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8828"></div><span class="title">shokaX主题插件文档</span></a><a class="item" href="/rss/a79b25a.html" title="Shoka主题速度优化-拆分Jsdelivr"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3069"></div><span class="title">Shoka主题速度优化-拆分Jsdelivr</span></a><a class="item" href="/rss/638e805e.html" title="从0搭建hexo博客-安装主题"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8235"></div><span class="title">从0搭建hexo博客-安装主题</span></a><a class="item" href="/rss/f68ab058.html" title="JS中的事件循环"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=6554"></div><span class="title">JS中的事件循环</span></a><a class="item" href="/rss/879455de.html" title="Vue3学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8632"></div><span class="title">Vue3学习笔记</span></a><a class="item" href="/rss/a760157e.html" title="Css3学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8715"></div><span class="title">Css3学习笔记</span></a><a class="item" href="/rss/ea942fbe.html" title="Css学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=844"></div><span class="title">Css学习笔记</span></a><a class="item" href="/rss/e569ba71.html" title="Html学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8604"></div><span class="title">Html学习笔记</span></a><a class="item" href="/rss/32faff6e.html" title="Js学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5136"></div><span class="title">Js学习笔记</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

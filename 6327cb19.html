@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>hexo博客工作流CI（一键部署的快乐） - RSSBOX</title>
+
+  
+    <meta name="description" content="在日常写博客的过程中我常常使用CI部署，一开始我是使用Jenkins，后来觉得很丑且经常拉库失败（设置的cron是半小时拉取一次，然而常常4-5小时才能更新）就转向了阿里的工作流，好看很多且界面操作也简单了许多，缺点就是个人使用实在是没必要，企业的话用起来还是很爽的。再后来看到店长的文章以后就开始使用Github Action，具体可以去看这篇文章 站内地址    使用 Github Actio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo博客工作流CI（一键部署的快乐）">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/6327cb19.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="在日常写博客的过程中我常常使用CI部署，一开始我是使用Jenkins，后来觉得很丑且经常拉库失败（设置的cron是半小时拉取一次，然而常常4-5小时才能更新）就转向了阿里的工作流，好看很多且界面操作也简单了许多，缺点就是个人使用实在是没必要，企业的话用起来还是很爽的。再后来看到店长的文章以后就开始使用Github Action，具体可以去看这篇文章 站内地址    使用 Github Actio">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec8e5037b2f.png!blogimg">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec947ee9897.webp!blogimg">
+<meta property="article:published_time" content="2023-02-15T07:55:44.000Z">
+<meta property="article:modified_time" content="2023-02-15T07:55:44.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="安知鱼">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec8e5037b2f.png!blogimg">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/">技术</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/%E5%AE%89%E7%9F%A5%E9%B1%BC/">安知鱼</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-02-15T07:55:44.000Z">2023-02-15</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>hexo博客工作流CI（一键部署的快乐）</span></h1>
+<div>
+<p>在日常写博客的过程中我常常使用CI部署，一开始我是使用<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jenkins.io/">Jenkins</a>，后来觉得很丑且经常拉库失败（设置的cron是半小时拉取一次，然而常常4-5小时才能更新）</p><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec8e5037b2f.png!blogimg"></p><p>就转向了<a target="_blank" rel="external nofollow noopener noreferrer" href="https://help.aliyun.com/document_detail/159666.htm">阿里的工作流</a>，好看很多且界面操作也简单了许多，缺点就是个人使用实在是没必要，企业的话用起来还是很爽的。</p><p>再后来看到店长的文章以后就开始使用Github Action，具体可以去看这篇文章</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://anzhiy.cn/posts/asdx.html" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">站内地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(/img/favicon.ico);"></div> <div class="tag-link-right"> <div class="tag-link-title">使用 Github Action 自动部署</div> <div class="tag-link-sitename"> 使用 Github Action 自动部署</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><h1 id="Github-Action-优点"><a class="headerlink" href="#Github-Action-优点" title="Github Action 优点"></a>Github Action 优点</h1><ol><li>可以多域名多站点部署</li><li>不会出现从服务器去连接github连接不上的情况</li><li>可以一键多处全部部署完成✅</li><li>不再需要使用繁杂的前置命令<blockquote><p>hexo clean<br>hexo bangumi -u #bilibili番剧更新<br>hexo generate<br>hexo algolia<br>gulp</p></blockquote></li></ol><p>比如我自己是在<a target="_blank" rel="external nofollow noopener noreferrer" href="https://vercel.com/">vercel</a>, <a target="_blank" rel="external nofollow noopener noreferrer" href="https://netlify.app/">netlify</a>, <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.dogecloud.com/?iuid=4945">服务器多吉云加速</a>，三处部署。</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://anzhiyu-c-github-io.vercel.app/" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(https://api.iowen.cn/favicon/anzhiyu-c-github-io.vercel.app/.png);"></div> <div class="tag-link-right"> <div class="tag-link-title">安知鱼博客vercel线路</div> <div class="tag-link-sitename"> 安知鱼博客vercel线路</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://cheerful-otter-8af915.netlify.app/" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url( /img/favicon.ico);"></div> <div class="tag-link-right"> <div class="tag-link-title">安知鱼博客netlify线路</div> <div class="tag-link-sitename"> 安知鱼博客netlify线路</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://anzhiy.cn/" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">站内地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(/img/favicon.ico);"></div> <div class="tag-link-right"> <div class="tag-link-title">安知鱼博客多吉云线路</div> <div class="tag-link-sitename"> 安知鱼博客多吉云线路</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><p>大大提高可用性与速度。</p><h1 id="工作流"><a class="headerlink" href="#工作流" title="工作流"></a>工作流</h1><p>在这里分享一下我的工作流，平时写完文章以后，配合vscode左侧的叉子，填写提交信息后，点击提交，立即就可以提交至源码仓库</p><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec947ee9897.webp!blogimg"></p><p>通过源码仓库的github action推送至服务器与github page的仓库，<code>vercel</code>与<code>netlify</code>会自行拉取github page的仓库的更新，进而实现所有线路更新。</p><p>并且使用了店长分享的全站提交至npm，并<code>排除提交html文件</code>大大减小npm包体积大小，具体可以去看这篇文章<a target="_blank" rel="external nofollow noopener noreferrer" href="https://anzhiy.cn/posts/72ea.html">npm图床使用</a>。</p><p>这使我可以随时使用静态资源文件（如js,css,img等），我只需修改<code>package.json</code>的版本即可实现资源更新，而丰富的npm镜像又让我的站点速度大大提升，极大的便利性使我得到了极其舒适的体验。</p><p>以下是该工作流部分代码，注意该工作流已解决使用CI更新时，hexo更新时间不一致的问题。</p><p><code>autodeploy.yml</code></p><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">name</span><span class="token punctuation">:</span> 自动部署<span class="token comment"># 当有改动推送到master分支时，启动Action</span><span class="token key atrule">on</span><span class="token punctuation">:</span>  <span class="token key atrule">push</span><span class="token punctuation">:</span>    <span class="token key atrule">branches</span><span class="token punctuation">:</span>      <span class="token punctuation">-</span> master      <span class="token comment">#2020年10月后github新建仓库默认分支改为main，注意更改</span>  <span class="token key atrule">release</span><span class="token punctuation">:</span>    <span class="token key atrule">types</span><span class="token punctuation">:</span>      <span class="token punctuation">-</span> published<span class="token key atrule">jobs</span><span class="token punctuation">:</span>  <span class="token key atrule">deploy</span><span class="token punctuation">:</span>    <span class="token key atrule">runs-on</span><span class="token punctuation">:</span> ubuntu<span class="token punctuation">-</span>latest    <span class="token key atrule">steps</span><span class="token punctuation">:</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 检查分支        <span class="token key atrule">uses</span><span class="token punctuation">:</span> actions/checkout@v2        <span class="token key atrule">with</span><span class="token punctuation">:</span>          <span class="token key atrule">ref</span><span class="token punctuation">:</span> master          <span class="token key atrule">fetch-depth</span><span class="token punctuation">:</span> <span class="token number">0</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Sync local file timestamps        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          git ls-files -z | while read -d '' path; do touch -d $(git log -1 --format="@%ct" "$path") "$path"; done</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 安装 Node        <span class="token key atrule">uses</span><span class="token punctuation">:</span> actions/setup<span class="token punctuation">-</span>node@v1        <span class="token key atrule">with</span><span class="token punctuation">:</span>          <span class="token key atrule">node-version</span><span class="token punctuation">:</span> <span class="token string">"16.x"</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 安装 Hexo        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          export TZ='Asia/Shanghai'          npm install hexo-cli -g</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 缓存 Hexo        <span class="token key atrule">id</span><span class="token punctuation">:</span> cache<span class="token punctuation">-</span>npm        <span class="token key atrule">uses</span><span class="token punctuation">:</span> actions/cache@v3        <span class="token key atrule">env</span><span class="token punctuation">:</span>          <span class="token key atrule">cache-name</span><span class="token punctuation">:</span> cache<span class="token punctuation">-</span>node<span class="token punctuation">-</span>modules        <span class="token key atrule">with</span><span class="token punctuation">:</span>          <span class="token key atrule">path</span><span class="token punctuation">:</span> node_modules          <span class="token key atrule">key</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> runner.os <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">-</span>build<span class="token punctuation">-</span>$<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> env.cache<span class="token punctuation">-</span>name <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">-</span>$<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> hashFiles('<span class="token important">**/package-lock.json')</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>          <span class="token key atrule">restore-keys</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">            $&#123;&#123; runner.os &#125;&#125;-build-$&#123;&#123; env.cache-name &#125;&#125;-            $&#123;&#123; runner.os &#125;&#125;-build-            $&#123;&#123; runner.os &#125;&#125;-</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 安装依赖        <span class="token key atrule">if</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> steps.cache<span class="token punctuation">-</span>npm.outputs.cache<span class="token punctuation">-</span>hit <span class="token tag">!=</span> 'true' <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          npm install gulp-cli -g #全局安装gulp          npm install --save</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 生成静态文件        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          hexo clean          hexo bangumi -u #bilibili番剧更新          hexo generate          hexo algolia          gulp</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Deploy to Server        <span class="token key atrule">uses</span><span class="token punctuation">:</span> easingthemes/ssh<span class="token punctuation">-</span>deploy@v2        <span class="token key atrule">env</span><span class="token punctuation">:</span>          <span class="token key atrule">SSH_PRIVATE_KEY</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> secrets.SSH_PRIVATE_KEY <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>          <span class="token key atrule">ARGS</span><span class="token punctuation">:</span> <span class="token string">"-rltgoDzvO --delete"</span>          <span class="token key atrule">EXCLUDE</span><span class="token punctuation">:</span> <span class="token string">".well-known"</span>          <span class="token key atrule">SOURCE</span><span class="token punctuation">:</span> <span class="token string">"./public/*"</span>          <span class="token key atrule">REMOTE_HOST</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> secrets.SERVER_IP <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>          <span class="token key atrule">REMOTE_PORT</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> secrets.REMOTE_PORT <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>          <span class="token key atrule">REMOTE_USER</span><span class="token punctuation">:</span> <span class="token string">"你的用户名"</span>          <span class="token key atrule">TARGET</span><span class="token punctuation">:</span> <span class="token string">"你的服务器绝对路径"</span>                <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 推送百度必应url        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          hexo deploy</span>      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> 部署到Github        <span class="token key atrule">run</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">          cd ./public          git init          git config --global user.name "anzhiyu-c"          git config --global user.email "userEmail@gmail.com"          git add .          git commit -m '$&#123;&#123; github.event.head_commit.message &#125;&#125;'          git push --force --all https://xxxxxxToken@github.com/anzhiyu-c/anzhiyu-c.github.io</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p><code>npmignore.js</code></p><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">hexo<span class="token punctuation">.</span>extend<span class="token punctuation">.</span>generator<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token string">"npmignore"</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">locals</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  <span class="token comment">// Object</span>  <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">"/.npmignore"</span><span class="token punctuation">,</span>    <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">**/*.html.github/download/ads.txtCNAMErobots.txt</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p><code>npmpublish.js</code></p><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token comment">/* * @Description: npm * @Author: 安知鱼 * @Email: 2268025923@qq.com * @Date: 2022-02-22 12:13:18 * @LastEditTime: 2022-08-27 12:29:41 * @LastEditors: 安知鱼 */</span>hexo<span class="token punctuation">.</span>extend<span class="token punctuation">.</span>generator<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token string">'npmpush'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">locals</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  <span class="token comment">// Object</span>  <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>    <span class="token literal-property property">path</span><span class="token operator">:</span> <span class="token string">'/.github/workflows/autopublish.yml'</span><span class="token punctuation">,</span>    <span class="token literal-property property">data</span><span class="token operator">:</span>      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">name: Node.js Package# 监测分支，2020年10月后github新建仓库默认分支改为main，记得更改on:  push:    branches:      - masterjobs:  publish-npm:    runs-on: ubuntu-latest    steps:      - uses: actions/checkout@v2      - uses: actions/setup-node@v1        with:          node-version: "12.x"          registry-url: https://registry.npmjs.org/      - run: npm publish        env:          NODE_AUTH_TOKEN: </span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span> <span class="token string">'$&#123;&#123;secrets.npm_token&#125;&#125;'</span><span class="token punctuation">,</span>  <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="hexo博客工作流CI（一键部署的快乐）" href="https://anzhiy.cn/posts/b228.html" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">hexo博客工作流CI（一键部署的快乐）</span><span class="desc fs12">https://anzhiy.cn/posts/b228.html</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/bdabd8a.html">微信公众号静态单页 - 优雅的让用户关注你的公众号，展示公众号二维码的页面<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/8f777bc3.html">科技爱好者周刊（第 242 期）：一次尴尬的服务器被黑<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/622a5765.html" title="2022年度总结"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/27/63aa89943caea.webp!blogimg"></div><span class="title">2022年度总结</span></a><a class="item" href="/rss/822c227d.html" title="Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/19/639fe5a920d2b.png"></div><span class="title">Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！</span></a><a class="item" href="/rss/3bade946.html" title="React组件之间的通信"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/639336e44611e.jpg!blogimg"></div><span class="title">React组件之间的通信</span></a><a class="item" href="/rss/2274aa88.html" title="Bilibili动态背景"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=2622"></div><span class="title">Bilibili动态背景</span></a><a class="item" href="/rss/2dc84c32.html" title="Butterfly控制特定图片懒加载"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/03/638ac112cfd48.webp!blogimg"></div><span class="title">Butterfly控制特定图片懒加载</span></a><a class="item" href="/rss/4d8682d1.html" title="Butterfly文章顶部添加波浪效果"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/21/63a2dcb4d781a.png"></div><span class="title">Butterfly文章顶部添加波浪效果</span></a><a class="item" href="/rss/777c7872.html" title="Css模糊羽化"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=2183"></div><span class="title">Css模糊羽化</span></a><a class="item" href="/rss/78538721.html" title="Transform 支持单独赋值改变"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=4676"></div><span class="title">Transform 支持单独赋值改变</span></a><a class="item" href="/rss/6c019da2.html" title="为什么 React 的 setState 要设计成异步的"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/6392c48276234.jpg!blogimg"></div><span class="title">为什么 React 的 setState 要设计成异步的</span></a><a class="item" href="/rss/412f0ac5.html" title="为你的博客安装上便携小空调"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5187"></div><span class="title">为你的博客安装上便携小空调</span></a><a class="item" href="/rss/e8b64c0.html" title="我的图床方案"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=642"></div><span class="title">我的图床方案</span></a><a class="item" href="/rss/fc4ec0d5.html" title="操作系统复习题"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/07/63e1dd4b3942a.png"></div><span class="title">操作系统复习题</span></a><a class="item" href="/rss/a802e208.html" title="给你的博客加一个优雅的音乐界面"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/10/63e6004607d39.png"></div><span class="title">给你的博客加一个优雅的音乐界面</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

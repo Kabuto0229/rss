@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>RSSBOX</title>
+
+  
+    <meta property="og:type" content="website">
+<meta property="og:title" content="RSSBOX">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/page/8/index.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="rss">
+<meta name="twitter:card" content="summary">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout>
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+<div class="widget-wrap" id="markdown"><div class="widget-header cap dis-select"><span class="name">Welcome</span></div><div class="widget-body fs14"><p>This is a test site.</p>
+</div></div>
+
+<div class="widget-wrap" id="recent"><div class="widget-header cap dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><div class="more-item"><a class="title" href="/rss/209bc4cb.html">Postcatlab/postcat</a></div><div class="more-item"><a class="title" href="/rss/b88dcda7.html">RadekVyM/MarvelousMAUI</a></div><div class="more-item"><a class="title" href="/rss/6085c1ff.html">TheLastBen/fast-Stable-Diffusion</a></div><div class="more-item"><a class="title" href="/rss/6fb9976.html">Anc95/writely</a></div><div class="more-item"><a class="title" href="/rss/3ce75ceb.html">Davinci1010/pinduoduo_backdoor</a></div></div></div>
+</div>
+
+
+    </aside>
+    <div class="l_main list">
+      
+  
+
+<header class="header mobile-only">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+</header>
+
+
+
+      
+
+
+  <div class="nav-wrap">
+  <nav class="sub post cap">
+    
+      <a class="active" href="/">近期发布</a>
+    
+    
+      
+        <a href="/rss/categories">分类</a>
+      
+    
+    
+      
+        <a href="/rss/tags">标签</a>
+      
+    
+    
+      
+        <a href="/rss/archives">归档</a>
+      
+    
+  </nav>
+</div>
+
+  <div class="post-list post"><a class="post-card post " href="/rss/5b62734f.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://my.oschina.net&url=https://my.oschina.net/?r=https://my.oschina.net&url=https://oscimg.oschina.net/oscnet/53dbb3c2-dfff-4a4d-a6ef-52d145fbd166.jpg"></div><h2 class="post-title">每日一博 | Vivo 全球商城的库存系统架构设计与实践</h2><div class="excerpt"><p>
+
+
+
+
+
+
+
+
+
+作者：vivo官网商城开发团队 - Xu Yi、Yan Chao
+
+
+
+
+
+
+
+
+本文是vivo商城系列文章，主要介绍vivo商城库存系统发展历程、架构设计思路以及应对业务场景的实践。
+
+
+
+
+
+
+
+
+
+
+
+
+一、业务背景
+
+
+
+
+库存系统是电商商品管理的核心系统，本文主要介绍vivo商城库存中心发展历程、架构设计思路及应对各种业务场景的实践。
+vivo商城原库存系统耦合...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-23T23:29:00.000Z">2023-02-24</time></span><span class="cap breadcrumb">媒体</span></div></article>
+</a><a class="post-card post " href="/rss/c5c95235.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/071805_rrtt_4937141.png"></div><h2 class="post-title">IntelliJ IDEA 2023.1 Beta 2 发布，支持保存多个窗口布局</h2><div class="excerpt"><p>
+
+IntelliJ IDEA 2023.1 Beta 2 已发布，该版本在 Beta 1 的基础上仅带来了一项重要更新内容。
+
+保存多个工具窗口布局的选项
+在 IntelliJ IDEA 2023.1 中，你可以保存和管理多个工具窗口布局，并在需要时进行切换。
+要保存一个新的布局，根据需要安排工具窗口，然后进入「Window | Layouts | Save Current Layout ...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-23T23:21:00.000Z">2023-02-24</time></span><span class="cap breadcrumb">媒体</span></div></article>
+</a><a class="post-card post " href="/rss/15a610d2.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8617"></div><h2 class="post-title">Audacious 4.3 发布，音频播放器</h2><div class="excerpt"><p>
+
+Audacious 是一个开源的音频播放器，可以在 Linux、BSD 衍生产品和 Windows 上运行。
+Audacious 音乐播放器正式发布 4.3 版本，更新内容如下：
+
+新版本具有 PipeWire 输出插件
+再次增加了对 GTK3 的支持（默认为 GTK2）
+原生的 Opus 解码器插件，以前通过 FFmpeg 插件完成
+对 Qt6 的支持趋于成熟，但仍默认为 Qt5
+支持...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-23T23:17:00.000Z">2023-02-24</time></span><span class="cap breadcrumb">媒体</span></div></article>
+</a><a class="post-card post " href="/rss/8a315e5b.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=7014"></div><h2 class="post-title">React Native 0.71.4 发布</h2><div class="excerpt"><p>
+
+React Native 0.71.4 现已发布，具体更新内容如下：
+Changed
+
+使 FlatList 允许 ArrayLike 数据（c03de97fb4）
+将 RNGP 提升至^0.71.16（3df4a79c3d）
+将 CLI 更新到 10.2.0，将 Metro 更新到 0.73.8（20a6fbd373）- 包含： 
+  
+修复：使用 Terser minificatio...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-23T23:09:00.000Z">2023-02-24</time></span><span class="cap breadcrumb">媒体</span></div></article>
+</a><a class="post-card post " href="/rss/9832a679.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-dd36dd6b54d36c15e163c64a9d1c6c2b835.png"></div><h2 class="post-title">程序员笔记 CherryTree 0.99.55.0 发布</h2><div class="excerpt"><p>
+
+CherryTree 0.99.55 现已发布。CherryTree 是一个支持无限层级分类的笔记软件，Python 编写，支持富文本编辑和代码高亮，支持 Linux 和 Windows 平台。数据采用 sqlite 或 XML 存储，支持密码保护，支持从 NoteCase、KeepNote、Knowit、Tomboy、TuxCards、Treepad、Leo 等笔记软件导入数据。
+
+
+...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-23T23:08:00.000Z">2023-02-24</time></span><span class="cap breadcrumb">媒体</span></div></article>
+</a><a class="post-card post " href="/rss/6b879f13.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9506"></div><h2 class="post-title">Mac快速抠人像，提取图片中的主体物方法，智能抠图去背景</h2><div class="excerpt"><p>
+上一篇介绍了Mac使用&lt;a
+
+
+
+Mac快速抠人像，提取图片中的主体物方法，智能抠图去背景https://blog.zhheo.com/p/685dfd23.html
+
+
+</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-22T18:01:12.000Z">2023-02-23</time></span><span class="cap breadcrumb">生活</span></div></article>
+</a><a class="post-card post " href="/rss/6fe2acf1.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5281"></div><h2 class="post-title">探索一个曲终人未散但因战而生的《月光小夜曲》</h2><div class="excerpt"><p>
+最近，我又将曲库翻回上个世纪80年代，在这里听着蔡琴那首成名曲《你的眼神》，歌单的下一首就推到了《月光小夜曲》。这首歌在蔡琴独特的嗓音之下，让我心神平静。
+
+
+
+探索一个曲终人未散但因战而生的《月光小夜曲》https://www.thyuu.com/word/tale/73144
+
+
+</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-21T02:00:27.000Z">2023-02-21</time></span><span class="cap breadcrumb">生活</span></div></article>
+</a><a class="post-card post " href="/rss/9b977ed1.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1706"></div><h2 class="post-title">如何Fork自己的仓库</h2><div class="excerpt"><p>
+fork自己的仓库可以实现在整体代码开源的同时，可以进行私有的额外开发
+
+
+
+如何fork自己的仓库https://blog.dorakika.cn/post/20230221/
+
+
+</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-21T00:00:00.000Z">2023-02-21</time></span><span class="cap breadcrumb">技术</span></div></article>
+</a><a class="post-card post " href="/rss/f7b07e55.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=4539"></div><h2 class="post-title">No Niin – Suomen Tärkein Sana – Sketch Analysis</h2><div class="excerpt"><p>
+Click for the English translation and grammar analysis of Ismo Leikola's sketch about NO NIIN, the most important Finnish word!
+The post No Niin – Suomen Tärkein Sana – Sketch Analysis appeared fi...</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-20T05:03:56.000Z">2023-02-20</time></span><span class="cap breadcrumb">语言</span></div></article>
+</a><a class="post-card post " href="/rss/a3bf4d6c.html">
+<article class="md"><div class="post-cover"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1692"></div><h2 class="post-title">利用Mac的预览App实现快速抠图，快速给图片去背景方法</h2><div class="excerpt"><p>
+最近经常需要抠图，但是抠图的内容并不困难，都是一些纯白色或者灰色背景的图片扣图。但是每次都打开ps太费时间，没有效率。（虽然用ps只需要30秒就搞定了，但是还想更快点）
+&lt;a href="#示例图片"
+
+
+
+利用Mac的预览App实现快速抠图，快速给图片去背景方法https://blog.zhheo.com/p/a3bf4d6c.html
+
+
+</p></div><div class="meta cap"><span class="cap" id="post-meta">发布于&nbsp;<time datetime="2023-02-20T00:19:28.000Z">2023-02-20</time></span><span class="cap breadcrumb">生活</span></div></article>
+</a></div>
+  
+  <div class="paginator-wrap dis-select">
+    <a class="paginator prev" href="/rss/page/7/">
+      <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/arrow/f049bbd4e88ec.svg">
+    </a>
+    <div class="paginator current">
+      8<span class="sep"></span>25
+    </div>
+    <a class="paginator next" href="/rss/page/9/">
+      <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/arrow/064b95430caf4.svg">
+    </a>
+  </div>
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>Memos API 非官方不完全说明 - RSSBOX</title>
+
+  
+    <meta name="description" content="官方源码见：https:&#x2F;&#x2F;github.com&#x2F;usememos&#x2F;memos&#x2F;tree&#x2F;main&#x2F;server Memos 条数 路径：api&#x2F;memo&#x2F;amount 总条数 https:&#x2F;&#x2F;me.edui.fun&#x2F;api&#x2F;memo&#x2F;amount 结果： 远程获取内容失败，请检查 API 有效性。 指定用户 参数：userId 或 openId 早期个人的ID为 101 ，现在新创建默认为 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Memos API 非官方不完全说明">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/e122b797.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="官方源码见：https:&#x2F;&#x2F;github.com&#x2F;usememos&#x2F;memos&#x2F;tree&#x2F;main&#x2F;server Memos 条数 路径：api&#x2F;memo&#x2F;amount 总条数 https:&#x2F;&#x2F;me.edui.fun&#x2F;api&#x2F;memo&#x2F;amount 结果： 远程获取内容失败，请检查 API 有效性。 指定用户 参数：userId 或 openId 早期个人的ID为 101 ，现在新创建默认为 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-04T06:51:55.000Z">
+<meta property="article:modified_time" content="2023-02-04T06:51:55.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="林木木">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#memos-%E6%9D%A1%E6%95%B0"><span class="toc-text">Memos 条数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E6%9D%A1%E6%95%B0"><span class="toc-text">总条数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7"><span class="toc-text">指定用户</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E6%88%B3%E5%88%97%E8%A1%A8"><span class="toc-text">时间戳列表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7%E5%BF%85%E9%80%89"><span class="toc-text">指定用户（必选）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rss-%E8%BE%93%E5%87%BA%E6%8E%A5%E5%8F%A3"><span class="toc-text">RSS 输出接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#memos-%E5%88%97%E8%A1%A8"><span class="toc-text">Memos 列表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E5%88%97%E8%A1%A8"><span class="toc-text">总列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E6%A0%87%E7%AD%BE"><span class="toc-text">指定标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E6%9D%A1%E6%95%B0"><span class="toc-text">指定条数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E5%81%8F%E7%A7%BB"><span class="toc-text">指定偏移</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%8F%96%E9%83%A8%E5%88%86-memos"><span class="toc-text">调取部分 Memos</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#open-api"><span class="toc-text">Open API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA-memos-%E6%80%BB%E6%95%B0"><span class="toc-text">个人 Memos 总数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%A0%87%E7%AD%BE%E5%88%97%E8%A1%A8"><span class="toc-text">个人标签列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E8%B5%84%E6%BA%90%E5%88%97%E8%A1%A8"><span class="toc-text">内置资源列表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E9%93%BE%E6%8E%A5%E6%A0%BC%E5%BC%8F"><span class="toc-text">资源链接格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91-memos"><span class="toc-text">发 Memos</span></a></li></ol></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/">技术</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/%E6%9E%97%E6%9C%A8%E6%9C%A8/">林木木</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-02-04T06:51:55.000Z">2023-02-04</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>Memos API 非官方不完全说明</span></h1>
+<div>
+<p>官方源码见：<a href="https://github.com/usememos/memos/tree/main/server" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/usememos/memos/tree/main/server</a></p>
+<h3 id="memos-条数">Memos 条数</h3>
+<p>路径：<code>api/memo/amount</code></p>
+<h4 id="总条数">总条数</h4>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo/amount
+</code></pre><p>结果：</p>
+<p style="text-align: center;"><small>远程获取内容失败，请检查 API 有效性。</small></p>
+<h4 id="指定用户">指定用户</h4>
+<p>参数：<code>userId</code> 或 <code>openId</code></p>
+<p>早期个人的ID为 <code>101</code> ，现在新创建默认为 <code>1</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo/amount?userId=102
+</code></pre><p>结果：</p>
+<p style="text-align: center;"><small>远程获取内容失败，请检查 API 有效性。</small></p>
+<blockquote>
+<p>有了总条数，前端可以自行做分页加载处理。</p>
+</blockquote>
+<h3 id="时间戳列表">时间戳列表</h3>
+<p>路径：<code>api/memo/stats</code></p>
+<h4 id="指定用户必选">指定用户（必选）</h4>
+<p>参数：<code>creatorId</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo/stats?creatorId=101
+</code></pre><p>结果：</p>
+<pre style="max-height:15rem;overflow-x:scroll;overflow-wrap: anywhere;white-space: break-spaces;padding:10px;"><code>&#123;"data":[1677982907,1677944791,1677920032,1677912472,1677901870,1677889291,1677860986,1677672895,1677509756,1677428639,1677417507,1677383495,1677331121,1677316466,1677305170,1676776734,1676631573,1676470266,1676462980,1676377601,1676263144,1676208000,1676207292,1676172019,1676104898,1676079514,1675866684,1675866636,1675784274,1675771216,1675735722,1675688684,1675684569,1675676465,1675660361,1675582029,1675508158,1675481879,1675396865,1675347385,1675344357,1675344207,1675344101,1675343744,1675323173,1675213812,1674814694,1674807923,1674802299,1674782417,1674653445,1674626177,1674398311,1674392665,1674375476,1674288012,1674225387,1674214548,1674094470,1674059250,1673960056,1673699125,1673695175,1673660577,1673601115,1673440420,1673436680,1673353709,1673334779,1673328479,1673228828,1673080340,1673071967,1673069253,1672983314,1672907099,1672743140,1672731242,1672661847,1672560273,1672327741,1672285153,1672214072,1672210502,1672124895,1672051956,1672051590,1671955616,1671805540,1671804493,1671803816,1671801177,1671787141,1671678859,1671612683,1671600775,1671537947,1671537091,1671451440,1671326369,1671196643,1671170904,1670944183,1670760287,1670748244,1670745127,1670741581,1670732070,1670636957,1670455041,1670336795,1670249408,1670166775,1670155833,1670121251,1670116947,1670049364,1670048525,1670027806,1669992238,1669898424,1669732444,1669613187,1669554869,1669547751,1669511231,1669475795,1669462804,1669428179,1669346560,1669300715,1669297138,1669291410,1669214256,1669202093,1669170555,1668948661,1668930815,1668930294,1668871211,1668865981,1668823340,1668689983,1668415056,1668317502,1668314270,1668260458,1668255375,1668175705,1668151415,1668140491,1668133743,1668131147,1668130896,1668118620,1668085610,1668078702,1667907891,1667879418,1667718108,1667645276,1667313533,1667101955,1667006273,1666842866,1666787040,1666487864,1666412487,1666360118,1666359836,1666350792,1666192276,1665965669,1665932460,1665924900,1665908416,1665904984,1665895334,1665888981,1665878843,1665849304,1665835205,1665816662,1665809972,1665808867,1665802951,1665719317,1665674157,1665651512,1665574952,1665542355,1665540169,1665501004,1665499550,1665408201,1665324386,1665241429,1665218306,1665154278,1665149075,1665147572,1665132938,1665108193,1665073242,1665063063,1665053774,1665049356,1665048731,1664981401,1664962186,1664852645,1664638023,1664028948,1663480061,1663426595,1663232747,1663202464,1663058709,1662815081,1662787812,1662786969,1662729519,1662645930,1662641144,1662637019]&#125;</code></pre>
+<blockquote>
+<p>做个格子图？</p>
+</blockquote>
+<h3 id="rss-输出接口">RSS 输出接口</h3>
+<p>路径：<code>/u/:id/rss.xml</code></p>
+<h3 id="memos-列表">Memos 列表</h3>
+<p>路径： <code>/memo</code> 或 <code>/memo/all</code></p>
+<p>前者需要指定参数 <code>creatorId</code></p>
+<h4 id="总列表">总列表</h4>
+<pre tabindex="0"><code>https://demo.usememos.com/api/memo?creatorId=101
+https://demo.usememos.com/api/memo/all
+</code></pre><h4 id="指定标签">指定标签</h4>
+<p>参数：<code>tag</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo?creatorId=101&amp;tag=相册
+https://me.edui.fun/api/memo/all?tag=相册
+</code></pre><p>结果：</p>
+<p>
+<pre style="max-height:15rem;overflow-x:scroll;overflow-wrap: anywhere;white-space: break-spaces;padding:10px;"><code>&#123;"data":[&#123;"content":"#相册 春芽","createdTs":1677316466,"creatorId":101,"creatorName":"林木木","id":1419,"pinned":false,"resourceList":[&#123;"createdTs":1677316466,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-1.JPG","filename":"0225-zhongzi-1.JPG","id":181,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-2.JPG","filename":"0225-zhongzi-2.JPG","id":182,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-3.JPG","filename":"0225-zhongzi-3.JPG","id":183,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677316766,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 兔子折纸 🎉","createdTs":1675688684,"creatorId":101,"creatorName":"林木木","id":1392,"pinned":false,"resourceList":[&#123;"createdTs":1675688684,"creatorId":101,"externalLink":"","filename":"D2A9D694-A88A-4364-9E8E-F24F4F884EE2.jpeg","id":175,"linkedMemoAmount":0,"size":64760,"type":"image/jpeg","updatedTs":1676134494,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1676134494,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 大上海之大！","createdTs":1675347385,"creatorId":101,"creatorName":"林木木","id":1366,"pinned":false,"resourceList":[&#123;"createdTs":1675347385,"creatorId":101,"externalLink":"","filename":"IMG_6526.jpg","id":173,"linkedMemoAmount":0,"size":280338,"type":"image/jpeg","updatedTs":1675347385,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675347385,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 惠山古镇特色小吃桂花糕","createdTs":1675344357,"creatorId":101,"creatorName":"林木木","id":1365,"pinned":false,"resourceList":[&#123;"createdTs":1675344357,"creatorId":101,"externalLink":"","filename":"IMG_6400.jpg","id":171,"linkedMemoAmount":0,"size":225647,"type":"image/jpeg","updatedTs":1675344357,"visibility":""&#125;,&#123;"createdTs":1675344357,"creatorId":101,"externalLink":"","filename":"IMG_6444_1.jpg","id":172,"linkedMemoAmount":0,"size":154961,"type":"image/jpeg","updatedTs":1675344357,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344357,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 无锡南长街的夜","createdTs":1675344207,"creatorId":101,"creatorName":"林木木","id":1364,"pinned":false,"resourceList":[&#123;"createdTs":1675344207,"creatorId":101,"externalLink":"","filename":"IMG_2982_1.jpg","id":170,"linkedMemoAmount":0,"size":716299,"type":"image/jpeg","updatedTs":1675344207,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344207,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 鼋头渚喂海鸥","createdTs":1675344101,"creatorId":101,"creatorName":"林木木","id":1363,"pinned":false,"resourceList":[&#123;"createdTs":1675344101,"creatorId":101,"externalLink":"","filename":"鼋头渚.jpg","id":169,"linkedMemoAmount":0,"size":169044,"type":"image/jpeg","updatedTs":1675344101,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344101,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 折腾桌面","createdTs":1675343744,"creatorId":101,"creatorName":"林木木","id":1362,"pinned":false,"resourceList":[&#123;"createdTs":1675343744,"creatorId":101,"externalLink":"","filename":"zhuom.JPG","id":163,"linkedMemoAmount":0,"size":278839,"type":"image/jpeg","updatedTs":1675343780,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675343780,"visibility":"PUBLIC"&#125;,&#123;"content":"有光 #相册 ","createdTs":1671787141,"creatorId":101,"creatorName":"林木木","id":1308,"pinned":false,"resourceList":[&#123;"createdTs":1671787141,"creatorId":101,"externalLink":"","filename":"2F10DF80-899C-411E-B24D-25B81743E92B.jpeg","id":152,"linkedMemoAmount":0,"size":50392,"type":"image/jpeg","updatedTs":1677330091,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677330091,"visibility":"PUBLIC"&#125;,&#123;"content":"不知不觉，小声读书 #相册 ","createdTs":1670944183,"creatorId":101,"creatorName":"林木木","id":1292,"pinned":false,"resourceList":[&#123;"createdTs":1670944183,"creatorId":101,"externalLink":"","filename":"iShot_2022-12-12_20.22.29.jpg","id":148,"linkedMemoAmount":0,"size":174770,"type":"image/jpeg","updatedTs":1677330176,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677330176,"visibility":"PUBLIC"&#125;]&#125;</code></pre>
+<pre style="max-height:15rem;overflow-x:scroll;overflow-wrap: anywhere;white-space: break-spaces;padding:10px;"><code>&#123;"data":[&#123;"content":"#相册 春芽","createdTs":1677316466,"creatorId":101,"creatorName":"林木木","id":1419,"pinned":false,"resourceList":[&#123;"createdTs":1677316466,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-1.JPG","filename":"0225-zhongzi-1.JPG","id":181,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-2.JPG","filename":"0225-zhongzi-2.JPG","id":182,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-3.JPG","filename":"0225-zhongzi-3.JPG","id":183,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677316766,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 兔子折纸 🎉","createdTs":1675688684,"creatorId":101,"creatorName":"林木木","id":1392,"pinned":false,"resourceList":[&#123;"createdTs":1675688684,"creatorId":101,"externalLink":"","filename":"D2A9D694-A88A-4364-9E8E-F24F4F884EE2.jpeg","id":175,"linkedMemoAmount":0,"size":64760,"type":"image/jpeg","updatedTs":1676134494,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1676134494,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 大上海之大！","createdTs":1675347385,"creatorId":101,"creatorName":"林木木","id":1366,"pinned":false,"resourceList":[&#123;"createdTs":1675347385,"creatorId":101,"externalLink":"","filename":"IMG_6526.jpg","id":173,"linkedMemoAmount":0,"size":280338,"type":"image/jpeg","updatedTs":1675347385,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675347385,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 惠山古镇特色小吃桂花糕","createdTs":1675344357,"creatorId":101,"creatorName":"林木木","id":1365,"pinned":false,"resourceList":[&#123;"createdTs":1675344357,"creatorId":101,"externalLink":"","filename":"IMG_6400.jpg","id":171,"linkedMemoAmount":0,"size":225647,"type":"image/jpeg","updatedTs":1675344357,"visibility":""&#125;,&#123;"createdTs":1675344357,"creatorId":101,"externalLink":"","filename":"IMG_6444_1.jpg","id":172,"linkedMemoAmount":0,"size":154961,"type":"image/jpeg","updatedTs":1675344357,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344357,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 无锡南长街的夜","createdTs":1675344207,"creatorId":101,"creatorName":"林木木","id":1364,"pinned":false,"resourceList":[&#123;"createdTs":1675344207,"creatorId":101,"externalLink":"","filename":"IMG_2982_1.jpg","id":170,"linkedMemoAmount":0,"size":716299,"type":"image/jpeg","updatedTs":1675344207,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344207,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 鼋头渚喂海鸥","createdTs":1675344101,"creatorId":101,"creatorName":"林木木","id":1363,"pinned":false,"resourceList":[&#123;"createdTs":1675344101,"creatorId":101,"externalLink":"","filename":"鼋头渚.jpg","id":169,"linkedMemoAmount":0,"size":169044,"type":"image/jpeg","updatedTs":1675344101,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675344101,"visibility":"PUBLIC"&#125;,&#123;"content":"#相册 折腾桌面","createdTs":1675343744,"creatorId":101,"creatorName":"林木木","id":1362,"pinned":false,"resourceList":[&#123;"createdTs":1675343744,"creatorId":101,"externalLink":"","filename":"zhuom.JPG","id":163,"linkedMemoAmount":0,"size":278839,"type":"image/jpeg","updatedTs":1675343780,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1675343780,"visibility":"PUBLIC"&#125;,&#123;"content":"有光 #相册 ","createdTs":1671787141,"creatorId":101,"creatorName":"林木木","id":1308,"pinned":false,"resourceList":[&#123;"createdTs":1671787141,"creatorId":101,"externalLink":"","filename":"2F10DF80-899C-411E-B24D-25B81743E92B.jpeg","id":152,"linkedMemoAmount":0,"size":50392,"type":"image/jpeg","updatedTs":1677330091,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677330091,"visibility":"PUBLIC"&#125;,&#123;"content":"不知不觉，小声读书 #相册 ","createdTs":1670944183,"creatorId":101,"creatorName":"林木木","id":1292,"pinned":false,"resourceList":[&#123;"createdTs":1670944183,"creatorId":101,"externalLink":"","filename":"iShot_2022-12-12_20.22.29.jpg","id":148,"linkedMemoAmount":0,"size":174770,"type":"image/jpeg","updatedTs":1677330176,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677330176,"visibility":"PUBLIC"&#125;]&#125;</code></pre>
+</p>
+<h4 id="指定条数">指定条数</h4>
+<p>参数：<code>limit</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo?creatorId=101&amp;tag=相册&amp;limit=1
+https://me.edui.fun/api/memo/all?tag=相册&amp;limit=1
+</code></pre><p>结果：</p>
+<pre style="max-height:15rem;overflow-x:scroll;overflow-wrap: anywhere;white-space: break-spaces;padding:10px;"><code>&#123;"data":[&#123;"content":"#相册 春芽","createdTs":1677316466,"creatorId":101,"creatorName":"林木木","id":1419,"pinned":false,"resourceList":[&#123;"createdTs":1677316466,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-1.JPG","filename":"0225-zhongzi-1.JPG","id":181,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-2.JPG","filename":"0225-zhongzi-2.JPG","id":182,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;,&#123;"createdTs":1677316766,"creatorId":101,"externalLink":"https://r2m.immmmm.com/memos/0225-zhongzi-3.JPG","filename":"0225-zhongzi-3.JPG","id":183,"linkedMemoAmount":0,"size":0,"type":"image/jpeg","updatedTs":1677316766,"visibility":""&#125;],"rowStatus":"NORMAL","updatedTs":1677316766,"visibility":"PUBLIC"&#125;]&#125;</code></pre>
+<h4 id="指定偏移">指定偏移</h4>
+<p>参数：<code>offset</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo?creatorId=101&amp;tag=相册&amp;limit=1&amp;offset=2
+https://me.edui.fun/api/memo/all?tag=相册&amp;limit=1&amp;offset=2
+</code></pre><blockquote>
+<p>利用 <code>limit=1</code> 、 <code>offset</code> 和总条数之间随机数，可实现调取随机一条 Memos 。</p>
+</blockquote>
+<h4 id="调取部分-memos">调取部分 Memos</h4>
+<p>参数：<code>rowStatus</code></p>
+<pre tabindex="0"><code>https://me.edui.fun/api/memo?creatorId=101&amp;rowStatus=NORMAL
+</code></pre><p>加上 <code>rowStatus=NORMAL</code> 不用调取在归档里的 Memos 。</p>
+<h3 id="open-api">Open API</h3>
+<p>参数：<code>openId</code></p>
+<pre tabindex="0"><code>https://demo.usememos.com/api/memo?openId=4D878AD599A6CCACD52C56753A36C4C7
+</code></pre><blockquote>
+<p>此参数拥有最高权限，get、post 都可以。get 到的内容包括仅自己可见的内容。</p>
+</blockquote>
+<h4 id="个人-memos-总数">个人 Memos 总数</h4>
+<pre tabindex="0"><code>https://demo.usememos.com/api/memo/amount?openId=4D878AD599A6CCACD52C56753A36C4C7
+</code></pre><h3 id="个人标签列表">个人标签列表</h3>
+<p>路径：<code>api/tag</code></p>
+<pre tabindex="0"><code>https://demo.usememos.com/api/tag?openId=4D878AD599A6CCACD52C56753A36C4C7
+</code></pre><h3 id="内置资源列表">内置资源列表</h3>
+<p>路径：<code>api/resource</code></p>
+<pre tabindex="0"><code>https://demo.usememos.com/api/resource?openId=4D878AD599A6CCACD52C56753A36C4C7
+</code></pre><h4 id="资源链接格式">资源链接格式</h4>
+<p>网址+<code>o/r/</code>+<code>resourceId/</code>+<code>filename</code>，如：</p>
+<pre tabindex="0"><code>https://me.edui.fun/o/r/167/iShot_2023-01-22_16.22.45.png
+</code></pre><blockquote>
+<p>做个资源外链清单？</p>
+</blockquote>
+<h4 id="发-memos">发 Memos</h4>
+<pre tabindex="0"><code>POST https://demo.usememos.com/api/memo?openId=4D878AD599A6CCACD52C56753A36C4C7
+Content-type: application/json
+&#123;
+  "content": "Hello #memos from https://demo.usememos.com",
+  "visibility": "PUBLIC",
+  "resourceIdList" : []
+&#125;
+</code></pre><p>参数：<code>content</code></p>
+<p>参数：<code>visibility</code></p>
+<ul>
+<li>值 <code>PUBLIC</code>（公开） <code>PRIVATE</code>（仅自己） <code>PROTECTED</code>（登录可见）</li>
+</ul>
+<p>参数：<code>resourceIdList</code></p>
+<ul>
+<li>值是数组，上传图片之后的 resourceId。</li>
+</ul>
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="Memos API 非官方不完全说明" href="https://immmmm.com/memos-api-description/" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">Memos API 非官方不完全说明</span><span class="desc fs12">https://immmmm.com/memos-api-description/</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/1ea0a070.html">Memos 单页及浏览器扩展<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/fe31c649.html">《心中有数》阅读笔记<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/adb09b71.html" title="2023-02-26"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9391"></div><span class="title">2023-02-26</span></a><a class="item" href="/rss/5a2159f0.html" title="Hugo With Obsidian"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://immmmm.com&url=https://immmmm.com/?r=https://immmmm.com&url=https://r2.immmmm.com/2023/02/iShot_2023-02-27_23.48.16.png"></div><span class="title">Hugo With Obsidian</span></a><a class="item" href="/rss/1ea0a070.html" title="Memos 单页及浏览器扩展"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://immmmm.com&url=https://immmmm.com/?r=https://immmmm.com&url=https://r2.immmmm.com/2022/10/extensions-3.jpg"></div><span class="title">Memos 单页及浏览器扩展</span></a><a class="item" href="/rss/fe31c649.html" title="《心中有数》阅读笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://immmmm.com&url=https://immmmm.com/?r=https://immmmm.com&url=https://img2.doubanio.com/view/subject/l/public/s34109032.jpg"></div><span class="title">《心中有数》阅读笔记</span></a><a class="item" href="/rss/f68ab058.html" title="JS中的事件循环"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=6554"></div><span class="title">JS中的事件循环</span></a><a class="item" href="/rss/879455de.html" title="Vue3学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8632"></div><span class="title">Vue3学习笔记</span></a><a class="item" href="/rss/a760157e.html" title="Css3学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8715"></div><span class="title">Css3学习笔记</span></a><a class="item" href="/rss/ea942fbe.html" title="Css学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=844"></div><span class="title">Css学习笔记</span></a><a class="item" href="/rss/e569ba71.html" title="Html学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8604"></div><span class="title">Html学习笔记</span></a><a class="item" href="/rss/32faff6e.html" title="Js学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5136"></div><span class="title">Js学习笔记</span></a><a class="item" href="/rss/6d897fa1.html" title="p5.js学习笔记"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=6053"></div><span class="title">p5.js学习笔记</span></a><a class="item" href="/rss/76ed27f4.html" title="关于JavaScript继承与原型链的一些理解"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=7051"></div><span class="title">关于JavaScript继承与原型链的一些理解</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

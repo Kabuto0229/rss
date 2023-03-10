@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>Css模糊羽化 - RSSBOX</title>
+
+  
+    <meta name="description" content="在逛 codepen 的时候发现一个有意思的 css 羽化项目 引用站外地址    css羽化 css 羽化    原理是使用了 svg 中的 foreignObject 将 dom 转化为图片来创建一个边缘模糊的遮罩让原本有backdrop-filter: blur(10px);的元素产生了羽化的效果核心代码.name &amp;#123;  position: absolute;  bottom:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Css模糊羽化">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/777c7872.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="在逛 codepen 的时候发现一个有意思的 css 羽化项目 引用站外地址    css羽化 css 羽化    原理是使用了 svg 中的 foreignObject 将 dom 转化为图片来创建一个边缘模糊的遮罩让原本有backdrop-filter: blur(10px);的元素产生了羽化的效果核心代码.name &amp;#123;  position: absolute;  bottom:">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-24T03:22:54.000Z">
+<meta property="article:modified_time" content="2022-12-24T03:22:54.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="安知鱼">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+
+<div class="widget-wrap" id="recent"><div class="widget-header cap dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><div class="more-item"><a class="title" href="/rss/209bc4cb.html">Postcatlab/postcat</a></div><div class="more-item"><a class="title" href="/rss/b88dcda7.html">RadekVyM/MarvelousMAUI</a></div><div class="more-item"><a class="title" href="/rss/6085c1ff.html">TheLastBen/fast-Stable-Diffusion</a></div><div class="more-item"><a class="title" href="/rss/6fb9976.html">Anc95/writely</a></div><div class="more-item"><a class="title" href="/rss/3ce75ceb.html">Davinci1010/pinduoduo_backdoor</a></div></div></div>
+
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/">技术</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/%E5%AE%89%E7%9F%A5%E9%B1%BC/">安知鱼</a></div><div id="post-meta">发布于&nbsp;<time datetime="2022-12-24T03:22:54.000Z">2022-12-24</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>Css模糊羽化</span></h1>
+<div>
+<p>在逛 codepen 的时候发现一个有意思的 css 羽化项目</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://codepen.io/xboxyan/pen/ZERZrQw" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(https://img02.anzhiy.cn/adminuploads/1/2022/12/24/63a6a601154d7.png);"></div> <div class="tag-link-right"> <div class="tag-link-title">css羽化</div> <div class="tag-link-sitename">css 羽化</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><p>原理是使用了 svg 中的 <code>foreignObject</code> 将 dom 转化为图片来创建一个边缘模糊的遮罩</p><p>让原本有<code>backdrop-filter: blur(10px);</code>的元素产生了羽化的效果</p><p>核心代码</p><pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.name</span> <span class="token punctuation">&#123;</span>  <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>  <span class="token property">bottom</span><span class="token punctuation">:</span> 30px<span class="token punctuation">;</span>  <span class="token property">font-size</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>  <span class="token property">padding</span><span class="token punctuation">:</span> 5px 15px<span class="token punctuation">;</span>  <span class="token property">margin</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>  <span class="token property">color</span><span class="token punctuation">:</span> #fff<span class="token punctuation">;</span>  <span class="token property">backdrop-filter</span><span class="token punctuation">:</span> <span class="token function">blur</span><span class="token punctuation">(</span>10px<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token property">-webkit-mask</span><span class="token punctuation">:</span> <span class="token url"><span class="token function">url</span><span class="token punctuation">(</span><span class="token string url">"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3CforeignObject width='100%25' height='100%25'%3E%3Cbody class='wrap' xmlns='http://www.w3.org/1999/xhtml'%3E%3Cstyle%3E.wrap%7Bbox-sizing:border-box;margin:0;height:100%25;padding:15px%7D.shadow%7Bheight:100%25;background:black;border-radius:10px;box-shadow:0 0 5px black, 0 0 10px black, 0 0 15px black %7D%3C/style%3E%3Cdiv class='shadow'/%3E%3C/body%3E%3C/foreignObject%3E%3C/svg%3E"</span><span class="token punctuation">)</span></span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>且这么创建出来的羽化效果可以达到自适应。当然我觉得或许可以用 box-shadow 也可以实现，只不过觉得这种实现方式思路新奇，特此记录 📝。</p>
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="css模糊羽化" href="https://anzhiy.cn/posts/fd57.html" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">css模糊羽化</span><span class="desc fs12">https://anzhiy.cn/posts/fd57.html</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/4d8682d1.html">Butterfly文章顶部添加波浪效果<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/78538721.html">Transform 支持单独赋值改变<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/622a5765.html" title="2022年度总结"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/27/63aa89943caea.webp!blogimg"></div><span class="title">2022年度总结</span></a><a class="item" href="/rss/822c227d.html" title="Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/19/639fe5a920d2b.png"></div><span class="title">Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！</span></a><a class="item" href="/rss/3bade946.html" title="React组件之间的通信"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/639336e44611e.jpg!blogimg"></div><span class="title">React组件之间的通信</span></a><a class="item" href="/rss/2274aa88.html" title="Bilibili动态背景"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=2622"></div><span class="title">Bilibili动态背景</span></a><a class="item" href="/rss/2dc84c32.html" title="Butterfly控制特定图片懒加载"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/03/638ac112cfd48.webp!blogimg"></div><span class="title">Butterfly控制特定图片懒加载</span></a><a class="item" href="/rss/4d8682d1.html" title="Butterfly文章顶部添加波浪效果"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/21/63a2dcb4d781a.png"></div><span class="title">Butterfly文章顶部添加波浪效果</span></a><a class="item" href="/rss/6327cb19.html" title="hexo博客工作流CI（一键部署的快乐）"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec8e5037b2f.png!blogimg"></div><span class="title">hexo博客工作流CI（一键部署的快乐）</span></a><a class="item" href="/rss/78538721.html" title="Transform 支持单独赋值改变"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=4676"></div><span class="title">Transform 支持单独赋值改变</span></a><a class="item" href="/rss/6c019da2.html" title="为什么 React 的 setState 要设计成异步的"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/6392c48276234.jpg!blogimg"></div><span class="title">为什么 React 的 setState 要设计成异步的</span></a><a class="item" href="/rss/412f0ac5.html" title="为你的博客安装上便携小空调"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5187"></div><span class="title">为你的博客安装上便携小空调</span></a><a class="item" href="/rss/e8b64c0.html" title="我的图床方案"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=642"></div><span class="title">我的图床方案</span></a><a class="item" href="/rss/fc4ec0d5.html" title="操作系统复习题"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/07/63e1dd4b3942a.png"></div><span class="title">操作系统复习题</span></a><a class="item" href="/rss/a802e208.html" title="给你的博客加一个优雅的音乐界面"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/10/63e6004607d39.png"></div><span class="title">给你的博客加一个优雅的音乐界面</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

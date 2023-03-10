@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>服役 8 年，Google 删除 Chrome 清理工具 - RSSBOX</title>
+
+  
+    <meta name="description" content="在 2015 年，Google 为了防止恶意软件篡改 Chrome 浏览器，影响用户正常上网、修改搜索结果、重定向到其他页面，或者在用户访问的页面中注入额外的广告（非网站自身的广告），推出了一个清理工具 —— Chrome Cleanup Tool（Chrome 清理工具），该工具可以帮助用户寻找和删除系统中可能影响浏览体验的软件。 如今在推出 Chrome Cleanup Tool 八年后，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服役 8 年，Google 删除 Chrome 清理工具">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/4d53ac09.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="在 2015 年，Google 为了防止恶意软件篡改 Chrome 浏览器，影响用户正常上网、修改搜索结果、重定向到其他页面，或者在用户访问的页面中注入额外的广告（非网站自身的广告），推出了一个清理工具 —— Chrome Cleanup Tool（Chrome 清理工具），该工具可以帮助用户寻找和删除系统中可能影响浏览体验的软件。 如今在推出 Chrome Cleanup Tool 八年后，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/084308_g6Ju_4937141.png">
+<meta property="article:published_time" content="2023-02-24T00:43:00.000Z">
+<meta property="article:modified_time" content="2023-02-24T00:43:00.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="开源中国">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/084308_g6Ju_4937141.png">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+
+<div class="widget-wrap" id="recent"><div class="widget-header cap dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><div class="more-item"><a class="title" href="/rss/209bc4cb.html">Postcatlab/postcat</a></div><div class="more-item"><a class="title" href="/rss/b88dcda7.html">RadekVyM/MarvelousMAUI</a></div><div class="more-item"><a class="title" href="/rss/6085c1ff.html">TheLastBen/fast-Stable-Diffusion</a></div><div class="more-item"><a class="title" href="/rss/6fb9976.html">Anc95/writely</a></div><div class="more-item"><a class="title" href="/rss/3ce75ceb.html">Davinci1010/pinduoduo_backdoor</a></div></div></div>
+
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E5%BC%80%E6%BA%90%E4%B8%AD%E5%9B%BD/">开源中国</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-02-24T00:43:00.000Z">2023-02-24</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>服役 8 年，Google 删除 Chrome 清理工具</span></h1>
+<div>
+<div class="content">
+<p>在 2015 年，Google 为了防止恶意软件篡改 Chrome 浏览器，影响用户正常上网、修改搜索结果、重定向到其他页面，或者在用户访问的页面中注入额外的广告（非网站自身的广告），推出了一个清理工具 —— Chrome Cleanup Tool（Chrome 清理工具），该工具可以帮助用户寻找和删除系统中可能影响浏览体验的软件。</p>
+<p>如今在推出 Chrome Cleanup Tool 八年后，Google <a href="https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fsecurity.googleblog.com%2F2023%2F03%2Fthank-you-and-goodbye-to-chrome-cleanup.html" target="_blank" rel="external nofollow noopener noreferrer">表示</a>该工具已经达到了它的目的，Google 现已从 Chrome 中删除了该工具。</p>
+<p><img class="lazy" alt height="400" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/084308_g6Ju_4937141.png" width="700"></p>
+<p>该功能最初是以一个独立的应用程序推出，当时的名字还是叫做 Software removal tool，后来被重新命名为 Chrome Cleanup Tool 并直接集成到了 Windows 版本的 Chrome 中（macOS 没有对应的工具）。</p>
+<p>虽然对日常系统维护很有用，但 Chrome Cleanup Tool 从未打算成为一个全面的防病毒解决方案，而且 Google 已经通过 Safe Browsing 和浏览器内置的病毒保护功能带来了更好的安全保障，而随着新的网络钓鱼和恶意软件的不断出现，Google 已经将重点转移到主动改进认证工作流程和病毒检测技术（提前预防，而不是事后弥补）。</p>
+<p>Google 在公告中表示，Chrome Cleanup Tool 自发布以来已经进行了 8000 多万次清理，恢复了受意外设置变化影响的系统，并删除了大量违反 Google Unwanted Software Policy 的扩展。</p>
+<p>根据 Google 给出的数据，在上个月运行的 Chrome Cleanup Tool 扫描中，只有 0.06% 实际检测到了已知的软件问题。面对用户报告的减少和更强大的反病毒解决方案的出现，移除这个工具不会对 Chrome 用户产生太大影响。</p>
+<p>在前两天发布的 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.oschina.net/news/231621/chrome-111-released">Chrome 111</a> 中，Google 已经将该工具移除，只不过当时的 Chrome 版本更新说明并没有提到这个。</p>
+</div>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="服役 8 年，Google 删除 Chrome 清理工具" href="https://www.oschina.net/news/231920/remove-chrome-cleanup-tool" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">服役 8 年，Google 删除 Chrome 清理工具</span><span class="desc fs12">https://www.oschina.net/news/231920/remove-chrome-cleanup-tool</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/2c49ce0e.html">Ruby 引入新 JIT 编译器 RJIT，替代 MJIT<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/79a22f83.html">5大GPU厂商共建 | openKylin 社区 GPU SIG 首次例会召开!<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/e957436c.html" title="2022年中国开源创新大赛初赛结果发布 76个项目晋级决赛"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5135"></div><span class="title">2022年中国开源创新大赛初赛结果发布 76个项目晋级决赛</span></a><a class="item" href="/rss/79a22f83.html" title="5大GPU厂商共建 | openKylin 社区 GPU SIG 首次例会召开!"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://www.openkylin.top/upload/202303/1678413808152530.png"></div><span class="title">5大GPU厂商共建 | openKylin 社区 GPU SIG 首次例会召开!</span></a><a class="item" href="/rss/15a610d2.html" title="Audacious 4.3 发布，音频播放器"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8617"></div><span class="title">Audacious 4.3 发布，音频播放器</span></a><a class="item" href="/rss/6e24a23b.html" title="Gitee 推荐 | 智能可视分析框架 AVA"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://gitee.com&url=https://gitee.com/?r=https://gitee.com&url=https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg"></div><span class="title">Gitee 推荐 | 智能可视分析框架 AVA</span></a><a class="item" href="/rss/c5c95235.html" title="IntelliJ IDEA 2023.1 Beta 2 发布，支持保存多个窗口布局"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/071805_rrtt_4937141.png"></div><span class="title">IntelliJ IDEA 2023.1 Beta 2 发布，支持保存多个窗口布局</span></a><a class="item" href="/rss/c4ccc6a2.html" title="JetBrains 在代码质量平台 Qodana 中引入 PHP 污点分析"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-19916c13c3e90ce0bc997d8f063e08b4e44.gif"></div><span class="title">JetBrains 在代码质量平台 Qodana 中引入 PHP 污点分析</span></a><a class="item" href="/rss/83144ab6.html" title="Linux 6.3 增加 Thunderbolt/USB4 DisplayPort 带宽分配模式"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-54df17c43edebcd2a86cd79c992a4a7eade.png"></div><span class="title">Linux 6.3 增加 Thunderbolt/USB4 DisplayPort 带宽分配模式</span></a><a class="item" href="/rss/8a315e5b.html" title="React Native 0.71.4 发布"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=7014"></div><span class="title">React Native 0.71.4 发布</span></a><a class="item" href="/rss/2c49ce0e.html" title="Ruby 引入新 JIT 编译器 RJIT，替代 MJIT"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/082736_6VYA_2720166.png"></div><span class="title">Ruby 引入新 JIT 编译器 RJIT，替代 MJIT</span></a><a class="item" href="/rss/e4f80b8b.html" title="Wasm-Bpf —— WebAssembly eBPF 库和运行时"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://user-images.githubusercontent.com/34985212/218979864-80668806-b197-4e10-8447-6a1a21832a3f.png"></div><span class="title">Wasm-Bpf —— WebAssembly eBPF 库和运行时</span></a><a class="item" href="/rss/a56ea247.html" title="开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-bbbadbafcdc0c3567bc2a534ff918ebdf4b.png"></div><span class="title">开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储</span></a><a class="item" href="/rss/291aab1.html" title="开源指南针 OSS Compass 顺利晋级！“2022 年中国开源创新大赛”决赛现场见"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/140007_jcG8_4489239.png"></div><span class="title">开源指南针 OSS Compass 顺利晋级！“2022 年中国开源创新大赛”决赛现场见</span></a><a class="item" href="/rss/5b62734f.html" title="每日一博 | Vivo 全球商城的库存系统架构设计与实践"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://my.oschina.net&url=https://my.oschina.net/?r=https://my.oschina.net&url=https://oscimg.oschina.net/oscnet/53dbb3c2-dfff-4a4d-a6ef-52d145fbd166.jpg"></div><span class="title">每日一博 | Vivo 全球商城的库存系统架构设计与实践</span></a><a class="item" href="/rss/9832a679.html" title="程序员笔记 CherryTree 0.99.55.0 发布"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-dd36dd6b54d36c15e163c64a9d1c6c2b835.png"></div><span class="title">程序员笔记 CherryTree 0.99.55.0 发布</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

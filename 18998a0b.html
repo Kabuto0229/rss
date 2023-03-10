@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>在 KubeSphere 中开启新一代云原生数仓 Databend - RSSBOX</title>
+
+  
+    <meta name="description" content="作者：尚卓燃（https:&#x2F;&#x2F;github.com&#x2F;PsiACE），Databend 研发工程师，Apache OpenDAL (Incubating) PPMC。  前言 Databend 是一款完全面向云对象存储的新一代云原生数据仓库，专为弹性和高效设计，为您的大规模分析需求保驾护航。Databend 同时是一款符合 Apache-2.0 协议的开源软件，除了访问云服务（https:&#x2F;&#x2F;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 KubeSphere 中开启新一代云原生数仓 Databend">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/18998a0b.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="作者：尚卓燃（https:&#x2F;&#x2F;github.com&#x2F;PsiACE），Databend 研发工程师，Apache OpenDAL (Incubating) PPMC。  前言 Databend 是一款完全面向云对象存储的新一代云原生数据仓库，专为弹性和高效设计，为您的大规模分析需求保驾护航。Databend 同时是一款符合 Apache-2.0 协议的开源软件，除了访问云服务（https:&#x2F;&#x2F;a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/168186426020232.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/427935099520233.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/7337222620234.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/265004022620235.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/173222569320236.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/265835909120237.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/412313176720238.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/30141921520239.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/1395003309202310.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/573255759202311.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3220899540202312.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/536462125202313.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3124420022202314.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/347608003202315.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/604727747202316.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3002059035202317.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/277967799202318.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/913867528202319.png">
+<meta property="article:published_time" content="2023-03-09T09:33:13.000Z">
+<meta property="article:modified_time" content="2023-03-09T09:33:13.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">配置对象存储</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">创建 Bucket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">创建 API 密钥</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">准备 KubeSphere 环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">KubeSphere 环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">All-in-One 模式部署测试环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">KubeSphere Cloud 创建演示环境</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">插件启用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">企业空间与项目管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">部署 Databend</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">应用模板载入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Databend 部署模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Meta 高可用集群部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Query 集群部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">KubeSphere 监控</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">KubeSphere 观测工作负载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">可访问性测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">节点状态检测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">执行查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">总结</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-09T09:33:13.000Z">2023-03-09</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>在 KubeSphere 中开启新一代云原生数仓 Databend</span></h1>
+<div>
+<blockquote>
+<p>作者：尚卓燃（https://github.com/PsiACE），Databend 研发工程师，Apache OpenDAL (Incubating) PPMC。</p>
+</blockquote>
+<h2>前言</h2>
+<p>Databend 是一款完全面向云对象存储的新一代云原生数据仓库，专为弹性和高效设计，为您的大规模分析需求保驾护航。Databend 同时是一款符合 Apache-2.0 协议的开源软件，除了访问云服务（https://app.databend.com/）之外，用户还可以自己部署 Databend 生产集群以满足工作负载需要。</p>
+<p>Databend 的典型使用场景包括：</p>
+<ul>
+<li>实时分析平台，日志的快速查询与可视化。</li>
+<li>云数据仓库，历史订单数据的多维度分析和报表生成。</li>
+<li>混合云架构，统一管理和处理不同来源和格式的数据。</li>
+<li>成本和性能敏感的 OLAP 场景，动态调整存储和计算资源。</li>
+</ul>
+<p>KubeSphere 是在 Kubernetes 之上构建的以应用为中心的多租户容器平台，提供全栈的 IT 自动化运维的能力，可以管理多个节点上的容器化应用，提供高可用性、弹性扩缩容、服务发现、负载均衡等功能。</p>
+<p>利用 KubeSphere 部署和管理 Databend 具有以下优点：</p>
+<ul>
+<li>使用 Helm Charts 部署 Databend 集群，简化应用管理、部署过程和参数设置。</li>
+<li>利用 Kubernetes 的特性来实现 Databend 集群的自动恢复、水平扩展、负载均衡等。</li>
+<li>与 Kubernetes 上的其他服务或应用轻松集成和交互，如 MinIO、Prometheus、Grafana 等。</li>
+</ul>
+<p><strong>本文将会介绍如何使用 KubeSphere 创建和部署 Databend 高可用集群，并使用 QingStor 作为底层存储服务。</strong></p>
+<h2>配置对象存储</h2>
+<p>对象存储是一种存储模型，它把数据作为对象来管理和访问，而不是文件或块。对象存储的优点包括：可扩展性、低成本、高可用性等。</p>
+<p>Databend 完全面向对象存储而设计，在减少复杂性和成本的同时提高灵活性和效率。Databend 支持多种对象存储服务，如 AWS S3、Azure Blob、Google Cloud Storage、HDFS、Alibaba Cloud OSS、Tencent Cloud COS 等。您可以根据业务的需求和偏好选择合适的服务来存放你的数据。</p>
+<p>这里我们以青云 QingStor 为例，介绍与 S3 兼容的对象存储相关配置的预先准备工作。</p>
+<h3>创建 Bucket</h3>
+<blockquote>
+<p>对象存储服务（QingStor）提供了一个无限容量的在线文件存储和访问平台。每个用户可创建多个存储空间（Bucket）；您可以将任意类型文件通过控制台或 QingStor API 上传至一个存储空间（Bucket）中；存储空间（Bucket）支持访问控制，您可以将自己的存储空间（Bucket）开放给指定的用户，或所有用户。</p>
+</blockquote>
+<p>登录青云控制台，选中对象存储服务，新建用于验证的 bucket 。</p>
+<p>需要关注的是 bucket 的名字 <code>&lt;bucket&gt;</code> 和其所在的可用区 <code>&lt;region&gt;</code>。</p>
+<p>由于这里使用 s3 兼容服务，所以最后连接的 endpoint_url 是 <code>s3.&lt;bucket&gt;.&lt;region&gt;.qingstor.com</code> 。</p>
+<h3>创建 API 密钥</h3>
+<blockquote>
+<p>API 密钥（Access Key）可以让您通过发送 API 指令来访问青云的服务。API 密钥 ID 须作为参数包含在每一个请求中发送；而 API 密钥的私钥负责生成 API 请求串的签名，私钥需要被妥善保管，切勿外传。默认所有 IP 地址都可使用此密钥调用 API，设置 IP 白名单后只有白名单范围内的 IP  地址才可使用此密钥。</p>
+</blockquote>
+<p>点击右上方菜单，选中 API 密钥，创建新的密钥用于 API 访问。</p>
+<p>下载文件中的 <code>qy_access_key_id</code> 对应 <code>access_key_id</code> ，<code>qy_secret_access_key</code> 对应 <code>secret_access_key</code> 。</p>
+<h2>准备 KubeSphere 环境</h2>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/kubesphere/kubesphere">KubeSphere</a>（https://kubesphere.io）是在 Kubernetes 之上构建的开源容器平台，提供全栈的 IT 自动化运维的能力，简化企业的 DevOps 工作流。KubeSphere 已被海内外数万家企业采用。此外， KubeSphere 还拥有极为开放的生态，KubeSphere 在 OpenPitrix 的基础上，为用户提供了一个基于 Helm 的应用商店，用于应用生命周期管理。KubeSphere 应用商店让 ISV、开发者和用户能够在一站式服务中只需点击几下就可以上传、测试、安装和发布应用。目前 Databend 已入驻 KubeSphere 应用商店。</p>
+<h3>KubeSphere 环境搭建</h3>
+<h4>All-in-One 模式部署测试环境</h4>
+<p>参考<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/quick-start/all-in-one-on-linux/">官方文档</a> 。</p>
+<p>在 Azure 上 Spot 一台机器：</p>
+<pre><code class="language-plain">Welcome to Ubuntu 18.04.6 LTS (GNU/Linux 5.4.0-1089-azure x86_64)
+
+<ul>
+<li>Documentation:  <a target="_blank" rel="external nofollow noopener noreferrer" href="https://help.ubuntu.com/">https://help.ubuntu.com</a></li>
+<li>Management:     <a target="_blank" rel="external nofollow noopener noreferrer" href="https://landscape.canonical.com/">https://landscape.canonical.com</a></li>
+<li>Support:        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://ubuntu.com/advantage">https://ubuntu.com/advantage</a></li>
+</ul>
+<p>  System information as of Tue Sep  6 02:09:16 UTC 2022</p>
+<p>  System load:  0.15              Processes:           376<br>  Usage of &#x2F;:   4.8% of 28.89GB   Users logged in:     0<br>  Memory usage: 0%                IP address for eth0: 10.0.0.4<br>  Swap usage:   0%<br></p></code></pre><p></p>
+<p>以 All-In-One 模式部署：</p>
+<blockquote>
+<p>注意，需要在 root 下运行。</p>
+</blockquote>
+<pre><code class="language-plain">apt install socat conntrack containerd
+systemctl daemon-reload
+systemctl enable --now containerd
+curl -sfL https://get-kk.kubesphere.io | VERSION=v3.0.2 sh -
+chmod +x kk
+./kk create cluster --with-kubernetes v1.22.12 --with-kubesphere v3.3.1
++------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------------+------------+-------------+------------------+--------------+
+| name | sudo | curl | openssl | ebtables | socat | ipset | ipvsadm | conntrack | chrony | docker | containerd       | nfs client | ceph client | glusterfs client | time         |
++------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------------+------------+-------------+------------------+--------------+
+| ks   | y    | y    | y       | y        | y     |       |         | y         | y      |        | 1.5.9-0ubuntu3.1 |            |             |                  | UTC 02:53:56 |
++------+------+------+---------+----------+-------+-------+---------+-----------+--------+--------+------------------+------------+-------------+------------------+--------------+
+</code></pre>
+<p>如果提示依赖缺失，可以根据需要安装，<code>sudo apt install &lt;name&gt;</code> ，这里只安装前两个。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left"><strong>Kubernetes Version ≥ 1.18</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">socat</td>
+<td style="text-align:left">Required</td>
+</tr>
+<tr>
+<td style="text-align:left">conntrack</td>
+<td style="text-align:left">Required</td>
+</tr>
+<tr>
+<td style="text-align:left">ebtables</td>
+<td style="text-align:left">Optional but recommended</td>
+</tr>
+<tr>
+<td style="text-align:left">ipset</td>
+<td style="text-align:left">Optional but recommended</td>
+</tr>
+<tr>
+<td style="text-align:left">ipvsadm</td>
+<td style="text-align:left">Optional but recommended</td>
+</tr>
+</tbody>
+</table>
+<p>访问 KubeSphere 控制面板。</p>
+<p>执行下面命令查看关于登录的信息：</p>
+<pre><code class="language-plain">Collecting installation results ...
+#####################################################
+###              Welcome to KubeSphere!           ###
+#####################################################
+
+<p>Console: <a target="_blank" rel="external nofollow noopener noreferrer" href="http://10.0.0.4:30880/">http://10.0.0.4:30880</a><br>Account: admin<br>Password: P@88w0rd</p>
+<p>NOTES：</p>
+<ol>
+<li>After you log into the console, please check the<br>monitoring status of service components in<br>“Cluster Management”. If any service is not<br>ready, please wait patiently until all components<br>are up and running.</li>
+<li>Please change the default password after login.</li>
+</ol>
+<p>#####################################################<br><a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/">https://kubesphere.io</a>             2022-09-06 15:41:44<br>#####################################################<br></p></code></pre><p></p>
+<p>访问 <code>30880</code> 端口，并使用用户名密码登录，就可以访问 KubeSphere 。为确保能够访问 KubeSphere 和其他服务，请根据实际情况在云平台控制面板为相应端口添加入站出站规则。</p>
+<h4>KubeSphere Cloud 创建演示环境</h4>
+<p>创建轻量集群服务：</p>
+<p>注册并登录 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.cloud/">https://kubesphere.cloud</a> 之后，可以轻松创建轻量集群服务。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></p>
+<p>使用默认配置创建免费版集群即可尝鲜体验，个人用户每月有 10 小时免费额度。</p>
+<p>访问 KubeSphere 控制面板。</p>
+<p>点击<code>进入 KubeSphere</code>，使用临时帐号密码登录。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/168186426020232.png"></p>
+<h3>插件启用</h3>
+<p>登录后的界面，如下图所示：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/427935099520233.png"></p>
+<p>如需使用应用商店，可以参考 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/pluggable-components/app-store/#%E5%9C%A8%E5%AE%89%E8%A3%85%E5%90%8E%E5%90%AF%E7%94%A8%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97">KubeSphere 文档 - 在安装后启用应用商店</a> 启用。</p>
+<p>开启后可以在应用商店中搜索找到 Databend ，结果类似下图。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/7337222620234.png"></p>
+<h3>企业空间与项目管理</h3>
+<p>点击<code>平台管理</code>进入<code>访问控制</code>页面，选中<code>企业空间</code>，点击<code>创建</code>，在<code>名称</code>一栏填写你想使用的名称，比如 <code>databend</code>。</p>
+<p>在侧边栏选中<code>项目</code>，点击<code>创建</code>，分别创建为 <code>databend-meta</code> 和 <code>databend-query</code> 准备的项目。创建后效果如图所示：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/265004022620235.png"></p>
+<h2>部署 Databend</h2>
+<h3>应用模板载入</h3>
+<p>虽然应用商店中已经有 Databend 可供选用，但版本较旧（v0.8.122-nightly），新的 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/kubesphere/helm-charts/pull/288">PR</a>（v1.0.3-nightly）需要等合并之后才可用，所以建议添加 Databend 官方维护的 helm-charts 作为应用模板。</p>
+<p>Databend 官方提供了 Helm Charts ，而 KubeSphere 也支持使用 Helm Charts 应用模板。</p>
+<blockquote>
+<p>应用模板是用户上传、交付和管理应用的一种方式。一般来说，根据一个应用的功能以及与外部环境通信的方式，它可以由一个或多个 Kubernetes 工作负载（例如<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/project-user-guide/application-workloads/deployments/">部署</a>、<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/project-user-guide/application-workloads/statefulsets/">有状态副本集</a>和<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/project-user-guide/application-workloads/daemonsets/">守护进程集</a>）和<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/project-user-guide/application-workloads/services/">服务</a>组成。作为应用模板上传的应用基于 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://helm.sh/">Helm</a> 包构建。
+可以将 Helm Chart 交付至 KubeSphere 的公共仓库，或者导入私有应用仓库来提供应用模板。
+<a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubesphere.io/zh/docs/v3.3/workspace-administration/upload-helm-based-application/">https://kubesphere.io/zh/docs/v3.3/workspace-administration/upload-helm-based-application/</a></p>
+</blockquote>
+<p>在企业空间侧边栏选中 <strong>应用管理</strong> ，点击 <strong>应用仓库</strong> ，添加 Databend 官方维护的 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://charts.databend.rs/">Helm Charts</a> 。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/173222569320236.png"></p>
+<p>待状态变为成功后，就可以基于模板安装部署新的 Databend 应用。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/265835909120237.png"></p>
+<h3>Databend 部署模型</h3>
+<p>参考<a target="_blank" rel="external nofollow noopener noreferrer" href="https://databend.rs/doc/deploy/understanding-deployment-modes">文档</a>。</p>
+<p>典型的 Databend 集群架构如下图所示，需要分别部署多个 Meta 和 Query 节点：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/412313176720238.png"></p>
+<p>在集群模式下部署 Databend 时，首先需要启动一个 Meta节点，然后设置并启动其他 Meta 节点以加入第一个 Meta 节点，形成集群。在成功启动所有 Meta 节点后，逐个启动 Query 节点。每个 Query 节点在启动后自动注册到 Meta 节点以形成集群。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/30141921520239.png"></p>
+<h3>Meta 高可用集群部署</h3>
+<p>选中 <code>databend-meta</code> 项目。点击侧边栏<code>应用负载</code>，选中<code>应用</code>。点击<code>创建</code>，并选中<code>从应用模板</code>。 下拉栏中选中之前添加的 Databend ，效果如图：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/1395003309202310.png"></p>
+<p>选中 <code>databend-meta</code>，点击<code>安装</code>，设定应用名称及版本，我们推荐总是使用最新版本，以获得更好的体验。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/573255759202311.png"></p>
+<p>使用示例设置，创建 3 副本的 <code>databend-meta</code> 节点形成集群。生产环境下推荐至少使用 3 副本高可用集群，可以参考 Databend 官方文档进行配置。</p>
+<pre><code class="language-plain">bootstrap: true
+replicaCount: 3
+persistence:
+  size: 5Gi # 考虑到宿主机资源有限，仅供示范
+serviceMonitor:
+  enabled: true
+</code></pre>
+<h3>Query 集群部署</h3>
+<p>在 Meta 节点的所有副本就绪之后，就可以开始部署 Query 集群。</p>
+<p>Query 节点部署的前置步骤与 Meta 节点类似。进入 <code>databend-query</code> 项目，仿照之前的步骤选中 databend-query 应用模板进行创建即可。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3220899540202312.png"></p>
+<p>配置中需要关注的部分是：</p>
+<ul>
+<li>databend-meta 连接：这里的地址取决于之前部署的 Meta 集群的相关信息。</li>
+<li>存储方式：本示例连接的是 QingStor ，使用 S3 兼容协议，所以需要特别关注 <code>endpoint_url</code> 。</li>
+<li>内置用户创建：创建一个名为 <code>databend</code> 密码为 <code>databend</code> 的内置用户，以方便在非 localhost 情况下访问。</li>
+</ul>
+<p>这里启动的是一个单副本的 Query 集群，实际情况下可以根据工作负载规模灵活调整。</p>
+<pre><code class="language-plain">replicaCount: 1
+config:
+  query:
+    clsuterId: default
+    # add builtin user
+    users:
+      - name: databend
+        # available type: sha256_password, double_sha1_password, no_password, jwt
+        authType: double_sha1_password
+        # echo -n "databend" | sha1sum | cut -d' ' -f1 | xxd -r -p | sha1sum
+        authString: 3081f32caef285c232d066033c89a78d88a6d8a5
+  meta:
+    # Set endpoints to use remote meta service
+    # depends on previous deployed meta service、namespace and nodes
+    endpoints:
+      - "databend-meta-0.databend-meta.databend-meta.svc:9191"
+      - "databend-meta-1.databend-meta.databend-meta.svc:9191"
+      - "databend-meta-2.databend-meta.databend-meta.svc:9191"
+  storage:
+    # s3, oss
+    type: s3
+    s3:
+      bucket: "&lt;bucket&gt;"
+      endpoint_url: "https://s3.&lt;region&gt;.qingstor.com" # for qingstor
+      access_key_id: "&lt;key&gt;"
+      secret_access_key: "&lt;secret&gt;"
+# [recommended] enable monitoring service
+serviceMonitor:
+  enabled: true
+# [recommended] enable access from outside cluster
+service:
+  type: LoadBalancer
+</code></pre>
+<h3>KubeSphere 监控</h3>
+<h4>KubeSphere 观测工作负载</h4>
+<p>待状态变为<code>运行中</code>即可，这时可以很方便使用 KubeSphere 观测工作负载。</p>
+<p><strong>资源状态</strong></p>
+<ul>
+<li>databend-meta</li>
+</ul>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/536462125202313.png"></p>
+<ul>
+<li>databend-query</li>
+</ul>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3124420022202314.png"></p>
+<p><strong>监控</strong></p>
+<ul>
+<li>databend-meta</li>
+</ul>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/347608003202315.png"></p>
+<ul>
+<li>databend-query</li>
+</ul>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/604727747202316.png"></p>
+<h2>可访问性测试</h2>
+<h3>节点状态检测</h3>
+<p>如果是在 <strong>All-in-One 模式</strong>下部署，我们可以轻松使用容器组 IP 地址来测试节点状态。</p>
+<pre><code class="language-plain">psiace@ks:~$ curl 10.233.107.113:8080/v1/health
+&#123;"status":"pass"&#125;
+</code></pre>
+<p>而使用 <strong>KubeSphere Cloud</strong> 部署时，可以在 KubeSphere Cloud 控制面板，选择<code>网络</code>以创建访问规则。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/3002059035202317.png"></p>
+<p>这里以 8080（Admin API）和 8000（Query HTTP Handler）端口为例：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/277967799202318.png"></p>
+<p>创建后的结果如下图所示：</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/913867528202319.png"></p>
+<p>同样我们可以使用 curl 来检查节点状态。</p>
+<pre><code class="language-plain">psiace@ks:~$ curl https://admin-gfkyzxaz.c.kubesphere.cloud:30443/v1/health
+&#123;"status":"pass"&#125;
+</code></pre>
+<h3>执行查询</h3>
+<p>bendsql 是一个十分方便的命令行界面工具，可以帮助您顺畅高效地使用 Databend 。bendsql 也支持连接 Databend Cloud ，管理计算集群和运行 SQL 查询。</p>
+<p><strong>安装 bendsql</strong></p>
+<pre><code class="language-plain">$ go install github.com/databendcloud/bendsql/cmd/bendsql@latest
+</code></pre>
+<p><strong>连接 databend 集群（以 KubeSphere Cloud 为例）</strong></p>
+<pre><code class="language-plain">$ bendsql connect -H query-gfkyzxaz.c.kubesphere.cloud -P 30443 -u databend -p databend --ssl
+Connected to Databend on Host: query-gfkyzxaz.c.kubesphere.cloud
+Version: DatabendQuery v0.9.57-nightly-df858a1(rust-1.68.0-nightly-2023-03-01T01:23:11.56066902Z)
+</code></pre>
+<p><strong>尝试执行查询</strong></p>
+<pre><code class="language-plain">$ bendsql query
+Connected with driver databend (DatabendQuery v0.9.57-nightly-df858a1(rust-1.68.0-nightly-2023-03-01T01:23:11.56066902Z))
+Type "help" for help.
+
+<p>dd:databend@query-gfkyzxaz&#x2F;default&#x3D;&gt; SELECT avg(number) FROM numbers(1000);<br>+————-+<br>| avg(number) |<br>+————-+<br>| 499.5       |<br>+————-+<br>(1 row)<br></p></code></pre><p></p>
+<h2>总结</h2>
+<p>本文介绍了如何使用 KubeSphere 创建和部署 Databend 高可用集群，后端存储服务采用 QingStor ，最后使用 bendsql 演示连接集群和执行查询。</p>
+<blockquote>
+<p>本文由博客一文多发平台 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://openwrite.cn/?from=article_bottom">OpenWrite</a> 发布！</p>
+</blockquote>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="在 KubeSphere 中开启新一代云原生数仓 Databend" href="https://juejin.cn/post/7208455127744741434" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span><span class="desc fs12">https://juejin.cn/post/7208455127744741434</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/ddbad3e6.html">产品经理需要了解的前后端技术知识<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/aea6a2bb.html">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

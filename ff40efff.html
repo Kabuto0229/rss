@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>Dubbo 在 Proxyless Mesh 模式下的探索与改进 - RSSBOX</title>
+
+  
+    <meta name="description" content="01 背景 随着 Docker 和 Kubernetes 的出现，一个庞大的单体应用可以被拆分成多个独立部署的微服务，并被打包运行于对应的容器中。不同应用之间相互通信，以共同完成某一功能模块。微服务架构与容器化部署带来的好处是显而易见的，它降低了服务间的耦合性，利于开发和维护，能更有效地利用计算资源。当然，微服务架构也存在相应的缺点：  强依赖于SDK，业务模块与治理模块耦合较为严重。除了相关依">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo 在 Proxyless Mesh 模式下的探索与改进">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/ff40efff.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="01 背景 随着 Docker 和 Kubernetes 的出现，一个庞大的单体应用可以被拆分成多个独立部署的微服务，并被打包运行于对应的容器中。不同应用之间相互通信，以共同完成某一功能模块。微服务架构与容器化部署带来的好处是显而易见的，它降低了服务间的耦合性，利于开发和维护，能更有效地利用计算资源。当然，微服务架构也存在相应的缺点：  强依赖于SDK，业务模块与治理模块耦合较为严重。除了相关依">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b712c671db26440eb88eca497dfaa234~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb3bf67ea6bd4af09c1ffb387bfc880a~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8536e719ea4449cebc14e225323312af~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c520028c10e4064a71ba436d7f46972~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d9098f218b440889f717f297a6d8c2f~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2023-03-08T10:21:29.000Z">
+<meta property="article:modified_time" content="2023-03-08T10:21:29.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">01 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">02 Dubbo Xds 推送机制详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">03 当前 Dubbo Proxyless 实现存在的不足</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">04 Xds 监听模式实现方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.1 资源缓存池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.2 多点独立监听</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.3 采用读写锁避免并发冲突</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.4 断线重连</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">05 感想与总结</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-08T10:21:29.000Z">2023-03-08</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></h1>
+<div>
+<h2>01 背景</h2>
+<p>随着 Docker 和 Kubernetes 的出现，一个庞大的单体应用可以被拆分成多个独立部署的微服务，并被打包运行于对应的容器中。不同应用之间相互通信，以共同完成某一功能模块。微服务架构与容器化部署带来的好处是显而易见的，它降低了服务间的耦合性，利于开发和维护，能更有效地利用计算资源。当然，微服务架构也存在相应的缺点：</p>
+<ul>
+<li>强依赖于SDK，业务模块与治理模块耦合较为严重。除了相关依赖，往往还需要在业务代码中嵌入SDK代码或配置。</li>
+<li>统一治理难。每次框架升级都需要修改 SDK 版本，并重新进行回归测试，确认功能正常后再对每一台机器重新部署上线。不同服务引用的 SDK 版本不统一、能力参差不齐，增大了统一治理的难度。</li>
+<li>缺少一套统一解决方案。目前市场不存在一整套功能完善、无死角的微服务治理与解决方案。在实际生产环境往往还需要引入多个治理组件来完成像灰度发布、故障注入等功能。</li>
+</ul>
+<p>为解决这些痛点，Service Mesh诞生了。以经典的side car模式为例，它通过在业务 Pod 中注入 Sidecar 容器，对代理流量实施治理和管控，将框架的治理能力下层到 side car 容器中，与业务系统解耦，从而轻松实现多语言、多协议的统一流量管控、监控等需求。通过剥离 SDK 能力并拆解为独立进程，从而解决了强依赖于 SDK 的问题，从而使开发人员可以更加专注于业务本身，实现了基础框架能力的下沉，如下图所示（源自dubbo官网）：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>经典的 Sidecar Mesh 部署架构有很多优势，如减少 SDK 耦合、业务侵入小等，但增加了一层代理，也带来了一些额外的问题，比如:</p>
+<ul>
+<li>SideCar 代理会损耗一部分性能，当网络结构层级比较复杂时尤其明显，对性能要求很高的业务造成了一定的困扰。</li>
+<li>架构更加复杂，对运维人员要求高。</li>
+<li>对部署环境有一定的要求，需要其能支持SideCar代理的运行。</li>
+</ul>
+<p>为解决这些痛点，Proxyless Service Mesh 模式诞生了。传统服务网格通过代理的方式拦截所有的业务网络流量，代理需要感知到控制平面下发的配置资源，从而按照要求控制网络流量的走向。以istio为例，Proxyless 模式是指应用直接与负责控制平面的istiod进程通信，istiod进程通过监听并获取k8s的资源，例如Service、Endpoint等，并将这些资源统一通过 xds 协议下发到不同的rpc框架，由rpc框架进行请求转发，从而实现服务发现和服务治理等能力。</p>
+<p>Dubbo社区是国内最早开始对Proxyless Service Mesh模式进行探索的社区，这是由于相比于 Service Mesh，Proxyless模式落地成本较低，对于中小企业来说是一个较好的选择。Dubbo 在3.1 版本中通过对xds协议进行解析，新增了对 Proxyless 的支持。Xds是一类发现服务的总称，应用通过xds api可以动态获取Listener(监听器)，Route(路由)， Cluster(集群)， Endpoint(集群成员)以及Secret(证书)配置。</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b712c671db26440eb88eca497dfaa234~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>通过 Proxyless 模式，Dubbo 与 Control Plane直接建立通信，进而实现控制面对流量管控、服务治理、可观测性、安全等的统一管控，从而规避 Sidecar 模式带来的性能损耗与部署架构复杂性。</p>
+<h2>02 Dubbo Xds 推送机制详解</h2>
+<pre><code>@startuml
+
+<p>‘ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;调整样式&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>‘ 单个状态定义示例：state 未提交 #70CFF5 ##Black<br>‘ hide footbox 可关闭时序图下面部分的模块<br>‘ autoactivate on 是否自动激活<br>skinparam sequence &amp;#123;<br>ArrowColor black</p>
+<p>LifeLineBorderColor black<br>LifeLineBackgroundColor #70CFF5</p>
+<p>ParticipantBorderColor #black<br>ParticipantBackgroundColor  #70CFF5<br>&amp;#125;<br>‘ &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;定义流程&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>activate ControlPlane<br>activate DubboRegistry<br>autonumber 1</p>
+<p>ControlPlane &lt;-&gt; DubboRegistry : config pull and push<br>activate XdsServiceDiscoveryFactory<br>activate XdsServiceDiscovery<br>activate PilotExchanger</p>
+<p>DubboRegistry -&gt; XdsServiceDiscoveryFactory : request<br>XdsServiceDiscoveryFactory –&gt; DubboRegistry: get registry configuration</p>
+<p>XdsServiceDiscoveryFactory -&gt; XdsChannel: 返回列表信息（若数据没有导入完成，则不可见）<br>XdsServiceDiscoveryFactory-&gt; XdsServiceDiscovery: init Xds service discovery<br>XdsServiceDiscovery-&gt; PilotExchanger: init PilotExchanger</p>
+<p>alt PilotExchanger<br>  PilotExchanger -&gt; XdsChannel: 初始化XdsChannel<br>  XdsChannel –&gt; PilotExchanger: return<br>  PilotExchanger -&gt; PilotExchanger: get cert pair<br>  PilotExchanger -&gt; PilotExchanger: int ldsProtocol<br>  PilotExchanger -&gt; PilotExchanger: int rdsProtocol<br>  PilotExchanger -&gt; PilotExchanger: int edsProtocol<br>end</p>
+<p>alt PilotExchanger<br>  XdsServiceDiscovery –&gt; XdsServiceDiscovery: 解析Xds协议<br>  XdsServiceDiscovery –&gt; XdsServiceDiscovery: 根据Eds初始化节点信息<br>  XdsServiceDiscovery –&gt; XdsServiceDiscovery: 将Rds、Cds的的负载均衡和路由规则写入结点的运行信息中<br>  XdsServiceDiscovery –&gt; XdsServiceDiscovery: 回传给服务自省框架，构建invoker<br>end</p>
+<p>deactivate ControlPlane<br>deactivate XdsServiceDiscovery<br>deactivate XdsServiceDiscoveryFactory</p>
+<p>@enduml<br></p></code></pre><p></p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bb3bf67ea6bd4af09c1ffb387bfc880a~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>从整体上看，istio control plane和dubbo的交互时序图如上。Dubbo 里xds处理的主要逻辑在 PilotExchanger 和各个DS(LDS、RDS、CDS、EDS)的对应协议的具体实现里。PilotExchanger统一负责串联逻辑，主要有三大逻辑：</p>
+<ul>
+<li>获取授信证书。</li>
+<li>调用不同 protocol 的 getResource 获取资源。</li>
+<li>调用不同 protocol 的 observeResource 方法监听资源变更。</li>
+</ul>
+<p>例如对于lds和rds，PilotExchanger 会调用 lds 的 getResource 方法与 istio 建立通信连接，发送数据并解析来自istio的响应，解析完成后的resource资源会作为rds调用getResource方法的入参，并由rds发送数据给istio。当lds发生变更时，则由lds的observeResource方法去触发自身与 rds 的变更。上述关系对于rds和eds同样如此。现有交互如下，上述过程对应图里红线的流程：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8536e719ea4449cebc14e225323312af~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>在第一次成功获取资源之后，各个 DS 会通过定时任务去不断发送请求给 istio，并解析响应结果和保持与 istio 之间的交互，进而实现控制面对流量管控、服务治理、可观测性方面的管控，其流程对应上图蓝线部分。</p>
+<h2>03 当前 Dubbo Proxyless 实现存在的不足</h2>
+<p>Dubbo Proxyless模式经过验证之后，已经证明了其可靠性。现有dubbo proxyless的实现方案存在以下问题：</p>
+<ul>
+<li>目前与istio交互的逻辑是推送模式。getResource和observeResource是两条不同的stream流，每次发送新请求都需要重新建立连接。但我们建立的stream流是双向流动的，istio在监听到资源变化后由主动推送即可，LDS、RDS、EDS分别只需要维护一条stream流。</li>
+<li>Stream流模式改为建立持久化连接之后，需要设计一个本地的缓存池，去存储已经存在的资源。当istio主动推送更新后，需要去刷新缓存池的数据。</li>
+<li>现有observeResource逻辑是通过定时任务去轮询istio。现在observeResource不再需要定时去轮询，只需要将需要监听的资源加入到缓存池，等istio自动推送即可，且istio推送回来的数据需要按照app切分好，实现多点监听，后续dubbo支持其他DS模式，也可复用相应的逻辑。</li>
+<li>目前由istio托管的dubbo应用在istio掉线后会抛出异常，断线后无法重新连接，只能重新部署应用，增加了运维和管理的复杂度。我们需增加断线重连的功能，等istio恢复正常后无需重新部署即可重连。</li>
+</ul>
+<p>改造完成后的交互逻辑：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c520028c10e4064a71ba436d7f46972~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<h2>04 Xds 监听模式实现方案</h2>
+<h3>4.1 资源缓存池</h3>
+<p>目前Dubbo的资源类型有LDS，RDS，EDS。对于同一个进程，三种资源监听的所有资源都与 istio 对该进程所缓存的资源监听列表一一对应。因此针对这三种资源，我们应该设计分别对应的本地的资源缓存池，dubbo 尝试资源的时候先去缓存池查询，若有结果则直接返回；否则将本地缓存池的资源列表与想要发送的资源聚合后，发送给istio让其更新自身的监听列表。缓存池如下，其中key代表单个资源，T为不同DS的返回结果：</p>
+<pre><code>protected Map&lt;String, T&gt; resourcesMap = new ConcurrentHashMap&lt;&gt;();
+</code></pre>
+<p>有了缓存池我们必须有一个监听缓存池的结构或者容器，在这里我们设计为Map的形式，如下：</p>
+<pre><code>protected Map&lt;Set&lt;String&gt;, List&lt;Consumer&lt;Map&lt;String, T&gt;&gt;&gt;&gt; consumerObserveMap = new ConcurrentHashMap&lt;&gt;();
+</code></pre>
+<p>其中key为想要监听的资源，value为一个List, 之所以设计为List是为了可以支持重复订阅。List存储的item为jdk8中的Consumer类型，它可以用于传递一个函数或者行为，其入参为Map，其key对应所要监听的单个资源，便于从缓存池中获取。如上文所述，PilotExchanger负责串联整个流程，不同DS之间的更新关系可以用Consumer进行传递。以监听LDS observeResource为例,  大致代码如下：</p>
+<pre><code>// 监听
+void observeResource(Set&lt;String&gt; resourceNames, Consumer&lt;Map&lt;String, T&gt;&gt; consumer, boolean isReConnect);
+
+<p>&#x2F;&#x2F; Observe LDS updated<br>ldsProtocol.observeResource(ldsResourcesName, (newListener) -&gt; &amp;#123;<br>    &#x2F;&#x2F; LDS数据不一致<br>    if (!newListener.equals(listenerResult)) &amp;#123;<br>        &#x2F;&#x2F;更新LDS数据<br>        this.listenerResult &#x3D; newListener;<br>        &#x2F;&#x2F; 触发RDS监听<br>        if (isRdsObserve.get()) &amp;#123;<br>            createRouteObserve();<br>        &amp;#125;<br>    &amp;#125;<br>&amp;#125;, false);<br></p></code></pre><p></p>
+<p>Stream流模式改为建立持久化连接之后，我们也需要把这个Consumer的行为存储在本地的缓存池中。Istio收到来自dubbo的推送请求后，刷新自身缓存的资源列表并返回响应。此时istio返回的响应内容是聚合后的结果，Dubbo收到响应后，将响应资源拆分为更小的资源粒度，再推送给对应的 Dubbo应用通知其进行变更。</p>
+<p><strong>▧</strong>踩坑点</p>
+<ul>
+<li>istio推送的数据可能为空字符串，此时缓存池子无需存储，直接跳过即可。否则dubbo会绕过缓冲池，不断向istio发送请求。</li>
+<li>考虑以下场景，dubbo应用同时订阅了两个接口，分别由app1和app2提供。为避免监听之间的相互覆盖，因此向istio发送数据时，需要聚合所有监听的资源名一次性发起。</li>
+</ul>
+<h3>4.2 多点独立监听</h3>
+<p>在第一次向istio发送请求时会调用getResource方法先去cache查询，缺失了再聚合数据去istio请求数据，istio再返回相应的结果给dubbo。我们处理istio的响应有两种实现方案：</p>
+<ol>
+<li>
+<p>由用户在getResource方案中new 一个completeFuture，由cache分析是否是需要的数据，若确认是新数据则由该future回调传递结果。</p>
+</li>
+<li>
+<p>getResource建立资源的监听器consumerObserveMap，定义一个consumer并把取到的数据同步到原来的线程，cache 收到来自istio的推送后会做两件事：将数据推送所有监听器和将数据发送给该资源的监听器。</p>
+</li>
+</ol>
+<p>以上两种方案都能实现，但最大的区别就是用户调用onNext发送数据给istio的时候需不需要感知getResource 的存在。综上，最终选择方案2进行实现。具体实现逻辑是让dubbo与istio建立连接后，istio会推送自身监听到资源列表给dubbo，dubbo解析响应，并根据监听的不同app切分数据，并刷新本地缓存池的数据，并发送ACK响应给istio，大致流程如下：</p>
+<pre><code>@startuml
+
+<p>object Car<br>object Bus<br>object Tire<br>object Engine<br>object Driver</p>
+<p>Car &lt;|- Bus<br>Car *-down- Tire<br>Car *-down- Engine<br>Bus o-down- Driver</p>
+<p>@enduml<br></p></code></pre><p></p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d9098f218b440889f717f297a6d8c2f~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>部分关键代码如下：</p>
+<pre><code>public class ResponseObserver implements XXX &#123;
+        ...
+        public void onNext(DiscoveryResponse value) &#123;
+            //接受来自istio的数据并切分
+            Map&lt;String, T&gt; newResult = decodeDiscoveryResponse(value);
+            //本地缓存池数据
+            Map&lt;String, T&gt; oldResource = resourcesMap;
+            //刷新缓存池数据
+            discoveryResponseListener(oldResource, newResult);
+            resourcesMap = newResult;
+            // for ACK
+            requestObserver.onNext(buildDiscoveryRequest(Collections.emptySet(), value));
+        &#125;
+        ...
+        public void discoveryResponseListener(Map&lt;String, T&gt; oldResult, 
+                                              Map&lt;String, T&gt; newResult) &#123;
+            ....
+        &#125;  
+&#125;
+//具体实现交由LDS、RDS、EDS自身
+protected abstract Map&lt;String, T&gt; decodeDiscoveryResponse(DiscoveryResponse response)&#123;
+  //比对新数据和缓存池的资源，并将不同时存在于两种池子的资源取出
+    ...
+    for (Map.Entry&lt;Set&lt;String&gt;, List&lt;Consumer&lt;Map&lt;String, T&gt;&gt;&gt;&gt; entry : consumerObserveMap.entrySet()) &#123;
+    // 本地缓存池不存在则跳过
+    ...
+  //聚合资源
+    Map&lt;String, T&gt; dsResultMap = entry.getKey()
+        .stream()
+        .collect(Collectors.toMap(k -&gt; k, v -&gt; newResult.get(v)));
+    //刷新缓存池数据
+    entry.getValue().forEach(o -&gt; o.accept(dsResultMap));
+    &#125;
+&#125;
+</code></pre>
+<p>▧踩坑点</p>
+<ul>
+<li>原本多个stream流的情况下，会用递增的requestId来复用stream流，改成持久化连接之后，一种resource会有多个requestid，可能会相互覆盖，因此必须去掉这个机制。</li>
+<li>初始实现方案并没有对资源进行切分，而是一把梭，考虑到后续对其他DS的支持，对istio返回的数据进行切分，也导致consumerObserveMap有点奇形怪状。</li>
+<li>三种DS在发送数据时可以共享同一channel，但监听所用到的必须是同一channel，否则数据变更时istio不会进行推送。</li>
+<li>建立双向stream流之后，初始方案future为全局共享。但可能有这样的场景：相同的ds两次相邻时间的onNext事件，记为A事件和B事件，可能是A事件先发送，B随后；但可能是B事件的结果先返回，不确定istio推送的时间，因此future必须是局部变量而不是全局共享。</li>
+</ul>
+<h3>4.3 采用读写锁避免并发冲突</h3>
+<p>监听器consumerObserveMap和缓存池resourcesMap均可能产生并发冲突。对于resourcemap，由于put操作都集中在getResource方法，因此可以采用悲观锁就能锁住相应的资源，避免资源的并发监听。</p>
+<p>对于consumerObserveMap，同时存在put、remove和遍历操作，从时序上，采用读写锁可规避冲突，对于遍历操作加读锁，对于put和remove操作加写锁，即可避免并发冲突。综上，resourcesMap加悲观锁即可，consumerObserveMap涉及的操作场景如下：</p>
+<ul>
+<li>远程请求istio时候会往consumerObserveMap新增数据，加写锁。</li>
+<li>CompleteFuture跨线程返回数据后，去掉监听future，加写锁。</li>
+<li>监听缓存池时会往consumerObserveMap新增监听，加写锁。</li>
+<li>断线重连时会往consumerObserveMap新增监听，加写锁。</li>
+<li>解析istio返回的数据，遍历缓存池并刷新数据，加读锁。</li>
+</ul>
+<p>▧踩坑点</p>
+<ul>
+<li>由于dubbo和istio建立的是是双向stream流，相同的ds两次相邻时间的onNext事件，记为A事件和B事件，可能是A事件先发送，B随后；但可能是B事件的结果先返回，不确定istio推送的时间。因此需要加锁。</li>
+</ul>
+<h3>4.4 断线重连</h3>
+<p>断线重连只需要用定时任务去定时与istio交互，尝试获取授信证书，证书获取成功即可视为istio成功重新上线，dubbo会聚合本地的资源去istio请求数据，并解析响应和刷新本地缓存池数据，最后再关闭定时任务。</p>
+<p>▧踩坑点</p>
+<ul>
+<li>采用全局共享的定时任务池，不能进行关闭，否则会影响其他业务。</li>
+</ul>
+<h2>05 感想与总结</h2>
+<p>在这次功能的改造中，笔者着实掉了一波头发，怎么找bug也找不到的情形不在少数。除了上述提到的坑点之外，其他的坑点包括但不局限于：</p>
+<ul>
+<li>dubbo在某一次迭代里更改了获取k8s证书的方式，授权失败。</li>
+<li>原本的功能没问题，merge了下master代码，grpc版本与envoy版本不兼容，各种报错，最后靠降低版本成功解决。</li>
+<li>原本的功能没问题，merge了下master代码，最新分支代码里metadataservice发成了triple，然而在Proxyless模式下只支持dubbo协议，debug了三四天，最后发现需要增加配置。</li>
+</ul>
+<p>......</p>
+<p>但不得不承认，Proxyless Service Mesh确实有它自身的优势和广阔的市场前景。自dubbo3.1.0 release版本之后，dubbo已经实现了Proxyless Service Mesh能力，未来dubbo社区将深度联动业务，解决更多实际生产环境中的痛点，更好地完善service mesh能力。</p>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进" href="https://juejin.cn/post/7208088676853432380" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span><span class="desc fs12">https://juejin.cn/post/7208088676853432380</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/c7243308.html">那些年，我们写过的无效单元测试<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/f60a837e.html">风记得的音乐：我以为<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

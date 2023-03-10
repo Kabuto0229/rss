@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>CNStack 多集群服务：基于 OCM 打造完善的集群管理能力 - RSSBOX</title>
+
+  
+    <meta name="description" content="作者：学靖  概述 随着 Kubernetes 在企业业务中的应用和发展，单集群内的管理能力已经趋于完善，越来越多的客户期望在多云、多集群场景部署其业务，因此需要提供相应的多云、多集群管理能力。 CNStack 多集群服务是 CNStack 面向多集群、多云场景提供的云原生服务，能够统一管理 CNStack 平台创建的、阿里云上的、客户自建的和其他云上的 Kubernetes 集群。 在 CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/9ea251e4.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="作者：学靖  概述 随着 Kubernetes 在企业业务中的应用和发展，单集群内的管理能力已经趋于完善，越来越多的客户期望在多云、多集群场景部署其业务，因此需要提供相应的多云、多集群管理能力。 CNStack 多集群服务是 CNStack 面向多集群、多云场景提供的云原生服务，能够统一管理 CNStack 平台创建的、阿里云上的、客户自建的和其他云上的 Kubernetes 集群。 在 CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9921aef48f8e453eb9553b986f7a640b~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b080e5f91d41456caf3ea74e9b2a5d3f~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/385b5de052e84e69a0a5af252c6757bd~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df15d0dc1097400b937f124877dc5f46~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2023-03-08T05:11:53.000Z">
+<meta property="article:modified_time" content="2023-03-08T05:11:53.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">完善的集群注册能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">完整的集群生命周期管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">声明式注册（通过创建 ManagedCluster 触发注册）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">涵盖创建和删除集群的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">扩展注册成功状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">增强取消注册能力</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">适应不同网络场景的多种注册模式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">多种分发资源的模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">多集群多租户管理与统一认证与鉴权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">管控集群与被管理集群的互访</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">展望</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">相关链接</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-08T05:11:53.000Z">2023-03-08</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></h1>
+<div>
+<blockquote>
+<p>作者：学靖</p>
+</blockquote>
+<h2>概述</h2>
+<p>随着 Kubernetes 在企业业务中的应用和发展，单集群内的管理能力已经趋于完善，越来越多的客户期望在多云、多集群场景部署其业务，因此需要提供相应的多云、多集群管理能力。</p>
+<p>CNStack 多集群服务是 CNStack 面向多集群、多云场景提供的云原生服务，能够统一管理 CNStack 平台创建的、阿里云上的、客户自建的和其他云上的 Kubernetes 集群。</p>
+<p>在 CNStack 2.0 中，CNStack 多集群服务是以云服务（cnstack-multicluster）的形式存在，这样一方面在单集群模式下用户可以完全聚焦集群内管理，另一方面也便于多集群服务能力独立演进，更加敏捷高效。该服务在 CNStack2.0 中主要提供以下功能，并会逐步在后续版本上线更多能力（如多集群资源分发、应用跨集群故障迁移、多集群Service等）。</p>
+<ul>
+<li>
+<p>扩展 **OCM <strong>[</strong> <strong>1]</strong> ** 的集群注册能力，提供更加完善的注册相关的集群管理能力</p>
+</li>
+<li>
+<p>提供多种分发资源的模式：</p>
+</li>
+<li>
+<ul>
+<li>基于 OCM ManifestWork API 的 Pull 模式</li>
+<li>基于 Cluster Gateway 的 Push 模式</li>
+</ul>
+</li>
+<li>
+<p>支持实现多集群多租户管理，多集群统一认证和鉴权</p>
+</li>
+<li>
+<p>为平台和云服务/云组件提供管控集群（Hub Cluster）和被管理集群（Managed Cluster）之间的跨集群高可用互访能力</p>
+</li>
+</ul>
+<h2>完善的集群注册能力</h2>
+<p>基于 Kubernetes，云原生 PaaS 团队和红帽等技术伙伴开源了 CNCF Open Cluster Management（OCM）项目。而 CNStack 多集群服务则是基于 OCM 项目，提供了多集群的创建、注册、取消注册等生命周期管理能力，允许用户以 Kubernetes 自定义资源声明的方式描述需要创建或者纳管的集群。该服务通过扩展 OCM，打造了非常完善的集群注册能力。</p>
+<h3>架构</h3>
+<p>CNStack 多集群服务注册架构如下图所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<ul>
+<li>UI Backend</li>
+</ul>
+<p>为 UI 提供多集群服务所有相关的 APIs。</p>
+<ul>
+<li>OCM Hub/Agent</li>
+</ul>
+<p>OCM 相关组件，用以实现基础的集群注册能力。组件主要包括 **registration-operator <strong>[</strong> <strong>2]</strong> **、**registration <strong>[</strong> <strong>3]</strong> ** 和 **work <strong>[</strong> <strong>4]</strong> **，分为 hub 端和 agent 端，OCM Hub 则为在 Hub Cluster 部署的组件，OCM Agent 则为在 Managed Cluster 部署的组件。</p>
+<ul>
+<li>Cluster Import Controller</li>
+</ul>
+<p>实现了 CNStack 所扩展的集群管理能力。</p>
+<ul>
+<li>Cluster Gateway</li>
+</ul>
+<p>**cluster-gateway <strong>[</strong> <strong>5]</strong> ** 是一个多集群网关，用于将 Kubernetes api 流量路由到多个 Kubernetes 集群的网关APIServer。它是一个 Aggregated APIServer，可集成 OCM。</p>
+<ul>
+<li>Managed ServiceAccount</li>
+</ul>
+<p>**managed-serviceaccount <strong>[</strong> <strong>6]</strong> **这里是用于让 Cluster Gateway 以 Kubernetes ServiceAccount 的 token 的方式而非 x509证书的方式访问被管理集群的 Kubernetes api。它将 ServiceAccount 同步到被管理集群中，并从这些被同步的 ServiceAccount 收集 token，然后同步回 hub 集群。</p>
+<ul>
+<li>CNStack Agent</li>
+</ul>
+<p>自动采集集群厂商及核心组件状态等信息。</p>
+<h3>完整的集群生命周期管理</h3>
+<p>OCM 中使用 ManagedCluster API 来表示被管理集群的期望状态和当前状态，并建立了注册、取消注册集群生命周期的管理。虽然 OCM 在 ManagedCluster 的定义和集群注册的设计上足够优秀，但其并不能完全满足我们的需求，因此我们在 CNStack 2.0 中扩展了集群的生命周期管理，使其更加完整。</p>
+<h4>声明式注册（通过创建 ManagedCluster 触发注册）</h4>
+<p>在 CNStack 2.0 的架构设计中，采用“所有管理对象都是资源”的编程模型，所以我们的集群管理也采用声明式的 API，即通过声明 ManagedCluster 来完成注册。这样被管理集群的期望状态和当前状态都呈现在资源（ManagedCluster）上。</p>
+<p>OCM 本身对集群注册的管理主要是通过手动或者 clusteradm 去被管理集群部署 OCM Agent，之后由 OCM Agent 在 Hub 集群自动创建 ManagedCluster。另外 OCM 虽然也允许用户在部署 OCM Agent 之前创建 ManagedCluster，但仍然存在问题：OCM Agent 只会在创建 ManagedCluster 时候上报 CABundle 到 ManagedCluster 上。这个问题会导致我们无法通过声明 ManagedCluster 来触发注册，因为 ManagedCluster 不会由 OCM Agent 来创建，而是由 CNStack 管控组件创建，这样就无法在管控集群中使用 ManagedCluster.spec.managedClusterClientConfigs 去访问被管理集群（如 Cluster Gateway 的 Const 模式就是通过这种方式访问的）。</p>
+<p>所以我们通过：</p>
+<p>1）自动化部署 OCM Agent</p>
+<p>2）修复 **OCM Agent 只会在创建 ManagedCluster 时候上报 CABundle <strong>[</strong> <strong>7]</strong> ** 实现了声明式集群注册。</p>
+<h4>涵盖创建和删除集群的生命周期</h4>
+<p>CNStack 平台可以创建集群，为了统一管理，我们扩展了 ManagedCluster，让其也涵盖了创建和删除集群的生命周期，用户可以通过声明 ManagedCluster 来创建期望的集群，并在创建后注册。删除亦然。</p>
+<p>和通过注册管理的三方集群相比，多集群服务对于自己创建的集群，拥有完全的生命周期管理权限，包括集群创建、修改、扩缩容以及删除。使用者只需要按照提示准备若干台 Linux 机器，并确保这些机器可被从平台所在节点通过 SSH 访达（密码或者秘钥），然后根据指引填写集群表单，就可以快速创建一套 K8s 集群。</p>
+<p>值得一提的是，对于自建集群的生命周期管理能力，由阿里巴巴开源的集群镜像技术和 ACK 发行版来提供底层支持，也就是说，使用者通过多集群管理服务创建的集群，就是一套标准的 ACK 发行版，具备以下优势：</p>
+<blockquote>
+<p>阿里巴巴开源的集群镜像技术：</p>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/sealerio/sealer">https://github.com/sealerio/sealer</a></p>
+<p>ACK 发行版：
+<a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/AliyunContainerService/ackdistro">https://github.com/AliyunContainerService/ackdistro</a></p>
+</blockquote>
+<ul>
+<li>无需使用阿里云云就可以感受和阿里云 ACK 一致的使用体验，相较社区版 K8s 更为稳定</li>
+<li>不依赖公网，可在离线环境完成分钟级的创建和运维，支持 RHEL/Anolis/Kylin 等多种操作系统</li>
+<li>内置网络插件（hybridnet）、存储插件（open-local/csi-hostpath）、运维插件（npd/l-zero），且支持 IPv6双栈、GPU、多架构等特性</li>
+<li>内置集群预检工具，可以在集群部署之前检查出可能影响集群稳定性的隐患</li>
+<li>内置集群健康检查工具，可以一键检查集群是否健康</li>
+<li>支持对 K8s 管控组件进行隔离和容量管理，以提升 etcd 性能以及 OS 稳定性</li>
+</ul>
+<h4>扩展注册成功状态</h4>
+<p>集群是否注册成功，在不同的产品或场景中判断条件往往不同。在 CNStack 2.0 中，就需在 OCM 的 ManagedClusterConditionAvailable 为 true 基础上，增加对一些管控组件状态的判断，才可认为该集群最终注册完成。</p>
+<p>为了扩展性和灵活性，CNStack2.0中，我们参考 Kubernetes **Pod Readiness Gates <strong>[</strong> <strong>8]</strong> ** 的设计，在 ManagedCluster API 上做了扩展，使得可以自定义符合业务需求的集群注册成功的状态。</p>
+<h4>增强取消注册能力</h4>
+<p>集群取消注册是通过删除 ManagedCluster 来触发的，主要清理注册集群过程中在 hub集群和被管理集群上创建的资源。在 CNStack 2.0 中这样的能力还不够，还会存在以下问题和隐患：</p>
+<ol>
+<li>
+<ol>
+<li>在取消注册时，实现多集群能力的组件也需要清理资源，且需要在清理 OCM Agent 之前完成，否则会在 Hub 集群和被管理集群造成垃圾</li>
+<li>集群取消注册时，ManifestWork 和 ManagedClusterAddon 等资源不回收会影响集群的二次注册和集群对应 namespace 无法删除</li>
+</ol>
+</li>
+</ol>
+<p>针对问题 a，我们允许用户先清理自己创建的资源，然后才执行基础的取消注册逻辑（卸载 OCM Agent 和清理元数据）。允许用户给 ManagedCluster 添加自定义 finalizer，在资源清理完后，删除相应 finalizer，CNStack 多集群服务会检测 ManagedCluster，在没有用户自定义 finalizer 以后，才会执行基础的取消注册逻辑。</p>
+<p>针对问题 b，CNStack 多集群服务基于问题 a 的机制，在集群取消注册时去清理掉集群相关的 ManifestWork、ManagedClusterAddon 等资源，以确保不会有相应问题出现。</p>
+<h4>适应不同网络场景的多种注册模式</h4>
+<p>在 CNStack 2.0 中，我们从设计上来说，支持两种注册模式：Auto 和 Manual。Auto 模式，适用于 Hub 集群和被管理集群网络可以互通的场景。这种方式更加自动化，通信结构更简单。Manual 模式，适用于只有被管理集群可以访问到 Hub 集群的场景。这种方式比较适用于纳管那些因安全性考虑不对外开放的集群。不过这种模式因为某些原因在 CNStack 2.0 中尚未对用户透出，后续版本会补齐。</p>
+<h2>多种分发资源的模式</h2>
+<p>CNStack 2.0 对多集群的资源下发支持 Pull 和 Push 两种模式。支持两种模式让多集群能力更加灵活。</p>
+<ul>
+<li>Pull 模式</li>
+</ul>
+<p>Pull 模式是基于 OCM ManifestWork API 的，OCM 自身提供的能力。该模式的主要优点在于每个被管理集群都由 agent，可以极大分摊管控集群的压力。架构如下图所示：<img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9921aef48f8e453eb9553b986f7a640b~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<ul>
+<li>Push 模式</li>
+</ul>
+<p>Push 模式是基于 Cluster-Gateway 实现的。该模式的主要优点在于操作方面，也不需要考虑往每个被管理集群安装 Agent。架构如下所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b080e5f91d41456caf3ea74e9b2a5d3f~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>使用 Cluster Gateway 除了具备路由透明，权限一致，通信安全的能力，还有一个好处是：无论是 Auto 模式还是 Manual 模式，在集成注册成功后，我们都可以统一使用 Cluster Gateway 访问被管理集群的资源。</p>
+<p>当然，我们在使用过程中也发现和修复了 Cluster Gateway 的一些问题，最主要的是其在集成 OCM 时的性能问题：在集成 OCM 跨多个集群访问时的性能远落后于直接通过被管理集群 kubeconfig 访问，严重影响多集群资源下发和多集群聚合能力。其主要原因是：Cluster Gateway 在集成 OCM 后，频繁访问 Hub 集群 APIServer，获取 ManagedCluster，造成 APIServer 限频，从而 RT 远高于直接通过 kubeconfig 访问时的 RT。我们通过<strong>增加缓存</strong> **（Inforemer） <strong>[</strong> <strong>9]</strong> **解决了该性能问题，从单个 Get 请求的 Benchmark 结果看 RT 减少 95%，与直接通过 kubeconfig 访问被管理集群相差无几。</p>
+<h2>多集群多租户管理与统一认证与鉴权</h2>
+<p>CNStack 2.0 中，在多集群云服务的帮助下，租户管理与认证和鉴权也扩展至多集群。这里主要是利用 OCM ManifestWork 机制，将租户、角色相关资源分发到多个集群。</p>
+<p>用户对被管理集群的访问是使用平台 UI 或者是平台提供的 kubeconfig 去访问的，请求会经过管控集群的 Management Gateway，Management Gateway 会对请求的用户进行统一认证。而多集群鉴权则是通过**伪装（Impersonation） <strong>[</strong> <strong>10]</strong> **结合下发到被管理集群的 RBAC 完成，主要流程是 Management Gateway 在认证之后会为请求增加 Impersonate-User Header，再经过 Cluster Gateway 将请求发到被管理集群的 Kube APIServer。</p>
+<p>关于伪装，这里有个细节是，请求经过 Hub Kube APIServer 以后，Impersonate-User 这个 header 会被丢弃（"Impersonate-"为前缀的几个都会被丢弃）。而 Cluster Gateway 是 Aggregated APIServer，请求都会先到达 Hub Kube APIServer，再到达 Cluster Gateway，因此请求在到达 Cluster Gateway 时已经没有这个Impersonate-User 这个 header 了。而 Cluster Gateway 有个 ClientIdentityPenetration feature gate，打开时，可以从请求的 context 中获取 User 信息（Name、Groups、Extra），并将其设置到 Header 中。因此 Cluster Gateway 开启 ClientIdentityPenetration feature gate 后可以保证多集群鉴权能够成功完成。</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/385b5de052e84e69a0a5af252c6757bd~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<h2>管控集群与被管理集群的互访</h2>
+<p>在 CNStack 2.0 中，平台和云服务/云组件有些组件是需要跨管控集群与被管理集群通信的，因此我们在管控集群与被管理集群之间构建了通路。架构图如下所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df15d0dc1097400b937f124877dc5f46~tplv-k3u1fbpfcp-zoom-1.image" title="image.png"></p>
+<p>管控集群中所有控制面请求都收敛在 Management Gateway，数据面请求收敛在 Ingress Controller；被管理集群上服务都由 Ingress Controller 代理。</p>
+<p>为了屏蔽网络联通的复杂性，比如对应网关代理的 IP 和端口发生变化等，无论是管控集群访问被管理集群 Ingress Controller，还是被管理集群访问管控集群 Management Gateway 和 Ingress Controller，我们都提供通过 Kuberetes Headless Service 实现路由的通路。</p>
+<p>CNStack 2.0 中，对被管理集群的 Kubernetes API 的访问都经由 Management Gateway 转 Cluster Gateway 到达被管理集群 Kube APIServer。使用 Cluster Gateway 的优势，前文也有表述，具备路由透明，权限一致，通信安全的能力，并且方便统一访问方式。</p>
+<p>对于被管理集群上业务想要通过域名访问 Ingress Controller 所代理的管控服务时，可以通过增加一个映射到 Headless Service 对应网关代理（Management Gateway/Ingress Controller）的 ExternalName Service，然后配合管控集群上 Ingress 对象的定义，在业务中使用$&#123;ExternalName Service&#125;.$&#123;Serviece Namespace&#125;.svc访问。</p>
+<h2>展望</h2>
+<p>从多云、多集群的领域来说，做好集群管理是第一步，它很重要，在不同厂商、不同位置、不同网络的集群都被注册到管控平台后，用户往往期望将应用扩展到多个集群，并期望能提供如应用跨集群故障迁移、多集群 Service、容灾备份、就近访问等场景能力。伴随应用管理而来的还有相关安全合规的策略管理。CNStack 多集群服务期望后续能够逐步把这样的能力展示给用户。</p>
+<h2>相关链接</h2>
+<p>[1] OCM</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://open-cluster-management.io/">https://open-cluster-management.io/</a></em></p>
+<p>[2] registration-operator</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/open-cluster-management-io/registration-operator">https://github.com/open-cluster-management-io/registration-operator</a></em></p>
+<p>[3] registration</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/open-cluster-management-io/registration">https://github.com/open-cluster-management-io/registration</a></em></p>
+<p>[4] work</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/open-cluster-management-io/work?spm=a2c6h.13046898.0.0.93f06ffa5Qh2UR">https://github.com/open-cluster-management-io/work</a></em></p>
+<p>[5] cluster-gateway</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/oam-dev/cluster-gateway?spm=a2c6h.13046898.0.0.93f06ffa5Qh2UR">https://github.com/oam-dev/cluster-gateway</a></em></p>
+<p>[6] managed-serviceaccount</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/open-cluster-management-io/managed-serviceaccount?spm=a2c6h.13046898.0.0.93f06ffa5Qh2UR">https://github.com/open-cluster-management-io/managed-serviceaccount</a></em></p>
+<p>[7] OCM Agent 只会在创建 ManagedCluster 时候上报 CABundle</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/open-cluster-management-io/registration/pull/270?spm=a2c6h.13046898.0.0.93f06ffa5Qh2UR">https://github.com/open-cluster-management-io/registration/pull/270</a></em></p>
+<p>[8] Pod Readiness Gates</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/?spm=a2c6h.13046898.0.0.93f06ffa5Qh2UR#pod-readiness-gate">https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-readiness-gate</a></em></p>
+<p>[9] 增加缓存（Inforemer）</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/oam-dev/cluster-gateway/pull/117">https://github.com/oam-dev/cluster-gateway/pull/117</a></em></p>
+<p>[10] 伪装（Impersonation）</p>
+<p><em><a target="_blank" rel="external nofollow noopener noreferrer" href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#user-impersonation">https://kubernetes.io/docs/reference/access-authn-authz/authentication/#user-impersonation</a></em></p>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力" href="https://juejin.cn/post/7208018141317546039" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span><span class="desc fs12">https://juejin.cn/post/7208018141317546039</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/437c7eee.html">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/7fd50f5c.html">程序员的边界是什么——圣光之愿礼拜堂系列<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

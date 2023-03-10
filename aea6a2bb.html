@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？ - RSSBOX</title>
+
+  
+    <meta name="description" content="导语 | 以《羊了个羊》为代表的微信小游戏在去年多次刷屏，引爆全网。近期又有几款微信小游戏成为热门，一度让“微信小游戏”热度指数上涨 20% 以上。微信小游戏市场一直都充满着希望与竞争，开发者如何在爆品争霸中脱颖而出呢？在小游戏开发中有哪些传统开发经验可以借鉴与学习呢？我们特邀腾讯云 TVP、计算机作家&#x2F;讲师 李艺老师，在他新书《微信小游戏开发》的基础上带我们看看在微信小游戏项目开发中，从架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/aea6a2bb.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="导语 | 以《羊了个羊》为代表的微信小游戏在去年多次刷屏，引爆全网。近期又有几款微信小游戏成为热门，一度让“微信小游戏”热度指数上涨 20% 以上。微信小游戏市场一直都充满着希望与竞争，开发者如何在爆品争霸中脱颖而出呢？在小游戏开发中有哪些传统开发经验可以借鉴与学习呢？我们特邀腾讯云 TVP、计算机作家&#x2F;讲师 李艺老师，在他新书《微信小游戏开发》的基础上带我们看看在微信小游戏项目开发中，从架构">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d0b2ff78cbb4d86bdfe3ff8be89304d~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bef65a36cea42c38ad6244f13f25638~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4805095241e4f09adb95b7a33478987~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70d979f3be3e4b1e82b377e577ae612c~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f54776a7fba34bc18d0b6da379ccbd1b~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6aa6462dc232460398bd5a8412878d5a~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee98c3b51ebf4f7cb1c9ebd39a828595~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f60e6fb1fca74008a5de6a2607f05978~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4635bf3216104098b0b135784069de55~tplv-k3u1fbpfcp-watermark.image?">
+<meta property="article:published_time" content="2023-03-09T10:39:26.000Z">
+<meta property="article:modified_time" content="2023-03-09T10:39:26.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（一）桥接模式的具体实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（二）在项目中消费桥接模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（三）使用桥接模式的意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（四）桥接模式用法总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（一）应用模式之前的项目状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（二）什么是访问者模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">（三）访问者模式用法总结</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-09T10:39:26.000Z">2023-03-09</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></h1>
+<div>
+<blockquote>
+<p>导语 | 以《羊了个羊》为代表的微信小游戏在去年多次刷屏，引爆全网。近期又有几款微信小游戏成为热门，一度让“微信小游戏”热度指数上涨 20% 以上。微信小游戏市场一直都充满着希望与竞争，开发者如何在爆品争霸中脱颖而出呢？在小游戏开发中有哪些传统开发经验可以借鉴与学习呢？我们特邀腾讯云 TVP、计算机作家/讲师 李艺老师，在他新书《微信小游戏开发》的基础上带我们看看在微信小游戏项目开发中，从架构师角度如何应用面向对象和软件设计思想和设计模式。</p>
+</blockquote>
+<h1><strong>作者简介</strong></h1>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>李艺，腾讯云 TVP、日行一课联合创始人兼 CTO，极客时间视频专栏《微信小程序全栈开发实战》讲师，一汽大众等知名企业内训培训讲师。具有近 20 年互联网软件研发经验，参与研发的音视频直播产品曾在腾讯 QQ 上线，为数千万人使用。是国内早期闪客之一，曾自定义课件标准并完成全平台教育课件产品研发，官方评定为 Adobe 中国十五位社区管理员之一。同时，还是中国人工智能学会会员，在北京协同创新研究院负责过人工智能项目的研发。业余喜欢写作，在微信公众号/视频号“艺述论”分享技术经验，著有《微信小游戏开发》、《小程序从 0 到 1：微信全栈工程师一本通》等计算机图书。</p>
+<h1><strong>引言</strong></h1>
+<p>去年 9 月，微信小游戏《羊了个羊》火爆全网，用户访问量骤增时甚至出现过多次宕机，其火爆程度远超预期。其实，微信小游戏开发整体而言简单、独立、易上手，即使单人也可以完成开发，不少程序员都是独立的微信小游戏开发者。《羊了个羊》微信小游戏的火热，吸引了很多前端开发者向这个领域转行。</p>
+<h1><strong>一、为什么要在游戏开发中使用设计模式呢？</strong></h1>
+<h1></h1>
+<p>一般而言，游戏开发作为创意行业，不仅要有过硬的技术，更要有新奇的想法。尤其当任何一个创意火爆后，马上就会引发众多开发厂商快速跟进。这在游戏行业的开发史上，已经出现过多次后来者居上的案例了。</p>
+<p>那么我们该怎么应对这种情况呢？如果别人跑得快，就要想办法比别人跑得更快，跑得更久。游戏开发和其他所有软件产品的开发一样，并不是一锤子买卖，在第一个版本上线以后，后续根据玩家反馈和竞品功能的升级，需要不断研发和推出新版本。</p>
+<p>在版本迭代的过程中，怎么样让新功能更快地开发出来，同时老功能还能更大范围地保持稳定，这是最考验游戏架构师能力的。架构师在项目启动的时候，就要为后续可能的变化预留方案，让后面游戏版本的迭代进行得又快、又稳。这涉及游戏架构师的一项核心能力：渐进式模块化重构与面向对象重构的能力。</p>
+<p>软件开发是有成熟的套路的，前辈大牛经过实践总结的设计模式便是套路的结晶，有意识地在游戏开发中运用成熟的设计模式，不仅可以彰显程序员的内功水平，还能在一定程度上保证版本迭代的快速与稳定。</p>
+<h1><strong>二、小游戏实战项目介绍</strong></h1>
+<p>接下来分享的，是来自《微信小游戏开发》这本书中的一个小游戏实战案例，项目在基本功能开发完后，为了方便读者锤炼渐进式模块化重构与面向对象重构的能力，特意在这个阶段安排了设计模式实战。</p>
+<p>在目前的项目中，有两类碰撞检测：一类发生在球与挡板之间；另一类发生在球与屏幕边界之间。在游戏中，碰撞检测是非常常见一种功能，为了应对可能增加的碰撞检测需求，我们使用设计模式将两类碰撞的耦合性降低，方便后续加入的碰撞与被碰撞对象。</p>
+<p>具体从实现上来讲，我们准备应用桥接模式，将发生碰撞的双方，分别定义为两个可以独立变化的抽象对象（HitObjectRectangle与HitedObjectRectangle），然后再让它们的具体实现部分独立变化，以此完成对桥接模式的应用。</p>
+<p>目前球（Ball）与挡板（Panel）还没有基类，我们可以让它们继承于新创建的抽象基类，但这样并不是很合理，它们都属于可视化对象，如果要继承，更应该继承于 Component 基类。在 JS 中一个类的继承只能实现单继承，不能让一个类同时继承于多个基类，在这种情况下我们怎么实现桥接模式中的抽象部分呢？对象能力的扩展形式，除了继承，还有复合，我们可以将定义好的桥接模式中的具体实现部分，以类属性的方式放在球和挡板对象中。</p>
+<h1><strong>三、模式应用之桥接模式</strong></h1>
+<p>在应用桥接模式之前，我们首先需要把握它的概念，从定义入手。其实，桥接模式是一种结构型设计模式，可将一系列紧密相关的类拆分为抽象和实现两个独立的层次结构，从而能在开发时分别使用。</p>
+<p>换言之，桥接模式将对象的抽象部分与它的具体实现部分分离，使它们都可以独立的变化。在桥接模式中，一般包括两个抽象部分和两个具体实现的部分，一个抽象部分和一个具体实现部分为一组，一共有两组，两组通过中间的抽象部分进行桥接，从而让两组的具体实现部分可以相对独立自由的变化。</p>
+<p>为了更好地理解这个模式，我们通过一张图看一个应用示例，如图 1 所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d0b2ff78cbb4d86bdfe3ff8be89304d~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>图1，桥接模式示例示意图</p>
+<p>在这张图中，中间是一个跨平台开发框架，它为开发者抽离出一套通用接口（抽象部分 B），这些接口是通用的、系统无关的，借此开发框架实现了跨平台特性。在开发框架中，具体到每个系统（Mac、Windows和Linux），每个接口及 UI 有不同的实现（具体实现部分 B1、B2、B3）。左边，在应用程序中，开发者在软件中定义了一套抽象部分 A，在每个系统上有不同的具体实现（具体实现部分 A1、A2、A3）。应用程序面向抽象部分B编程，不必关心开发框架在每个系统下的具体实现；应用程序的具体实现部分 A1、A2、A3 是基于抽象部分A编程的，它们也不需要知道抽象部分 B。抽象部分 A 与抽象部分 B 之间仿佛有一个桥连接了起来，这两套抽象部分与其具体实现部分呈现的模式便是桥接模式。</p>
+<p>试想一下，如果我们不使用桥接模式，没有中间这一层跨平台开发框架，没有抽象部分B和抽象部分 A，这时候我们想实现具体实现部分 A1、A2、A3，需要怎么做呢？直接在各个系统的基础类库上实现呢？让 A1 与 B1 耦合、A2 与 B2 耦合、A3 与 B3 耦合吗？每次在应用程序中添加一个新功能，都要在三个地方分别实现。而有了桥接模式之后，B1、B2、B3 都不需要关心了，只需要知道抽象部分 B 就可以了；添加新功能时，只需要在抽象部分A中定义并基于抽象部分 B 实现核心功能就可以了，在具体实现部分 A1、A2、A3 中只是 UI 和交互方式不同而已。这是使用桥接模式的价值。</p>
+<h2>（一）桥接模式的具体实现</h2>
+<p>接下来便进入实践步骤，我们先定义桥接模式当中的抽象部分，一个是主动撞击对象的抽象部分（HitObjectRectangle），一个是被动撞击对象的抽象部分（HitedObjectRectangle）。由于两个部分的抽象部分具有相似性，我们可以先定义一个抽象部分的基类 Rectangle：</p>
+<pre><code>1.  // JS：src\views\hitTest\rectangle.js
+2.  /** 对象的矩形描述，默认将注册点放在左上角 */
+3.  class Rectangle &#123;
+4.    constructor(x, y, width, height) &#123;
+5.      this.x = x
+6.      this.y = y
+7.      this.width = width
+8.      this.height = height
+9.    &#125;
+10.  
+11.    /** X坐标 */
+12.    x = 0
+13.    /** Y坐标 */
+14.    y = 0
+15.    /** X轴方向上所占区域 */
+16.    width = 0
+17.    /** Y轴方向上所占区域 */
+18.    height = 0
+19.  
+20.    /** 顶部边界 */
+21.    get top() &#123;
+22.      return this.y
+23.    &#125;
+24.    /** 底部边界 */
+25.    get bottom() &#123;
+26.      return this.y + this.height
+27.    &#125;
+28.    /** 左边界 */
+29.    get left() &#123;
+30.      return this.x
+31.    &#125;
+32.    /** 右边界 */
+33.    get right() &#123;
+34.      return this.x + this.width
+35.    &#125;
+36.  &#125;
+37.  
+38.  export default Rectangle
+</code></pre>
+<p>以上代码：</p>
+<ul>
+<li>
+<p>第 12 行至第 18 行，这是 4 个属性，x、y 决定注册点，width、height 决定尺寸。</p>
+</li>
+<li>
+<p>第 21 行至第 35 行，这是 4 个 getter 访问器，分别代表对象在 4 个方向上的边界值。</p>
+</li>
+</ul>
+<p>这 4 个属性不是实际存在的，而是通过注册点与尺寸计算出来的。根据注册点位置的不同，这 4 个 getter 的值也不同。默认注册点，即（0，0）坐标点在左上角，这时候 top 等于 y；如果注册点在左下角，这时候 top 则等于 y 减去 height。</p>
+<p>Rectangle 描述了一个对象的距形范围，关于 4 个边界属性 top、bottom、left、right 与注册点的关系，可以参见图 2：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bef65a36cea42c38ad6244f13f25638~tplv-k3u1fbpfcp-watermark.image?">
+图2，注册点与边界值的关系</p>
+<p>接下来我们开始定义两个抽象部分：一个是撞击对象的，另一个是受撞击对象的。先看受撞击对象的，它比较简单：</p>
+<pre><code>1.  // JS：src\views\hitTest\hited_object_rectangle.js
+2.  import Rectangle from "rectangle.js"
+3.  
+4.  /** 被碰撞对象的抽象部分，屏幕及左右挡板的注册点默认在左上角 */
+5.  class HitedObjectRectangle extends Rectangle&#123;
+6.    constructor(x, y, width, height)&#123;
+7.      super(x, y, width, height)
+8.    &#125;
+9.  &#125;
+10.  
+11.  export default HitedObjectRectangle
+</code></pre>
+<p>HitedObjectRectangle 类它没有新增属性或方法，所有特征都是从基类继承的。它的主要作用是被继承，稍后有 3 个子类继承它。</p>
+<p>再看一下撞击对象的定义：</p>
+<pre><code>1.  // JS：src\views\hitTest\hit_object_rectangle.js
+2.  import Rectangle from "rectangle.js"
+3.  import LeftPanelRectangle from "left_panel_rectangle.js"
+4.  import RightPanelRectangle from "right_panel_rectangle.js"
+5.  import ScreenRectangle from "screen_rectangle.js"
+6.  
+7.  /** 碰撞对象的抽象部分，球与方块的注册点在中心，不在左上角 */
+8.  class HitObjectRectangle extends Rectangle &#123;
+9.    constructor(width, height) &#123;
+10.      super(GameGlobal.CANVAS_WIDTH / 2, GameGlobal.CANVAS_HEIGHT / 2, width, height)
+11.    &#125;
+12.  
+13.    get top() &#123;
+14.      return this.y - this.height / 2
+15.    &#125;
+16.    get bottom() &#123;
+17.      return this.y + this.height / 2
+18.    &#125;
+19.    get left() &#123;
+20.      return this.x - this.width / 2
+21.    &#125;
+22.    get right() &#123;
+23.      return this.x + this.width / 2
+24.    &#125;
+25.  
+26.    /** 与被撞对象的碰撞检测 */
+27.    hitTest(hitedObject) &#123;
+28.      let res = 0
+29.      if (hitedObject instanceof LeftPanelRectangle) &#123; // 碰撞到左挡板返回1
+30.        if (this.left &lt; hitedObject.right &amp;&amp; this.top &gt; hitedObject.top &amp;&amp; this.bottom &lt; hitedObject.bottom) &#123;
+31.          res = 1 &lt;&lt; 0
+32.        &#125;
+33.      &#125; else if (hitedObject instanceof RightPanelRectangle) &#123; // 碰撞到右挡板返回2
+34.        if (this.right &gt; hitedObject.left &amp;&amp; this.top &gt; hitedObject.top &amp;&amp; this.bottom &lt; hitedObject.bottom) &#123;
+35.          res = 1 &lt;&lt; 1
+36.        &#125;
+37.      &#125; else if (hitedObject instanceof ScreenRectangle) &#123;
+38.        if (this.right &gt; hitedObject.right) &#123; // 触达右边界返回4
+39.          res = 1 &lt;&lt; 2
+40.        &#125; else if (this.left &lt; hitedObject.left) &#123; // 触达左边界返回8
+41.          res = 1 &lt;&lt; 3
+42.        &#125;
+43.        if (this.top &lt; hitedObject.top) &#123; // 触达上边界返回16
+44.          res = 1 &lt;&lt; 4
+45.        &#125; else if (this.bottom &gt; hitedObject.bottom) &#123; // 触达下边界返回32
+46.          res = 1 &lt;&lt; 5
+47.        &#125;
+48.      &#125;
+49.      return res
+50.    &#125;
+51.  &#125;
+52.  
+53.  export default HitObjectRectangle
+</code></pre>
+<p>在上面代码中：</p>
+<ul>
+<li>
+<p>HitObjectRectangle 也是作为基类存在的，稍后有一个子类继承它。在这个基类中，第 13 行至第 24 行，我们通过重写 getter 访问器属性，将注册点由左上角移到了中心。</p>
+</li>
+<li>
+<p>第 10 行，在构造器函数中我们看到，默认的起始 x、y 是屏幕中心的坐标。</p>
+</li>
+<li>
+<p>第 27 行至第 50 行，hitTest 方法的实现是核心代码，碰撞到左挡板与碰撞到右挡板返回的数字与之前定义的一样，碰撞四周墙壁返回的数字是 4 个新增的数字。</p>
+</li>
+<li>
+<p>第 35 行，这行出现的 1&lt;&lt;0 代表数值的二进制向左移 0 个位置。移 0 个位置没有意义，这样书写是为了与下面的第 35 行、第 39 行、第 41 行等保持格式一致。1&lt;&lt;0 等于 1，1&lt;&lt;1 等于 2，1&lt;&lt;2 等于 4，1&lt;&lt;3 等于 8，这些数值是按 2 的 N 次幂递增的。</p>
+</li>
+</ul>
+<p>接下来我们定义 ScreenRectangle，它是被撞击部分的具体实现部分：</p>
+<pre><code>1.  // JS：src\views\hitTest\screen_rectangle.js
+2.  import HitedObjectRectangle from "hited_object_rectangle.js"
+3.  
+4.  /** 被碰撞对象屏幕的大小数据 */
+5.  class ScreenRectangle extends HitedObjectRectangle &#123;
+6.    constructor() &#123;
+7.      super(0, 0, GameGlobal.CANVAS_WIDTH, GameGlobal.CANVAS_HEIGHT)
+8.    &#125;
+9.  &#125;
+10.  
+11.  export default ScreenRectangle
+</code></pre>
+<p>ScreenRectangle 是屏幕的大小、位置数据对象，是一个继承于 HitedObjectRectangle 的具体实现。ScreenRectangle 类作为一个具体的实现类，却没有添加额外的属性或方法，定义它的原因和意义在于是由它本身作为一个对象成立的，参见 HitObjectRectangle 类中的 hitTest 方法。</p>
+<p>接下来我们再看左挡板的大小、位置数据对象：</p>
+<pre><code>1.  // JS：src\views\hitTest\left_panel_rectangle.js
+2.  import HitedObjectRectangle from "hited_object_rectangle.js"
+3.  
+4.  /** 被碰撞对象左挡板的大小数据 */
+5.  class LeftPanelRectangle extends HitedObjectRectangle &#123;
+6.    constructor() &#123;
+7.      super(0, (GameGlobal.CANVAS_HEIGHT - GameGlobal.PANEL_HEIGHT) / 2, GameGlobal.PANEL_WIDTH, GameGlobal.PANEL_HEIGHT)
+8.    &#125;
+9.  &#125;
+10.  
+11.  export default LeftPanelRectangle
+</code></pre>
+<p>LeftPanelRectangle 与 ScreenRectangle 一样，是继承于 HitedObjectRectangle 的一个具体实现，仍然没有新增属性或方法，所有信息，包括大小和位置，都已经通过构造器参数传递进去了。</p>
+<p>再看一下右挡板的大小、位置数据对象：</p>
+<pre><code>1.  // JS：src\views\hitTest\right_panel_rectangle.js
+2.  import HitedObjectRectangle from "hited_object_rectangle.js"
+3.  
+4.  /** 被碰撞对象右挡板的大小数据 */
+5.  class RightPanelRectangle extends HitedObjectRectangle &#123;
+6.    constructor() &#123;
+7.      super(GameGlobal.CANVAS_WIDTH - GameGlobal.PANEL_WIDTH, (GameGlobal.CANVAS_HEIGHT - GameGlobal.PANEL_HEIGHT) / 2, GameGlobal.PANEL_WIDTH, GameGlobal.PANEL_HEIGHT)
+8.    &#125;
+9.  &#125;
+10.  
+11.  export default RightPanelRectangle
+</code></pre>
+<p>RightPanelRectangle 也是继承于 HitedObjectRectangle 的一个具体实现，与 LeftPanelRectangle 不同的只是坐标位置。</p>
+<p>接下来我们再看撞击对象这边的具体实现部分，只有一个 BallRectangle 类：</p>
+<pre><code>1.  // JS：src\views\hitTest\ball_rectangle.js
+2.  import HitObjectRectangle from "hit_object_rectangle.js"
+3.  
+4.  /** 碰撞对象的具体实现部分，球的大小及运动数据对象 */
+5.  class BallRectangle extends HitObjectRectangle &#123;
+6.    constructor() &#123;
+7.      super(GameGlobal.RADIUS * 2, GameGlobal.RADIUS * 2)
+8.    &#125;
+9.  &#125;
+10.  
+11.  export default BallRectangle
+</code></pre>
+<p>BallRectangle 是描述球的位置、大小的，所有信息在基类中都具备了，所以它不需要添加任何属性或方法了。</p>
+<p>以上就是我们为应用桥接模式定义的所有类了，为了进一步明确它们之间的关系，看一张示意图，如图 3 所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4805095241e4f09adb95b7a33478987~tplv-k3u1fbpfcp-watermark.image?">
+图3，桥接模式示例类关系图</p>
+<p>第二层的 HitObjectRectangle 和 HitedObjectRectangle 是桥接模式中的抽象部分，第三层是具体实现部分。事实上如果我们需要的话，我们在 HitObjectRectangle 和 HitedObjectRectangle 两条支线上，还可以定义更多的具体实现类。</p>
+<h2>（二）在项目中消费桥接模式</h2>
+<p>接下来看如何使用，先改造原来的 Ball 类：</p>
+<pre><code>1.  // JS：src/views/ball.js
+2.  import BallRectangle from "hitTest/ball_rectangle.js"
+3.  
+4.  /** 小球 */
+5.  class Ball &#123;
+6.    ...
+7.  
+8.    constructor() &#123; &#125;
+9.  
+10.    get x() &#123;
+11.      // return this.#pos.x
+12.      return this.rectangle.x
+13.    &#125;
+14.    get y() &#123;
+15.      // return this.#pos.y
+16.      return this.rectangle.y
+17.    &#125;
+18.    /** 小于碰撞检测对象 */
+19.    rectangle = new BallRectangle()
+20.    // #pos // 球的起始位置
+21.    #speedX = 4 // X方向分速度
+22.    #speedY = 2 // Y方向分速度
+23.  
+24.    /** 初始化 */
+25.    init(options) &#123;
+26.      // this.#pos = options?.ballPos ?? &#123; x: GameGlobal.CANVAS_WIDTH / 2, y: GameGlobal.CANVAS_HEIGHT / 2 &#125; 
+27.      // const defaultPos = &#123; x: this.#pos.x, y: this.#pos.y &#125;
+28.      // this.reset = () =&gt; &#123;
+29.      //   this.#pos.x = defaultPos.x
+30.      //   this.#pos.y = defaultPos.y
+31.      // &#125;
+32.      this.rectangle.x = options?.x ?? GameGlobal.CANVAS_WIDTH / 2
+33.      this.rectangle.y = options?.y ?? GameGlobal.CANVAS_HEIGHT / 2
+34.      this.#speedX = options?.speedX ?? 4
+35.      this.#speedY = options?.speedY ?? 2
+36.      const defaultArgs = Object.assign(&#123;&#125;, this.rectangle)
+37.      this.reset = () =&gt; &#123;
+38.        this.rectangle.x = defaultArgs.x
+39.        this.rectangle.y = defaultArgs.y
+40.        this.#speedX = 4
+41.        this.#speedY = 2
+42.      &#125;
+43.    &#125;
+44.  
+45.    /** 重设 */
+46.    reset() &#123; &#125;
+47.  
+48.    /** 渲染 */
+49.    render(context) &#123;
+50.      ...
+51.    &#125;
+52.  
+53.    /** 运行 */
+54.    run() &#123;
+55.      // 小球运动数据计算
+56.      // this.#pos.x += this.#speedX
+57.      // this.#pos.y += this.#speedY
+58.      this.rectangle.x += this.#speedX
+59.      this.rectangle.y += this.#speedY
+60.    &#125;
+61.  
+62.    /** 小球与墙壁的四周碰撞检查 */
+63.    // testHitWall() &#123;
+64.    //   if (this.#pos.x &gt; GameGlobal.CANVAS_WIDTH - GameGlobal.RADIUS) &#123; // 触达右边界
+65.    //     this.#speedX = -this.#speedX
+66.    //   &#125; else if (this.#pos.x &lt; GameGlobal.RADIUS) &#123; // 触达左边界
+67.    //     this.#speedX = -this.#speedX
+68.    //   &#125;
+69.    //   if (this.#pos.y &gt; GameGlobal.CANVAS_HEIGHT - GameGlobal.RADIUS) &#123; // 触达右边界
+70.    //     this.#speedY = -this.#speedY
+71.    //   &#125; else if (this.#pos.y &lt; GameGlobal.RADIUS) &#123; // 触达左边界
+72.    //     this.#speedY = -this.#speedY
+73.    //   &#125;
+74.    // &#125;
+75.    testHitWall(hitedObject) &#123;
+76.      const res = this.rectangle.hitTest(hitedObject)
+77.      if (res === 4 || res === 8) &#123;
+78.        this.#speedX = -this.#speedX
+79.      &#125; else if (res === 16 || res === 32) &#123;
+80.        this.#speedY = -this.#speedY
+81.      &#125;
+82.    &#125;
+83.  
+84.    ...
+85.  &#125;
+86.  
+87.  export default Ball.getInstance()
+</code></pre>
+<p>在 Ball 类中发生了如下变化：</p>
+<ul>
+<li>
+<p>第 19 行，我们添加了新的类属性 rectangle，它是 BallRectangle 的实例。所有关于球的位置、大小等信息都移到了 rectangle 中，所以原来的类属性 #pos（第20 行）不再需要了，同时原来调用它的代码（例如第 58 行、第 59 行）都需要使用rectangle改写。</p>
+</li>
+<li>
+<p>第 32 行至第 42 行，这是初始化代码，原来 #pos 是一个坐标，包括 x、y 两个值，现在将这两个值分别以 rectangle 中的 x、y 代替。</p>
+</li>
+<li>
+<p>方法 testHitWall 用于屏幕边缘碰撞检测的，第 63 行至第 74 行的是旧代码，第 75 行至第 82 行是新代码。hitedObject 是新增的参数，它是 HitedObjectRectangle 子类的实例。</p>
+</li>
+</ul>
+<p>小球属于撞击对象，它的 rectangle 是一个 HitObjectRectangle 的子类实例（BallRectangle）。</p>
+<p>看一下对 Panel 类的改造，它是 LeftPanel 和 RightPanel 的基类：</p>
+<pre><code>1.  // JS：src/views/panel.js
+2.  /** 挡板基类 */
+3.  class Panel &#123;
+4.    constructor() &#123; &#125;
+5.  
+6.    // x // 挡板的起点X坐标
+7.    // y // 挡板的起点Y坐标
+8.    get x() &#123;
+9.      return this.rectangle.x
+10.    &#125;
+11.    set x(val) &#123;
+12.      this.rectangle.x = val
+13.    &#125;
+14.    get y() &#123;
+15.      return this.rectangle.y
+16.    &#125;
+17.    set y(val) &#123;
+18.      this.rectangle.y = val
+19.    &#125;
+20.    /** 挡板碰撞检测对象 */
+21.    rectangle
+22.    ...
+23.  &#125;
+24.  
+25.  export default Panel
+</code></pre>
+<p>这个基类发生了如下变化：</p>
+<ul>
+<li>
+<p>第 21 行，rectangle 是新增的 HitedObjectRectangle 的子类实例，具体是哪个实现，要在子类中决定。</p>
+</li>
+<li>
+<p>第 6 行、第 7 行将 x、y 去掉，代之以第 8 行至第 19 行的 getter 访问器和 setter 设置器，对 x、y 属性的访问和设置，将转变为对 rectangle 中 x、y 的访问和设置。</p>
+</li>
+</ul>
+<p>为什么要在 Panel 基类中新增一个 rectangle 属性？因为要在它的子类 LeftPanel、RightPanel 中新增这个属性，挡板是被撞击对象，rectangle 是 HitedObjectRectangle 的子类实例。与其在子类中分别设置，不如在基类中一个地方统一设置；另外，基类中 render 方法渲染挡板时要使用 x、y 属性，x、y 属性需要重写，这也要求 rectangle 必须定义在基类中定义。</p>
+<p>对 LeftPanel 类的改造：</p>
+<pre><code>1.  // JS：src/views/left_panel.js
+2.  ...
+3.  import LeftPanelRectangle from "hitTest/left_panel_rectangle.js"
+4.  
+5.  /** 左挡板 */
+6.  class LeftPanel extends Panel &#123;
+7.    constructor() &#123;
+8.      super()
+9.      this.rectangle = new LeftPanelRectangle()
+10.    &#125;
+11.  
+12.    ...
+13.  
+14.    /** 小球碰撞到左挡板返回1 */
+15.    testHitBall(ball) &#123;
+16.      return ball.rectangle.hitTest(this.rectangle)
+17.      // if (ball.x &lt; GameGlobal.RADIUS + GameGlobal.PANEL_WIDTH) &#123; // 触达左挡板
+18.      //   if (ball.y &gt; this.y &amp;&amp; ball.y &lt; (this.y + GameGlobal.PANEL_HEIGHT)) &#123;
+19.      //     return 1
+20.      //   &#125;
+21.      // &#125;
+22.      // return 0
+23.    &#125;
+24.  &#125;
+25.  
+26.  export default new LeftPanel()
+</code></pre>
+<p>以上代码发生了两处改动：</p>
+<ul>
+<li>
+<p>第 9 行，这里决定了基类中的 rectangle 是 LeftPanelRectangle 实例。LeftPanelRectangle 是 HitedObjectRectangle 的子类。</p>
+</li>
+<li>
+<p>第 16 行，碰撞检测代码修改为：由小球的 rectangle 与当前对象的 rectangle 做碰撞测试。</p>
+</li>
+</ul>
+<p>接下来是对 RightPanel 类的改写：</p>
+<pre><code>1.  // JS：src/views/right_panel.js
+2.  ...
+3.  import RightPanelRectangle from "hitTest/right_panel_rectangle.js"
+4.  
+5.  /** 右挡板 */
+6.  class RightPanel extends Panel &#123;
+7.    constructor() &#123;
+8.      super()
+9.      this.rectangle = new RightPanelRectangle()
+10.    &#125;
+11.  
+12.    ...
+13.  
+14.    /** 小球碰撞到左挡板返回2 */
+15.    testHitBall(ball) &#123;
+16.      return ball.rectangle.hitTest(this.rectangle)
+17.      // if (ball.x &gt; (GameGlobal.CANVAS_WIDTH - GameGlobal.RADIUS - GameGlobal.PANEL_WIDTH)) &#123; // 碰撞右挡板
+18.      //   if (ball.y &gt; this.y &amp;&amp; ball.y &lt; (this.y + GameGlobal.PANEL_HEIGHT)) &#123;
+19.      //     return 2
+20.      //   &#125;
+21.      // &#125;
+22.      // return 0
+23.    &#125;
+24.  &#125;
+25.  
+26.  export default new RightPanel()
+</code></pre>
+<p>与 LeftPanel 类似，在这个 RightPanel 类中也只有两处修改，见第 9 行与第 16 行。</p>
+<p>最后，我们开始改造 GameIndexPage，它是我们应用桥接模式的最后一站了：</p>
+<pre><code>1.  // JS：src\views\game_index_page.js
+2.  ...
+3.  import ScreenRectangle from "hitTest/screen_rectangle.js"
+4.  
+5.  /** 游戏主页页面 */
+6.  class GameIndexPage extends Page &#123;
+7.    ...
+8.    /** 墙壁碰撞检测对象 */
+9.    #rectangle = new ScreenRectangle()
+10.  
+11.    ...
+12.  
+13.    /** 运行 */
+14.    run() &#123;
+15.      ...
+16.      // 小球碰撞检测
+17.      // ball.testHitWall()
+18.      ball.testHitWall(this.#rectangle)
+19.      ...
+20.    &#125;
+21.  
+22.    ...
+23.  &#125;
+24.  
+25.  export default GameIndexPage
+</code></pre>
+<p>在 GameIndexPage 类中，只有以下两处修改：</p>
+<ul>
+<li>
+<p>第 9 行，添加了一个私有属性 #rectangle，它是一个碰撞检测数据对象，是 HitedObjectRectangle 的子类实例。</p>
+</li>
+<li>
+<p>第 18 行，在调用小球的 testHitWall 方法，将 #rectangle 作为参数传递了进去。</p>
+</li>
+</ul>
+<p>现在代码修改完了，重新编译测试，运行效果与之前一致，如下所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70d979f3be3e4b1e82b377e577ae612c~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>图4，运行效果图</p>
+<h2>（三）使用桥接模式的意义</h2>
+<p>我们思考一下，我们在碰撞检测这一块应用桥接模式，创建了许多新类，除了把项目变复杂了，到底有什么积极作用？我们将碰撞测试元素拆分为两个抽象对象（HitObjectRectangle 和 HitedObjectRectangle）的意义在哪里？</p>
+<p>看一张结构图，如图 5 所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f54776a7fba34bc18d0b6da379ccbd1b~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>图5，待扩展的桥接模式示意图</p>
+<p>HitObjectRectangle 代表碰撞对象的碰撞检测数据对象，HitedObjectRectangle 代表被碰撞对象的碰撞检测数据对象，后者有三个具体实现的子类：ScreenRectangle、LeftPanelRectangle 和 RightPanelRectangle，这三个子类代表三类被撞击的类型。</p>
+<p>如果游戏中出现一个四周需要被碰撞检测的对象，它的检测数据对象可以继承于 ScreenRectangle；如果出现一个右侧需要碰撞检测的对象，它的检测数据对象可以继承于 RightPanelRectangle，以此类推左侧出现的，它的数据对象可以继承于 LeftPanelRectangle。而如果出现一个撞击对象，它的检测数据对象可以继承于 BallRectangle。</p>
+<p>目前我们这个小游戏项目太过简单，不足够显示桥接模式的作用。接下来我们做一个人为拓展，新增一个红色立方体代替小球：</p>
+<pre><code>1.  // JS：src\views\cube.js
+2.  import &#123; Ball &#125; from "ball.js"
+3.  import CubeRectangle from "hitTest/cube_rectangle.js"
+4.  
+5.  /** 红色立方块 */
+6.  class Cube extends Ball &#123;
+7.    constructor() &#123;
+8.      super()
+9.      this.rectangle = new CubeRectangle()
+10.    &#125;
+11.  
+12.    /** 渲染 */
+13.    render(context) &#123;
+14.      context.fillStyle = "red"
+15.      context.beginPath()
+16.      context.rect(this.rectangle.left, this.rectangle.top, this.rectangle.width, this.rectangle.height)
+17.      context.fill()
+18.    &#125;
+19.  &#125;
+20.  
+21.  export default new Cube()
+</code></pre>
+<p>Cube 类的代码与 Ball 是类似的，只有 render 代码略有不同，让它继承于 Ball 是最简单的实现方法。第 9 行，rectangle 设置为 CubeRectangle 的实例，这个类尚不存在，稍后我们创建，它是 BallRectangle 的子类。</p>
+<p>在 cube.js 文件中引入的 Ball（第 2 行）现在还没有导出，我们需要修改一下 ball.js 文件，如下所示：</p>
+<pre><code>1.  // JS：src/views/ball.js
+2.  ...
+3.  
+4.  /** 小球 */
+5.  // class Ball &#123;
+6.  export class Ball &#123;
+7.    ...
+8.  &#125;
+9.  ...
+</code></pre>
+<p>第 6 行，使用 export 关键字添加了常规导出，其它不会修改。</p>
+<p>现在看一下新增的 CubeRectangle 类，如下所示：</p>
+<pre><code>1.  // JS：src\views\hitTest\ball_rectangle.js
+2.  import BallRectangle from "ball_rectangle.js"
+3.  
+4.  /** 碰撞对象的具体实现部分，立方体的大小及运动数据对象 */
+5.  class CubeRectangle extends BallRectangle &#123; &#125;
+6.  
+7.  export default CubeRectangle
+</code></pre>
+<p>CubeRectangle 是立方块的检测数据对象。CubeRectangle 可以继承于HitObjectRectangle 实现，但因为立方体与小球特征很像，所以让它继承于 BallRectangle 更容易实现。事实上它像一个“富二代”，只需要继承（第 5 行），什么也不用做。</p>
+<p>接下来开始使用立方块。为了使测试代码简单，我们将 game.js 文件中的页面创建代码修改一下，如下所示：</p>
+<pre><code>1.  // JS：disc\第11章\11.1\11.1.2\game.js
+2.  ...
+3.  // import PageBuildDirector from "src/views/page_build_director.js" // 引入页面建造指挥者
+4.  import PageFactory from "src/views/page_factory.js" // 引入页面工厂
+5.  
+6.  /** 游戏对象 */
+7.  class Game extends EventDispatcher &#123;
+8.    ...
+9.  
+10.    /** 游戏换页 */
+11.    turnToPage(pageName) &#123;
+12.      ...
+13.      // this.#currentPage = PageBuildDirector.buildPage(pageName, &#123; game: this, context: this.#context &#125;)
+14.      this.#currentPage = PageFactory.createPage(pageName, this, this.#context)
+15.      ...
+16.    &#125;
+17.  
+18.    ...
+19.  &#125;
+20.  ...
+</code></pre>
+<p>只有两处改动，第 4 行和第 14 行，继承使用 PageBuildDirector 不利于代码测试，使用 PageFactory 代码会更简单。这一步改动与本小节的桥接模式没有直接关系。</p>
+<p>最后修改 game_index_page.js 文件，使用立方块，代码如下：</p>
+<pre><code>1.  // JS：src\views\game_index_page.js
+2.  ...
+3.  // import ball from "ball.js" // 引入小球单例
+4.  import ball from "cube.js" // 引入立方块实例
+5.  ...
+</code></pre>
+<p>只有第 4 行引入地址变了，其他不会改变。代码扩展完了，重新编译测试，游戏的运行效果如图 6 所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6aa6462dc232460398bd5a8412878d5a~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>图6，小球变成了红色方块</p>
+<p>改动后，白色的小球变成了红色的方块。此处，项目的可扩展性非常好，在应用了桥接模式以后，当我们把小球扩展为方块时，只需要少量的变动就可以做到了。现在，将 CubeRectangle 纳入结构图，如图 7 所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee98c3b51ebf4f7cb1c9ebd39a828595~tplv-k3u1fbpfcp-watermark.image?">
+图7，扩展后的桥接模式示意图</p>
+<p>第四层添加了一个 CubeRectangle，我们的 HitObjectRectangle 修改了吗？没有。虽然在 HitObjectRectangle 的 hitTest 方法中，我们使用 instanceof 进行了类型判断，如下所示：</p>
+<pre><code>1.  /** 与被撞对象的碰撞检测 */
+2.  hitTest(hitedObject) &#123;
+3.    let res = 0
+4.    if (hitedObject instanceof LeftPanelRectangle) &#123; 
+5.      ...
+6.    &#125; else if (hitedObject instanceof RightPanelRectangle) &#123; 
+7.      ...
+8.    &#125; else if (hitedObject instanceof ScreenRectangle) &#123;
+9.      ...
+10.    &#125;
+11.    return res
+12.  &#125;
+</code></pre>
+<p>但判断的是基本类型，在第四层添加子类型不会影响代码的执行。我们添加的CubeRectangle 继承于 BallRectangle，属于 HitObjectRectangle 一支，如果添加一个新类继承于 HitedObjectRectangle 的子类（即 ScreenRectangle、LeftPanelRectangle 和 RightPanelRectangle），结果是一样的，代码不用修改仍然有效。HitObjectRectangle 和 HitedObjectRectangle 作为抽象部分，是我们实现的桥接模式中的重要组成部分，它们帮助具体实现部分屏蔽了变化的复杂性。</p>
+<p>注意：如果我们添加了新的碰撞检测类型，不同于 ScreenRectangle、LeftPanelRectangle 和 RightPanelRectangle 中的任何一个，代码应该如何拓展？这时候就需要修改 HitObjectRectangle 类的 hitTest 方法啦，需要添加 else if 分支。</p>
+<h2>（四）桥接模式用法总结</h2>
+<p>综上所述，在桥接模式中，是有两部分对象分别实现抽象部分与具体部分，然后这两部分对象相对独立自由的变化。在本小节示例中，我们主要应用桥接模式实现了碰撞检测。小球和立方块是撞击对象，左右挡板及屏幕是被撞击对象，通过相同的方式定义它们的大小、位置数据，然后以一种相对优雅的方式实现了碰撞检测。</p>
+<p>对比重构前后的代码，我们不难发现，在应用桥接模式之前，我们的碰撞检测代码是与 GameIndexPage、Ball、LeftPanel 和 RightPanel 耦合在一起的，并且不方便进行新的碰撞对象扩展；在重构以后，我们碰撞检测的代码变成了只有 top、bottom、left 和 right 属性数值的对比，变得非常清晰。</p>
+<p>所有面向对象重构中使用的设计模式，桥接模式是最复杂的，在大型跨平台 GUI 软件中，桥接模式基本也是必出现的。</p>
+<h1><strong>四、模式应用之访问者模式</strong></h1>
+<p>在应用了桥接模式以后，相信大家对设计模式的作用会有更深的了解，也有意识地运用设计模式，它可以帮助我们更大限度地应对需求变化的复杂性，从而保证版本迭代的稳定与快捷。</p>
+<p>访问者模式则是微信小游戏开发中另一应用设计，以下内容属于《微信小游戏开发》前端篇内容，我们尝试在源码基础之上，尝试应用访问者模式，目的仍然是有针对性地锤炼学习者渐进性模块化重构和面向对象重构思维的能力。</p>
+<h2>（一）应用模式之前的项目状态</h2>
+<p>目前我们在实现碰撞检测功能的时候，在 HitObjectRectangle 类中有一个很重要的方法：</p>
+<pre><code>1.  // JS：src\views\hitTest\hit_object_rectangle.js
+2.  ...
+3.  
+4.  /** 碰撞对象的抽象部分，球与方块的注册点在中心，不在左上角 */
+5.  class HitObjectRectangle extends Rectangle &#123;
+6.    ...
+7.  
+8.    /** 与被撞对象的碰撞检测 */
+9.    hitTest(hitedObject) &#123;
+10.      let res = 0
+11.      if (hitedObject instanceof LeftPanelRectangle) &#123; // 碰撞到左挡板返回1
+12.        ...
+13.      &#125; else if (hitedObject instanceof RightPanelRectangle) &#123; // 碰撞到右挡板返回2
+14.        ...
+15.      &#125; else if (hitedObject instanceof ScreenRectangle) &#123;
+16.        ...
+17.      &#125;
+18.      return res
+19.    &#125;
+20.  &#125;
+21.  
+22.  export default HitObjectRectangle
+</code></pre>
+<p>正是 hitTest 这个方法实现了碰撞检测，它根据不同的被撞击的对象，分别做了不同的边界检测。</p>
+<p>但是这个方法它存在缺陷，其内部有 if else，并且这个 if else 是会随着被检测对象的类型增长而增加的。那么在实践中该怎么优化它呢？我们可以使用访问者模式重构。在访问者模式中，可以根据不同的对象分别作不同的处理，这里多个被撞击的对象，恰好是定义中所说的不同的对象。</p>
+<h2>（二）什么是访问者模式</h2>
+<p>访问者模式是一种行为设计模式， 它能将算法与算法所作用的对象隔离开来。换言之，访问者模式根据访问者不同，展示不同的行为或做不同的处理。使用访问者模式，一般意味着调用反转，本来是 A 调用 B，结果该调用最终反赤来是通过 B 调用 A 完成的。</p>
+<p>在这个模式中一般有两个方面，我们可以拿软件外包市场中的甲方乙方类比一下，甲方是发包方，乙方是接包方，本来需要甲方到乙方公司系统阐明需求，由乙方根据不同需求安排不同的项目进行开发；现在则是与之相反。</p>
+<p>访问者模式的实现与应用</p>
+<p>接下来开始访问者模式的实践，我们先给 LeftPanelRectangle、RightPanelRectangle 和 ScreenRectangle 都添加一个相同的方法 accept，第一个 LeftPanelRectangle 的改动是这样的：</p>
+<pre><code>1.  // JS：src\views\hitTest\left_panel_rectangle.js
+2.  ...
+3.  
+4.  /** 被碰撞对象左挡板的大小数据 */
+5.  class LeftPanelRectangle extends HitedObjectRectangle &#123;
+6.    ...
+7.  
+8.    visit(hitObject) &#123;
+9.      if (hitObject.left &lt; this.right &amp;&amp; hitObject.top &gt; this.top &amp;&amp; hitObject.bottom &lt; this.bottom) &#123;
+10.        return 1 &lt;&lt; 0
+11.      &#125;
+12.      return 0
+13.    &#125;
+14.  &#125;
+15.  
+16.  export default LeftPanelRectangle
+</code></pre>
+<p>第 8 行至第 13 行，在这个新增的 visit 方法中，代码是从原来 HitObjectRectangle 类中摘取一段并稍加修改完成的，这里碰撞检测只涉及两个对象的边界，没有 if else，逻辑上便会更加简洁清晰。</p>
+<p>第二个 RightPanelRectangle 类的改动是这样的：</p>
+<pre><code>1.  // JS：src\views\hitTest\right_panel_rectangle.js
+2.  ...
+3.  
+4.  /** 被碰撞对象右挡板的大小数据 */
+5.  class RightPanelRectangle extends HitedObjectRectangle &#123;
+6.    ...
+7.  
+8.    visit(hitObject) &#123;
+9.      if (hitObject.right &gt; this.left &amp;&amp; hitObject.top &gt; this.top &amp;&amp; hitObject.bottom &lt; this.bottom) &#123;
+10.        return 1 &lt;&lt; 1
+11.      &#125;
+12.      return 0
+13.    &#125;
+14.  &#125;
+15.  
+16.  export default RightPanelRectangle
+</code></pre>
+<p>第 8 行至第 13 行，这个 visit 方法的实现，与 LeftPanelRectangle 中 visit 方法的实现如出一辙。</p>
+<p>第 3 个是 ScreenRectangle 类的改动：</p>
+<pre><code>1.  // JS：src\views\hitTest\screen_rectangle.js
+2.  ...
+3.  
+4.  /** 被碰撞对象屏幕的大小数据 */
+5.  class ScreenRectangle extends HitedObjectRectangle &#123;
+6.    ...
+7.  
+8.    visit(hitObject) &#123;
+9.      let res = 0
+10.      if (hitObject.right &gt; this.right) &#123; // 触达右边界返回4
+11.        res = 1 &lt;&lt; 2
+12.      &#125; else if (hitObject.left &lt; this.left) &#123; // 触达左边界返回8
+13.        res = 1 &lt;&lt; 3
+14.      &#125;
+15.      if (hitObject.top &lt; this.top) &#123; // 触达上边界返回16
+16.        res = 1 &lt;&lt; 4
+17.      &#125; else if (hitObject.bottom &gt; this.bottom) &#123; // 触达下边界返回32
+18.        res = 1 &lt;&lt; 5
+19.      &#125;
+20.      return res
+21.    &#125;
+22.  &#125;
+23.  
+24.  export default ScreenRectangle
+</code></pre>
+<p>第 8 行至第 21 行，是新增的 visit 方法。所有返回值，与原来均是一样的，代码的逻辑结构也是一样的，只是从哪个对象上取值上进行比较做了变化。</p>
+<p>上面这 3 个类都是 HitedObjectRectangle 的子类，为了让基类的定义更加完整，我们也修改一下 hited_object_rectangle.js 文件，如下所示：</p>
+<pre><code>1.  // JS：src\views\hitTest\hited_object_rectangle.js
+2.  ...
+3.  
+4.  /** 被碰撞对象的抽象部分，屏幕及左右挡板的注册点默认在左上角 */
+5.  class HitedObjectRectangle extends Rectangle &#123;
+6.    ...
+7.  
+8.    visit(hitObject) &#123; &#125;
+9.  &#125;
+10.  
+11.  export default HitedObjectRectangle
+</code></pre>
+<p>仅是第 8 行添加了一个空方法 visite，这个改动可以让所有 HitedObjectRectangle 对象都有一个默认的 visite方法，在某些情况下可以避免代码出错。</p>
+<p>最后我们再看一下 HitObjectRectangle 类的改动，这也是访问者模式中的核心部分：</p>
+<pre><code>1.  // JS：src\views\hitTest\hit_object_rectangle.js
+2.  ...
+3.  
+4.  /** 碰撞对象的抽象部分，球与方块的注册点在中心，不在左上角 */
+5.  class HitObjectRectangle extends Rectangle &#123;
+6.    ...
+7.  
+8.    /** 与被撞对象的碰撞检测 */
+9.    hitTest(hitedObject) &#123;
+10.      // let res = 0
+11.      // if (hitedObject instanceof LeftPanelRectangle) &#123; // 碰撞到左挡板返回1
+12.      //   if (this.left &lt; hitedObject.right &amp;&amp; this.top &gt; hitedObject.top &amp;&amp; this.bottom &lt; hitedObject.bottom) &#123;
+13.      //     res = 1 &lt;&lt; 0
+14.      //   &#125;
+15.      // &#125; else if (hitedObject instanceof RightPanelRectangle) &#123; // 碰撞到右挡板返回2
+16.      //   if (this.right &gt; hitedObject.left &amp;&amp; this.top &gt; hitedObject.top &amp;&amp; this.bottom &lt; hitedObject.bottom) &#123;
+17.      //     res = 1 &lt;&lt; 1
+18.      //   &#125;
+19.      // &#125; else if (hitedObject instanceof ScreenRectangle) &#123;
+20.      //   if (this.right &gt; hitedObject.right) &#123; // 触达右边界返回4
+21.      //     res = 1 &lt;&lt; 2
+22.      //   &#125; else if (this.left &lt; hitedObject.left) &#123; // 触达左边界返回8
+23.      //     res = 1 &lt;&lt; 3
+24.      //   &#125;
+25.      //   if (this.top &lt; hitedObject.top) &#123; // 触达上边界返回16
+26.      //     res = 1 &lt;&lt; 4
+27.      //   &#125; else if (this.bottom &gt; hitedObject.bottom) &#123; // 触达下边界返回32
+28.      //     res = 1 &lt;&lt; 5
+29.      //   &#125;
+30.      // &#125;
+31.      // return res
+32.      return hitedObject.visit(this)
+33.    &#125;
+34.  &#125;
+35.  
+36.  export default HitObjectRectangle
+</code></pre>
+<p>第 10 行至第 31 行，是 hitTest 方法中被注释掉的旧代码，原来复杂的 if else 逻辑没有了，只留下简短的一句话（第 32 行）。这就是设计模式的力量，不仅现在简单，后续如果我们要添加其他碰撞对象与被碰撞对象，这里也不需要变动，足以证明代码的可扩展性。</p>
+<p>这样我们在增加新的碰撞检测对象时，只需要创建新类，没有 if else 逻辑需要添加，也不影响旧代码。第 9 行，这里的 hitTest 方法，相当于一般访问者模式中的 accept 方法。</p>
+<p>当我们将访问者模式和桥接模式完成结合应用时，代码便变得异常简洁清晰。小游戏的运行效果与之前是一致的，如下所示：</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f60e6fb1fca74008a5de6a2607f05978~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>图7，运行效果示意图</p>
+<h2>（三）访问者模式用法总结</h2>
+<p>综上，访问者模式特别擅长将拥有多个 if else 逻辑或 switch 分支逻辑的代码，以一种反向调用的方式，转化为两类对象之间一对一的逻辑关系进行处理。这是一个应用十分普遍的设计模式，当遇到复杂的 if else 代码时，可以考虑使用该模式重构。</p>
+<h1><strong>五、总结</strong></h1>
+<p>桥接模式与访问者模式是通用的，不仅可以应用于小游戏开发中，而且可以用在其他前端项目中，甚至在其他编程语言中也可以发挥作用。设计模式本质上是一种组织软件功能、架构代码模块的面向对象思想，这种思想貌似让我们在开始写代码的时候多干了一些活，但干这些活的精力是值得投入的，它让我们可以把其他的活干得更快、更稳、更好。</p>
+<p>只有走得稳，才可以走得更远、更快。设计模式在项目开发中的作用一目了然，但也有一些反驳的声音认为，项目着急上线时根本没有仔细分析需求与架构的时间，如何应用设计模式？</p>
+<p>其实，快速上线是没有问题的，时间就是产品的生命；但在第一版本上线之后，程序员可以进行渐进式重构，重构并不发生在项目之初，对设计模式的应用也是在基本功能尘埃落定之后进行的。</p>
+<p>只有走得稳，才可以走得更远、更快，而设计模式与渐进式面向对象重构思想便可以帮助我们实现。</p>
+<p><img class="lazy" alt="image.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4635bf3216104098b0b135784069de55~tplv-k3u1fbpfcp-watermark.image?"></p>
+<p>本篇内容摘自腾讯云 TVP 李艺著、机械工业出版社出版的《微信小游戏开发》，该书已在京东上架，想要进一步深入了解微信小游戏开发的朋友们可以自行前往购买，文中涉及的所有设计模式源码在随书源码中都可以找到。</p>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？" href="https://juejin.cn/post/7208466455879729189" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span><span class="desc fs12">https://juejin.cn/post/7208466455879729189</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/18998a0b.html">在 KubeSphere 中开启新一代云原生数仓 Databend<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/f08e96c0.html">Express框架详解--- View 对象<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

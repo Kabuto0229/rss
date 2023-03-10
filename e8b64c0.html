@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>我的图床方案 - RSSBOX</title>
+
+  
+    <meta name="description" content="自从写博客以来就一直面临着图床问题，各种各样的图片该存放在哪里，又该如何管理，在我经过不断的探索以后写下了这篇博客初识图床图床图床，就是用来存放图片的温床，博客内有大量的图片，大量的地方需要使用到图片，优化博客加载方便管理的除了压缩图片的大小之外，首选就是多处使用图片链接，到不同的资源地址去进行加载来完成图片的加载。网络免费图床可以通过百度图床搜索 🔍 到很多很多各种各样的图床, 在此不做介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的图床方案">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/e8b64c0.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="自从写博客以来就一直面临着图床问题，各种各样的图片该存放在哪里，又该如何管理，在我经过不断的探索以后写下了这篇博客初识图床图床图床，就是用来存放图片的温床，博客内有大量的图片，大量的地方需要使用到图片，优化博客加载方便管理的除了压缩图片的大小之外，首选就是多处使用图片链接，到不同的资源地址去进行加载来完成图片的加载。网络免费图床可以通过百度图床搜索 🔍 到很多很多各种各样的图床, 在此不做介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-26T07:55:44.000Z">
+<meta property="article:modified_time" content="2022-11-26T07:55:44.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="安知鱼">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/">技术</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E6%8A%80%E6%9C%AF/%E5%AE%89%E7%9F%A5%E9%B1%BC/">安知鱼</a></div><div id="post-meta">发布于&nbsp;<time datetime="2022-11-26T07:55:44.000Z">2022-11-26</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>我的图床方案</span></h1>
+<div>
+<blockquote><p>自从写博客以来就一直面临着图床问题，各种各样的图片该存放在哪里，又该如何管理，在我经过不断的探索以后写下了这篇博客</p></blockquote><h1 id="初识图床"><a class="headerlink" href="#初识图床" title="初识图床"></a>初识图床</h1><p>图床图床，就是用来存放图片的温床，博客内有大量的图片，大量的地方需要使用到图片，优化博客加载方便管理的除了压缩图片的大小之外，首选就是多处使用图片链接，到不同的资源地址去进行加载来完成图片的加载。</p><h1 id="网络免费图床"><a class="headerlink" href="#网络免费图床" title="网络免费图床"></a>网络免费图床</h1><p>可以通过百度图床搜索 🔍 到很多很多各种各样的图床, 在此不做介绍如 SMMS 等图床.</p><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">无配置，仅需注册，有些甚至不用注册 ✅</td></tr><tr><td align="center">方便上传，方便管理 ✅</td></tr><tr><td align="center">免费 ✅</td></tr><tr><td align="center">容易跑路 ❌</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ❌</td></tr><tr><td align="center">图片加载速度不够快 ❌</td></tr><tr><td align="center">稳定性差 ❌</td></tr></tbody></table><h1 id="Github-图床"><a class="headerlink" href="#Github-图床" title="Github 图床"></a>Github 图床</h1><p>大部分同学是没有服务器的，那么就很需要图床来优化自己的仓库内容，毕竟 github 一个仓库大小只能在 1G 左右，一个比较成熟的方案是使用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/">github</a> + <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.jsdelivr.com/">jsd</a> + <a target="_blank" rel="external nofollow noopener noreferrer" href="https://picgo.github.io/PicGo-Doc/zh/guide/">PicGo</a></p><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">配置较为简单 ✅</td></tr><tr><td align="center">方便上传 ✅</td></tr><tr><td align="center">免费 ✅</td></tr><tr><td align="center">多个仓库可无限容量 ✅</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ❌</td></tr><tr><td align="center">一个仓库只能 1G❌</td></tr><tr><td align="center">图片加载速度不够快 ❌</td></tr><tr><td align="center">github 做图床有封号封仓库风险 ❌</td></tr><tr><td align="center">稳定性差 ❌</td></tr></tbody></table><h1 id="npm-图床"><a class="headerlink" href="#npm-图床" title="npm 图床"></a>npm 图床</h1><p>具体配置方法可以去参考我的这篇文章</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://anzhiy.cn/posts/72ea.html" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(https://api.iowen.cn/favicon/anzhiy.cn/posts/72ea.html.png);"></div> <div class="tag-link-right"> <div class="tag-link-title">npm图床</div> <div class="tag-link-sitename">npm图床配置教程</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">配置较为简 ✅</td></tr><tr><td align="center">免费 ✅</td></tr><tr><td align="center">镜像资源多，也可以自建，选对了镜像加载较快 ✅</td></tr><tr><td align="center">多个包或使用多个版本控制可无限容量 ✅</td></tr><tr><td align="center">方便上传，每次新加资源都需要重新发布版本 ❌</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ❌</td></tr><tr><td align="center">一个版本只能 100M-200M❌</td></tr><tr><td align="center">配置较为复杂 ❌</td></tr><tr><td align="center">高度依赖镜像，镜像寄就寄了 ❌</td></tr></tbody></table><h1 id="腾讯云或阿里云等各大平台的云存储-CDN-方案"><a class="headerlink" href="#腾讯云或阿里云等各大平台的云存储-CDN-方案" title="腾讯云或阿里云等各大平台的云存储+CDN 方案"></a>腾讯云或阿里云等各大平台的云存储+CDN 方案</h1><p>这个方案比较好，缺点是需要付费，大概为每年 20 元的存储费用 ➕ CDN 费用，CDN 为流量加速费用，具体得看站点流量大小。又拍云与七牛云都有免费的存储与 CDN 额度可以自行申请。</p><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">稳定性好 ✅</td></tr><tr><td align="center">方便管理图片，上传方便，有 API ✅</td></tr><tr><td align="center">容量取决于服务器 ✅</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ✅</td></tr><tr><td align="center">配置较为复杂 ❌</td></tr><tr><td align="center">需要额外费用 ❌</td></tr><tr><td align="center">容易被刷爆 ❌</td></tr></tbody></table><h1 id="自建图床"><a class="headerlink" href="#自建图床" title="自建图床"></a>自建图床</h1><p>如果你有一台服务器，那么你就可以自建自己的图床，以达到稳定性与速度兼备，可以自建<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.lsky.pro/">兰空图床</a>，缺点大概就是需要一台服务器的费用。</p><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">稳定性好 ✅</td></tr><tr><td align="center">方便管理图片，上传方便，有 API ✅</td></tr><tr><td align="center">容量取决于服务器 ✅</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ✅</td></tr><tr><td align="center">配置较为复杂 ❌</td></tr><tr><td align="center">需要服务器费用 ❌</td></tr></tbody></table><h1 id="付费图床"><a class="headerlink" href="#付费图床" title="付费图床"></a>付费图床</h1><p>目前我比较推荐的是杜老师的<a target="_blank" rel="external nofollow noopener noreferrer" href="https://7bu.top/">去不图床</a>, 10 元 1G, 容量收费。</p><table><thead><tr><th align="center">特点</th></tr></thead><tbody><tr><td align="center">稳定性好 ✅</td></tr><tr><td align="center">方便管理图片，上传方便，有 API ✅</td></tr><tr><td align="center">容量取决于服务器 ✅</td></tr><tr><td align="center">图像处理：如裁剪，压缩等 ✅</td></tr><tr><td align="center">配置简单 ✅</td></tr><tr><td align="center">需要一定费用 ❌</td></tr></tbody></table><h1 id="博主目前的方案"><a class="headerlink" href="#博主目前的方案" title="博主目前的方案"></a>博主目前的方案</h1><p>博主目前的方案为自建图床 ➕npm 图床 ➕ 云存储，三种方式都有使用，后续应该会逐渐迁移至云存储的方式。</p><p>目前为云存储 ➕cdn 来处理 js 等文件，搭建了 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://alist.nn.ci/zh/">alist</a>来管理文件。</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://pan.anzhiy.cn/" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url( https://cloud.anzhiy.cn/static/img/c192.png);"></div> <div class="tag-link-right"> <div class="tag-link-title">安知鱼alist</div> <div class="tag-link-sitename">安知鱼alist</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div><p>图片搭建了兰空图床企业版来使用。</p><div calss="anzhiyu-tag-link"><a class="tag-Link" href="https://image.anzhiy.cn" target="_blank" rel="external nofollow noopener noreferrer"> <div class="tag-link-tips">引用站外地址</div> <div class="tag-link-bottom"> <div class="tag-link-left" style="background-image: url(https://img02.anzhiy.cn/adminuploads/1/2022/04/27/6268e7d9de532.png);"></div> <div class="tag-link-right"> <div class="tag-link-title">安知鱼图床</div> <div class="tag-link-sitename">安知鱼图床</div> </div> <i class="fa-solid fa-angle-right"></i> </div> </a></div>
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="我的图床方案" href="https://anzhiy.cn/posts/2785.html" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">我的图床方案</span><span class="desc fs12">https://anzhiy.cn/posts/2785.html</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/fa1f709e.html">搭建环境与部署博客的最简便方法<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/d768d502.html">真心祝愿各位不要遇到 WJ<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/622a5765.html" title="2022年度总结"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/27/63aa89943caea.webp!blogimg"></div><span class="title">2022年度总结</span></a><a class="item" href="/rss/822c227d.html" title="Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/19/639fe5a920d2b.png"></div><span class="title">Chrome 发布新的 CSS 视口单位：Svh、lvh、dvh！！！</span></a><a class="item" href="/rss/3bade946.html" title="React组件之间的通信"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/639336e44611e.jpg!blogimg"></div><span class="title">React组件之间的通信</span></a><a class="item" href="/rss/2274aa88.html" title="Bilibili动态背景"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=2622"></div><span class="title">Bilibili动态背景</span></a><a class="item" href="/rss/2dc84c32.html" title="Butterfly控制特定图片懒加载"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/03/638ac112cfd48.webp!blogimg"></div><span class="title">Butterfly控制特定图片懒加载</span></a><a class="item" href="/rss/4d8682d1.html" title="Butterfly文章顶部添加波浪效果"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/21/63a2dcb4d781a.png"></div><span class="title">Butterfly文章顶部添加波浪效果</span></a><a class="item" href="/rss/777c7872.html" title="Css模糊羽化"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=2183"></div><span class="title">Css模糊羽化</span></a><a class="item" href="/rss/6327cb19.html" title="hexo博客工作流CI（一键部署的快乐）"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/15/63ec8e5037b2f.png!blogimg"></div><span class="title">hexo博客工作流CI（一键部署的快乐）</span></a><a class="item" href="/rss/78538721.html" title="Transform 支持单独赋值改变"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=4676"></div><span class="title">Transform 支持单独赋值改变</span></a><a class="item" href="/rss/6c019da2.html" title="为什么 React 的 setState 要设计成异步的"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2022/12/09/6392c48276234.jpg!blogimg"></div><span class="title">为什么 React 的 setState 要设计成异步的</span></a><a class="item" href="/rss/412f0ac5.html" title="为你的博客安装上便携小空调"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5187"></div><span class="title">为你的博客安装上便携小空调</span></a><a class="item" href="/rss/fc4ec0d5.html" title="操作系统复习题"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/07/63e1dd4b3942a.png"></div><span class="title">操作系统复习题</span></a><a class="item" href="/rss/a802e208.html" title="给你的博客加一个优雅的音乐界面"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://anzhiy.cn&url=https://anzhiy.cn/?r=https://anzhiy.cn&url=https://img02.anzhiy.cn/adminuploads/1/2023/02/10/63e6004607d39.png"></div><span class="title">给你的博客加一个优雅的音乐界面</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

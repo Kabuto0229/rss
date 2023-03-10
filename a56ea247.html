@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储 - RSSBOX</title>
+
+  
+    <meta name="description" content="GreptimeDB 是 Rust 实现的开源时序数据库，尤其关注可扩展性、分析能力和效率，专为云时代的基础设施而设计。 功能  提供可扩展到高可用分布式集群的独立二进制文件 优化处理时序数据的柱状布局 提供灵活的索引选项 利用弹性计算资源的分布式并行查询 提供用于高级分析场景的原生 SQL 和 Python 脚本 使用广泛采用的数据库协议和 API 适用于大量工作负载的可扩展表引擎架构  架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/a56ea247.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="GreptimeDB 是 Rust 实现的开源时序数据库，尤其关注可扩展性、分析能力和效率，专为云时代的基础设施而设计。 功能  提供可扩展到高可用分布式集群的独立二进制文件 优化处理时序数据的柱状布局 提供灵活的索引选项 利用弹性计算资源的分布式并行查询 提供用于高级分析场景的原生 SQL 和 Python 脚本 使用广泛采用的数据库协议和 API 适用于大量工作负载的可扩展表引擎架构  架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-bbbadbafcdc0c3567bc2a534ff918ebdf4b.png">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-f699833079ba777b8fff69cb34acc0b5ac4.png">
+<meta property="article:published_time" content="2023-02-24T08:54:00.000Z">
+<meta property="article:modified_time" content="2023-02-24T08:54:00.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="开源中国">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-bbbadbafcdc0c3567bc2a534ff918ebdf4b.png">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">GreptimeDB v0.1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Features</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Protocol</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Clients</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">Refactor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">未来的计划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">GreptimeDB</span></a></li></ol></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E5%BC%80%E6%BA%90%E4%B8%AD%E5%9B%BD/">开源中国</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-02-24T08:54:00.000Z">2023-02-24</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储</span></h1>
+<div>
+<div class="content">
+<p>GreptimeDB 是 Rust 实现的开源时序数据库，尤其关注可扩展性、分析能力和效率，专为云时代的基础设施而设计。</p>
+<p style="color:#333333; margin-left:0; margin-right:0; text-align:left"><strong>功能</strong></p>
+<ul style="list-style-type:disc; margin-left:0; margin-right:0">
+<li>提供可扩展到高可用分布式集群的独立二进制文件</li>
+<li>优化处理时序数据的柱状布局</li>
+<li>提供灵活的索引选项</li>
+<li>利用弹性计算资源的分布式并行查询</li>
+<li>提供用于高级分析场景的原生 SQL 和 Python 脚本</li>
+<li>使用广泛采用的数据库协议和 API</li>
+<li>适用于大量工作负载的可扩展表引擎架构</li>
+</ul>
+<p style="color:#333333; margin-left:0; margin-right:0; text-align:left"><strong>架构</strong></p>
+<p style="color:#333333; margin-left:0; margin-right:0; text-align:left"><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-bbbadbafcdc0c3567bc2a534ff918ebdf4b.png"></p>
+<p style="color:#333333; margin-left:0; margin-right:0; text-align:left">GreptimeDB 核心组件：</p>
+<ul style="list-style-type:disc; margin-left:0; margin-right:0">
+<li><code>Frontend</code><span> </span>前端用于在各种协议中提供读写服务，将请求转发到<span> </span><code>Datanode</code></li>
+<li><code>Datanode</code><span> </span>负责将数据存储到本地磁盘、S3 等持久化存储中</li>
+<li><code>Meta</code> server 后端负责协调<span> </span><code>Frontend</code><span> </span>和<span> </span><code>Datanode</code><span> </span>之间的操作</li>
+</ul>
+<p>近日，GreptimeDB 发布了 0.1 版本，并在公告写道，自去年 11 月开源以来，已经近 4 个月，团队将之前设定的里程碑拆分成了 v0.1， v0.2 和 v0.3 三个小阶段，最终希望可以在 v0.3 交付一个单机可靠，分布式可用的产品。</p>
+<p><img class="lazy" alt referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-f699833079ba777b8fff69cb34acc0b5ac4.png"></p>
+<p>以下内容摘录自 <a href="https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fmp.weixin.qq.com%2Fs%2FU0LdbvilVFpLBUK-zbRgrw" target="_blank" rel="external nofollow noopener noreferrer">https://mp.weixin.qq.com/s/U0LdbvilVFpLBUK-zbRgrw</a>。</p>
+<hr>
+<h2><strong>GreptimeDB v0.1</strong></h2>
+<h3><strong>Features</strong></h3>
+<ul>
+<li><strong>Compaction</strong></li>
+</ul>
+<p>是的，作为一个 LSM Tree 架构怎能没有 Compaction，GreptimeDB 终于支持 Compaction 了。通过 Compaction 也支持了数据的基于 TTL 的淘汰。</p>
+<ul>
+<li><strong>支持对象存储</strong></li>
+</ul>
+<p>通过 OpenDAL， GreptimeDB 较容易地实现了对 S3 和 OSS 对象存储的支持。</p>
+<ul>
+<li><strong>支持使用 Python</strong></li>
+</ul>
+<p>引入 Python 脚本功能与 DataFrame API 以及第三方 Python 库的支持，可作为协处理器和用户自定义函数 （UDF） 使用。</p>
+<ul>
+<li><strong>原生支持 PromQL</strong></li>
+</ul>
+<p>PromQL 在云原生可观测领域已是公认使用最广泛的查询语言了。因此，尽管挑战很大，我们决定在 GreptimeDB 中原生支持 PromQL。目前我们已经初步实现了 PromQL 原生支持，尽管还不能通过官方兼容性测试中的所有 cases，但随着 GreptimeDB 0.1 版本发布，其已经初步可用。对于这个兼容性测试，我们计划在 GreptimeDB v0.2 版本中通过一半以上的 test cases，在 v0.3 版本中通过 70% 以上。</p>
+<h3><strong>Protocol</strong></h3>
+<ul>
+<li><strong>新版高性能通信协议</strong></li>
+</ul>
+<p>基于 Arrow Flight RPC 构建，相比原来的 gRPC 私有协议，现在更加简洁高效，也很方便多种语言利用 Arrow Flight 的 SDK 直接与 GreptimeDB 通信。对 Stream 的支持也更方便。</p>
+<p>文档见:<a href="https://www.oschina.net/action/GoToLink?url=https%3A%2F%2Fdocs.greptime.com%2Fdeveloper-guide%2Fhow-to%2Fhow-to-write-sdk" target="_blank" rel="external nofollow noopener noreferrer">https://docs.greptime.com/developer-guide/how-to/how-to-write-sdk</a></p>
+<ul>
+<li><strong>MySQL &amp; PostgreSQL 支持 TLS</strong></li>
+</ul>
+<p>为了数据的传输安全，MySQL 和 PostgreSQL 支持 TLS 是十分有必要的。另外与 HTTP 或 gRPC 不同，数据库协议有自己的 TLS 握手过程，因此我们在数据库这一层来支持了 TLS。</p>
+<h3><strong>Clients</strong></h3>
+<ul>
+<li>基于Arrow Flight RPC通信的Java SDK[1]</li>
+<li>基于 Arrow Flight RPCGo SDK[2]正在开发</li>
+</ul>
+<h3><strong>Refactor</strong></h3>
+<ul>
+<li><strong>Datafusion &amp;Arrow重构</strong></li>
+</ul>
+<p>GreptimeDB 最初重度使用了 Arrow2，但是 DataFusion 的 Arrow2 分支已不再维护，所以我们决定切换到 Arrow，这样我们就可以跟上最新的 DataFusion 版本了，这是一个具有巨大挑战的任务，很高兴我们顺利完成了。</p>
+<p>除了以上列出的内容外，我们还有大大小小的 PRs 491 个，包括了各种功能准备，重构，bug 修复和文档完善等。另外，我们也将自己的一些经验回馈到开源社区，包括向 DataFusion[3],sqlness[4], Parquet2[5], Datafusion-Substrait[6], RustPython[7],OpenDAL[8] 等外部项目提交了贡献代码。</p>
+<h2><strong>未来的计划</strong></h2>
+<h3><strong>GreptimeDB</strong></h3>
+<p>我们会<strong>按计划在 5 月份 release v0.3</strong>，<strong>目标是可达到单机可靠，分布式可用的程度</strong>。其中 “可靠” 主要体现在性能和稳定性上，但既然是单机，无论性能还是稳定性都是有一定上限，所以我们也会逐步完善分布式的版本。<strong>对于单机已经能满足要求的用户来讲，GreptimeDB v0.3 将会给到建议可用的单机版本</strong>。</p>
+<p>而如果对可靠性和扩展性要求比较高的用户，我们也将在今年下半年完善分布式功能，计划年末提供分布式 GA ( General Availability ) 版本。</p>
+<p>功能方面，我们还是会专注在数据的采集、存储和分析的生命周期，落地在用户实际场景问题，重点会在<strong>查询性能</strong>、<strong>存储降本</strong>和<strong>分布式</strong>方面，包括：</p>
+<ul>
+<li>PromQL 查询性能优化</li>
+<li>Python scripts 支持 MapReduce 框架，更高效地处理分布式计算</li>
+<li>查询引擎的优化，向量化查询、智能索引和 Cost-Based Optimizer 等</li>
+<li>存储和计算分离，存与算均可做到自动化伸缩</li>
+<li>采用自适应压缩算法，一份数据支撑时序模型与分析模型的混合负载，降低存储成本</li>
+</ul>
+</div>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储" href="https://www.oschina.net/news/231999/greptimedb-0-1-released" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">开源 Rust 时序数据库 GreptimeDB 发布 v0.1，原生支持 Python, PromQL 和对象存储</span><span class="desc fs12">https://www.oschina.net/news/231999/greptimedb-0-1-released</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/291aab1.html">开源指南针 OSS Compass 顺利晋级！“2022 年中国开源创新大赛”决赛现场见<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/86fdb40.html">人狼羊菜过河详细题解<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/e957436c.html" title="2022年中国开源创新大赛初赛结果发布 76个项目晋级决赛"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=5135"></div><span class="title">2022年中国开源创新大赛初赛结果发布 76个项目晋级决赛</span></a><a class="item" href="/rss/79a22f83.html" title="5大GPU厂商共建 | openKylin 社区 GPU SIG 首次例会召开!"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://www.openkylin.top/upload/202303/1678413808152530.png"></div><span class="title">5大GPU厂商共建 | openKylin 社区 GPU SIG 首次例会召开!</span></a><a class="item" href="/rss/15a610d2.html" title="Audacious 4.3 发布，音频播放器"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8617"></div><span class="title">Audacious 4.3 发布，音频播放器</span></a><a class="item" href="/rss/6e24a23b.html" title="Gitee 推荐 | 智能可视分析框架 AVA"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://gitee.com&url=https://gitee.com/?r=https://gitee.com&url=https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg"></div><span class="title">Gitee 推荐 | 智能可视分析框架 AVA</span></a><a class="item" href="/rss/c5c95235.html" title="IntelliJ IDEA 2023.1 Beta 2 发布，支持保存多个窗口布局"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/071805_rrtt_4937141.png"></div><span class="title">IntelliJ IDEA 2023.1 Beta 2 发布，支持保存多个窗口布局</span></a><a class="item" href="/rss/c4ccc6a2.html" title="JetBrains 在代码质量平台 Qodana 中引入 PHP 污点分析"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-19916c13c3e90ce0bc997d8f063e08b4e44.gif"></div><span class="title">JetBrains 在代码质量平台 Qodana 中引入 PHP 污点分析</span></a><a class="item" href="/rss/83144ab6.html" title="Linux 6.3 增加 Thunderbolt/USB4 DisplayPort 带宽分配模式"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-54df17c43edebcd2a86cd79c992a4a7eade.png"></div><span class="title">Linux 6.3 增加 Thunderbolt/USB4 DisplayPort 带宽分配模式</span></a><a class="item" href="/rss/8a315e5b.html" title="React Native 0.71.4 发布"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=7014"></div><span class="title">React Native 0.71.4 发布</span></a><a class="item" href="/rss/2c49ce0e.html" title="Ruby 引入新 JIT 编译器 RJIT，替代 MJIT"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/082736_6VYA_2720166.png"></div><span class="title">Ruby 引入新 JIT 编译器 RJIT，替代 MJIT</span></a><a class="item" href="/rss/e4f80b8b.html" title="Wasm-Bpf —— WebAssembly eBPF 库和运行时"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://user-images.githubusercontent.com/34985212/218979864-80668806-b197-4e10-8447-6a1a21832a3f.png"></div><span class="title">Wasm-Bpf —— WebAssembly eBPF 库和运行时</span></a><a class="item" href="/rss/291aab1.html" title="开源指南针 OSS Compass 顺利晋级！“2022 年中国开源创新大赛”决赛现场见"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/140007_jcG8_4489239.png"></div><span class="title">开源指南针 OSS Compass 顺利晋级！“2022 年中国开源创新大赛”决赛现场见</span></a><a class="item" href="/rss/4d53ac09.html" title="服役 8 年，Google 删除 Chrome 清理工具"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://static.oschina.net/uploads/space/2023/0310/084308_g6Ju_4937141.png"></div><span class="title">服役 8 年，Google 删除 Chrome 清理工具</span></a><a class="item" href="/rss/5b62734f.html" title="每日一博 | Vivo 全球商城的库存系统架构设计与实践"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://my.oschina.net&url=https://my.oschina.net/?r=https://my.oschina.net&url=https://oscimg.oschina.net/oscnet/53dbb3c2-dfff-4a4d-a6ef-52d145fbd166.jpg"></div><span class="title">每日一博 | Vivo 全球商城的库存系统架构设计与实践</span></a><a class="item" href="/rss/9832a679.html" title="程序员笔记 CherryTree 0.99.55.0 发布"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://www.oschina.net&url=https://www.oschina.net/?r=https://www.oschina.net&url=https://oscimg.oschina.net/oscnet/up-dd36dd6b54d36c15e163c64a9d1c6c2b835.png"></div><span class="title">程序员笔记 CherryTree 0.99.55.0 发布</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

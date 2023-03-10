@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期 - RSSBOX</title>
+
+  
+    <meta name="description" content="theme: Chinese-red Hello，欢迎来到每日掘金时间。每日掘金专注于发掘站内优质创作者和优质内容，欢迎大家多提宝贵意见！ 本文字数 1800+，阅读时间大约需要 6 分钟。   【本期每日掘金】亮点： 巧用 CSS 变量，实现动画函数复用，制作高级感拉满的网格动画 你应该知道的React核心原理之任务优先级 来吧！接受Kotlin 协程--线程池的7个灵魂拷问 Netty框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/437c7eee.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="theme: Chinese-red Hello，欢迎来到每日掘金时间。每日掘金专注于发掘站内优质创作者和优质内容，欢迎大家多提宝贵意见！ 本文字数 1800+，阅读时间大约需要 6 分钟。   【本期每日掘金】亮点： 巧用 CSS 变量，实现动画函数复用，制作高级感拉满的网格动画 你应该知道的React核心原理之任务优先级 来吧！接受Kotlin 协程--线程池的7个灵魂拷问 Netty框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-08T05:11:20.000Z">
+<meta property="article:modified_time" content="2023-03-08T05:11:20.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">theme: Chinese-red</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">今日主理人</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">每日干货</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">『前端』</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">『后端』</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">『移动端』</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">趣味码上掘金分享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">📖 投稿专区</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-08T05:11:20.000Z">2023-03-08</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></h1>
+<div>
+<hr>
+<h2>theme: Chinese-red</h2>
+<p>Hello，欢迎来到每日掘金时间。每日掘金专注于发掘站内优质创作者和优质内容，欢迎大家多提宝贵意见！</p>
+<p>本文字数 1800+，阅读时间大约需要 6 分钟。</p>
+<blockquote>
+<ul>
+<li>【本期每日掘金】亮点：</li>
+<li>巧用 CSS 变量，实现动画函数复用，制作高级感拉满的网格动画</li>
+<li>你应该知道的React核心原理之任务优先级</li>
+<li>来吧！接受Kotlin 协程--线程池的7个灵魂拷问</li>
+<li>Netty框架内的宝藏：ByteBuf</li>
+<li>……</li>
+</ul>
+<p><strong>筛选规则</strong>：文章发布时间在本期「每日掘金」发布时间的 1-3 天内，且符合社区推荐标准，也会同步发布在掘金相关技术社群。</p>
+</blockquote>
+<h2>今日主理人</h2>
+<p>本期每日掘金由 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://juejin.cn/user/3008695929418318"> 丘山子 </a> 负责制作，需要投稿每日掘金请私信我的助理<a target="_blank" rel="external nofollow noopener noreferrer" href="https://juejin.cn/user/3008695929418318"> 小岳 </a>。</p>
+<p>PS：主理人目前正在招募中，有感兴趣的掘友们可以联系<a target="_blank" rel="external nofollow noopener noreferrer" href="https://juejin.cn/user/3052665287739005"><strong>Captain</strong></a></p>
+<h2>每日干货</h2>
+<p><strong>主理人们会对近期（1-3 天）社区深度技术好文进行挖掘和筛选，优质的技术文章有机会出现在下方列表，排名不分先后。</strong></p>
+<h3>『前端』</h3>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/xLx7td">巧用 CSS 变量，实现动画函数复用，制作高级感拉满的网格动画</a></li>
+</ul>
+<blockquote>
+<p>本文将介绍一种基于 CSS 变量技巧，通过合理使用 CSS 变量，实现 CSS 动画 <code>@keyframes</code> 的复用。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/d7NEeY">最新，Vue 中的响应性语法糖已废弃</a></li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Vue 中的响应性语法糖已废弃</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/zufyh9">JavaScript 中 Signals 的演变</a></li>
+</ul>
+<blockquote>
+<p>最近，“ Signals ”一词在前端世界中引起了不小的讨论。 在看似很短的时间内，它们好像在很多前端框架中都有出现，从 <a href="https://link.juejin.cn/?target=https%3A%2F%2Fpreactjs.com%2Fguide%2Fv10%2Fsignals%2F" title="https://preactjs.com/guide/v10/signals/" rel="external nofollow noopener noreferrer" target="_blank">Preact</a> 到 <a href="https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2Fangular%2Fangular%2Fdiscussions%2F49090" title="https://github.com/angular/angular/discussions/49090" rel="external nofollow noopener noreferrer" target="_blank">Angular</a></p>
+<p>但它并不是一个新事物。我们可以追溯到20世纪60年代末的研究。在其基础上，使第一个<a href="https://link.juejin.cn/?target=https%3A%2F%2Fwww.historyofinformation.com%2Fdetail.php%3Fid%3D5478" title="https://www.historyofinformation.com/detail.php?id=5478" rel="external nofollow noopener noreferrer" target="_blank">电子表格</a>和硬件描述语言（如 Verilog 和 VHDL ）得以实现的相同建模。</p>
+<p>甚至在 JavaScript 中，自从声明式 JavaScript 框架诞生以来，我们就拥有了 Signal。随着时间的推移，它们已经有了不同的名字，并在这些年里不断地流行起来。但现在我们又来到了这里，现在是一个很好的时机，让我们对其产生的原因以及如何使用有更多的了解。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/AFH9Ka">你应该知道的React核心原理之任务优先级</a></li>
+</ul>
+<blockquote>
+<p><code>React</code> 是一个声明式,高效且灵活的用于构建用户界面的 <code>JavaScript</code> 库,<code>React</code> 团队一直致力于实现高效渲染。
+其中 <code>可中断渲染</code>、<code>时间切片</code>、<code>异步渲染(Suspence)</code>等特性是 <code>React</code> 中很突出的特点,它们的具体实现都依赖于 <code>优先级管理</code>,那么今天我们来聊聊这个话题。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/zqhztM">三个经典的TypeScript易混淆点</a></li>
+</ul>
+<blockquote>
+<ul>
+<li><strong>本文会讲什么</strong>：主要讲解TypeScript在开发过程中的易混淆点，当然也同样是面试官常考的几个题目</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><strong>本文不会讲什么</strong>：本文并不是又大又全的TypeScript学习教程，不会讲那些基础知识、简单概念等，比如JS的内置类型这类。所以如果你是新手玩家，最好先去做一下新手任务出了新手村再这里</li>
+</ul>
+</blockquote>
+<h3>『后端』</h3>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/iy8b6H">Disruptor 高性能队列原理浅析</a></li>
+</ul>
+<blockquote>
+<p>测整体上来看 Disruptor 在提高吞吐量、减少并发执行损耗上做出了很大贡献，通过贴合硬件机制的方式进行设计，消除写争用，最小化读争用，并确保代码与现代处理器使用的 Cache 特性良好配合。我们可以看下 Log4j 2 的性能数据，Log4j 2 的 Loggers all async 就是基于 Disruptor 的。</p>
+</blockquote>
+<blockquote>
+<p>总结来说 Disruptor 是性能极高的无锁队列，提供了一种很好的利用硬件特性实现尽可能从缓存读取来加速访问的无锁方案。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/m7qJGd">设计模式篇之一文搞懂如何实现单例模式</a></li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>单例模式</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/JrRHEJ">记录一次锁的优化</a></li>
+</ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>记录一次锁的优化</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/PtpqS6">Netty框架内的宝藏：ByteBuf </a></li>
+</ul>
+<blockquote>
+<p>Netty框架是业内非常优秀的网络通信框架，本系列主要是通过介绍Netty里面优秀的组件设计，学一下高手的操作</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/hSB5Be">如何规范 RESTful API 的业务错误处理</a></li>
+</ul>
+<blockquote>
+<p>现如今，主流的 Web API 都采用 RESTful 设计风格，对于接口返回的 HTTP 状态码和响应内容都有统一的规范。针对接口错误响应，一般都会返回一个 Code（错误码）和 Message（错误消息内容），通常错误码 Code 用来定位一个唯一的错误，错误消息 Message 用来展示错误信息。</p>
+</blockquote>
+<blockquote>
+<p>本文就来详细介绍下，如何将 RESTful API 的错误处理进行规范化。</p>
+</blockquote>
+<h3>『移动端』</h3>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/SksgrW">云音乐 Swift 混编 Module 化实践</a></li>
+</ul>
+<blockquote>
+<p>本文主要介绍在支持云音乐 Swift 混编过程中，Module 化阶段的分析与实践。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://sourl.co/Dcb5Ce">来吧！接受Kotlin 协程--线程池的7个灵魂拷问</a></li>
+</ul>
+<blockquote>
+<p>通过本篇文章，你将了解到：</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>为什么要设计Dispatchers.Default和Dispatchers.IO？</li>
+<li>Dispatchers.Default 是如何调度的？</li>
+<li>Dispatchers.IO 是如何调度的？</li>
+<li>线程池是如何调度任务的？</li>
+<li>据说Dispatchers.Default 任务会阻塞？该怎么办？</li>
+<li>线程的生命周期是如何确定？</li>
+<li>如何更改线程池的默认配置？</li>
+</ol>
+</blockquote>
+<h2>趣味码上掘金分享</h2>
+<ul>
+<li>码上掘金精选，收集优秀的码上掘金项目，供大家一起学习：https://github.com/akira-cn/jcode-awesome</li>
+<li>码上掘金游戏精选：https://g.jcode.pub/#/7161331535579185191</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>作者</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="external nofollow noopener noreferrer" href="https://juejin.cn/user/712139263189303">十年踪迹</a></td>
+<td>🤖 manufactoria</td>
+</tr>
+</tbody>
+</table>
+<p><a target="_blank" rel="external nofollow noopener noreferrer" href="https://code.juejin.cn/pen/7161659797224292365">jcode</a></p>
+<h2>📖 投稿专区</h2>
+<blockquote>
+<p>大家可以在评论区推荐认为不错的文章，并附上链接和推荐理由，有机会登上下一期。文章创建日期必须在近 1-3 天内；可以推荐自己的文章、也可以推荐他人的文章。</p>
+</blockquote>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期" href="https://juejin.cn/post/7208016902039650361" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span><span class="desc fs12">https://juejin.cn/post/7208016902039650361</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/e36a18f8.html">2023年应该重新定义的CSS旧习惯（三）：元素比例属性、简写框距属性<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/9ea251e4.html">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/c7243308.html" title="那些年，我们写过的无效单元测试"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">那些年，我们写过的无效单元测试</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

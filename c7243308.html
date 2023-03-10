@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="dns-prefetch" href="https://fastly.jsdelivr.net">
+  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  <title>那些年，我们写过的无效单元测试 - RSSBOX</title>
+
+  
+    <meta name="description" content="作者：陈昌毅(常意) 前言  那些年，为了学分，我们学会了面向过程编程； 那些年，为了就业，我们学会了面向对象编程； 那些年，为了生活，我们学会了面向工资编程； 那些年，为了升职加薪，我们学会了面向领导编程； 那些年，为了完成指标，我们学会了面向指标编程； …… 那些年，我们学会了敷衍地编程； 那些年，我们编程只是为了敷衍。  现在，要响应提高代码质量的号召，需要提升单元测试的代码覆盖率。当然，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="那些年，我们写过的无效单元测试">
+<meta property="og:url" content="https://kabuto0229.github.io/rss/c7243308.html">
+<meta property="og:site_name" content="RSSBOX">
+<meta property="og:description" content="作者：陈昌毅(常意) 前言  那些年，为了学分，我们学会了面向过程编程； 那些年，为了就业，我们学会了面向对象编程； 那些年，为了生活，我们学会了面向工资编程； 那些年，为了升职加薪，我们学会了面向领导编程； 那些年，为了完成指标，我们学会了面向指标编程； …… 那些年，我们学会了敷衍地编程； 那些年，我们编程只是为了敷衍。  现在，要响应提高代码质量的号召，需要提升单元测试的代码覆盖率。当然，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95da14b7ef1a43ff89b4176f10c8808c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ced822b7721b4194b1125f39710d9e1c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75255a6d1c52408b8bb7e80f70003ecd~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5de566a71f3843bdb6ee5b297722c8a8~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4efa2d447ec4472bb48ce5e0c282c09a~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9f1cb7b8b05442d9fe393376b119417~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/44318b5a7c104e12af2902f4572ad113~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d4e32b3d08345dca7b8b76956ad3205~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2023-03-08T10:03:05.000Z">
+<meta property="article:modified_time" content="2023-03-08T10:03:05.000Z">
+<meta property="article:author" content="rss">
+<meta property="article:tag" content="媒体">
+<meta property="article:tag" content="掘金">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kabuto0229.github.io/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image">
+  
+  
+
+  <!-- feed -->
+  
+
+  
+    
+<link rel="stylesheet" href="/rss/css/main.css">
+
+  
+
+  
+
+  
+
+  
+
+
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class="l_body" id="start">
+    <aside class="l_left" layout="post">
+    
+
+
+<header class="header">
+
+<div class="logo-wrap"><a class="avatar" href="/rss/"><div class="bg" style="opacity:0;background-image:url(https://static.mhuig.top/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/rss/avatar.png" onerror="javascript:this.classList.add('error');this.src='rss/avatar.png';"></a><a class="title" href="/rss/"><div class="main">RSSBOX</div></a></div>
+<nav class="menu dis-select"><a class="nav-item active" href="/rss/">RSS</a></nav></header>
+
+<div class="widgets">
+
+<div class="widget-wrap single" id="toc"><div class="widget-header cap dis-select"><span class="name">本文目录</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">单元测试简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">1.1. 单元测试概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">1.2. 单元测试案例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.2.1. 服务代码案例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.2.2. 集成测试用例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.2.3. 单元测试用例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">1.3. 单元测试原则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.3.1. AIR原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.3.2. FIRST原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.3.3. ASCII原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">1.3.4. 对比集测和单测</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">无效单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">2.1. 单元测试覆盖率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">2.2. 单元测试编写流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">2.2.1. 定义对象阶段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">2.2.2. 模拟方法阶段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">2.2.3. 调用方法阶段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">2.2.4. 验证方法阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">2.3. 是否可以偷工减料</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">2.4. 最终可以得出结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">验证数据对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">3.1. 数据对象来源方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.1.1. 来源于被测方法的返回值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.1.2. 来源于依赖方法的参数捕获</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.1.3. 来源于被测对象的属性值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.1.4. 来源于请求参数的属性值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">3.2. 数据对象验证方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.2.1. 验证数据对象空值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.2.2. 验证数据对象布尔值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.2.3. 验证数据对象引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.2.4. 验证数据对象取值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">3.3. 验证数据对象问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.3.1. 不验证数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.3.2. 验证数据对象非空</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.3.3. 验证数据对象部分属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.3.4. 验证数据对象全部属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.3.5. 完美地验证数据对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">3.4. 模拟数据对象准则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.4.1. 除触发条件分支外，模拟对象所有属性值不能为空</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.4.2. 新增数据类属性字段时，必须模拟数据对象的属性值</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">3.5. 验证数据对象准则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.5.1. 必须验证所有数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.5.2. 必须使用明确语义的断言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">3.5.3. 尽量采用整体验证方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">验证抛出异常</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.1. 抛出异常来源方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.1.1. 来源于属性字段的判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.1.2. 来源于输入参数的判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.1.3. 来源于返回值的判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.1.4.来源于模拟方法的调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.1.5. 来源于静态方法的调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.2. 抛出异常验证方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.2.1. 通过try-catch语句验证抛出异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.2.2. 通过@Test注解验证抛出异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.2.3. 通过@Rule注解验证抛出异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.2.4. 通过Assert.assertThrows方法验证抛出异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.2.5. 四种抛出异常验证方式对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.3. 验证抛出异常问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.1. 不验证抛出异常类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.2. 不验证抛出异常属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.3. 只验证抛出异常部分属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.4. 不验证抛出异常原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.5. 不验证相关方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.3.6. 完美地验证抛出异常</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">4.4. 验证抛出异常准则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.4.1. 必须验证所有抛出异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.4.2. 必须验证异常类型、异常属性、异常原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">4.4.3. 验证抛出异常后，必须验证相关方法调用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">验证方法调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">5.1. 方法调用来源方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.1.1. 来源于注入对象的方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.1.2. 来源于输入参数的方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.1.3. 来源于返回值的方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.1.4. 来源于静态方法的调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">5.2. 方法调用验证方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.2.1. 验证依赖方法的调用参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.2.2. 验证依赖方法的调用次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.2.3. 验证依赖方法并捕获参数值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.2.4. 验证其它类型的依赖方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.2.5. 验证依赖对象没有更多方法调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">5.3. 验证依赖方法问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.1. 不验证依赖方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.2. 不验证依赖方法调用次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.3. 不验证依赖方法调用参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.4. 不验证所有依赖方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.5. 验证所有依赖方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.3.6. 完美地验证依赖方法调用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">5.4. 验证方法调用准则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.4.1. 必须验证所有的模拟方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.4.2. 必须验证所有的模拟对象没有更多方法调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">5.4.3. 必须使用明确语义的参数值或匹配器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-text">后记</span></a></li></ol></div></div></div>
+
+
+</div>
+
+
+    </aside>
+    <div class="l_main">
+      
+
+      
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/rss/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/rss/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/">媒体</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/rss/categories/%E5%AA%92%E4%BD%93/%E6%8E%98%E9%87%91/">掘金</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-03-08T10:03:05.000Z">2023-03-08</time></div></div>
+
+<article class="content md post">
+<h1 class="article-title"><span>那些年，我们写过的无效单元测试</span></h1>
+<div>
+<p><em>作者：陈昌毅(常意)</em></p>
+<h2>前言</h2>
+<blockquote>
+<p>那些年，为了学分，我们学会了<strong>面向过程编程</strong>；<br>
+那些年，为了就业，我们学会了<strong>面向对象编程</strong>；<br>
+那些年，为了生活，我们学会了<strong>面向工资编程</strong>；<br>
+那些年，为了升职加薪，我们学会了<strong>面向领导编程</strong>；<br>
+那些年，为了完成指标，我们学会了<strong>面向指标编程</strong>；<br>
+……<br>
+那些年，我们学会了<strong>敷衍地编程</strong>；<br>
+那些年，我们<strong>编程只是为了敷衍</strong>。</p>
+</blockquote>
+<p>现在，要响应提高代码质量的号召，需要提升单元测试的代码覆盖率。当然，我们要努力提高单元测试的代码覆盖率。至于单元测试用例的有效性，我们大抵是不用关心的，因为我们只是<strong>面向指标编程。</strong></p>
+<p>我曾经阅读过一个Java服务项目，单元测试的代码覆盖率非常高，但是通篇没有一个依赖方法验证（Mockito.verify）、满纸仅存几个数据对象断言（Assert.assertNotNull）。我说，这些都是无效的单元测试用例，根本起不到测试代码BUG和回归验证代码的作用。后来，在一个月黑风高的夜里，一个新增的方法调用，引起了一场血雨腥风。</p>
+<p>编写单元测试用例的目的，并不是为了追求单元测试代码覆盖率，而是为了利用单元测试验证回归代码——试图找出代码中潜藏着的BUG。所以，我们应该具备工匠精神、怀着一颗敬畏心，编写出有效的单元测试用例。在这篇文章里，作者通过日常的单元测试实践，系统地总结出一套避免编写无效单元测试用例的方法和原则。</p>
+<h2>单元测试简介</h2>
+<h3>1.1. 单元测试概念</h3>
+<p>在维基百科中是这样描述的：</p>
+<blockquote>
+<p>在计算机编程中，单元测试又称为模块测试，是针对程序模块来进行正确性检验的测试工作。程序单元是应用的最小可测试部件。在过程化编程中，一个单元就是单个程序、函数、过程等；对于面向对象编程，最小单元就是方法，包括基类、抽象类、或者派生类中的方法。</p>
+</blockquote>
+<h3>1.2. 单元测试案例</h3>
+<p>首先，通过一个简单的服务代码案例，让我们认识一下集成测试和单元测试。</p>
+<h4>1.2.1. 服务代码案例</h4>
+<p>这里，以用户服务（UserService）的分页查询用户（queryUser）为例说明。</p>
+<pre><code>@Service
+public class UserService &#123;
+    /** 定义依赖对象 */
+    /** 用户DAO */
+    @Autowired
+    private UserDAO userDAO;
+
+<pre><code>/**
+ * 查询用户
+ * 
+ * @param companyId 公司标识
+ * @param startIndex 开始序号
+ * @param pageSize 分页大小
+ * @return 用户分页数据
+ */
+public PageDataVO&amp;lt;UserVO&amp;gt; queryUser(Long companyId, Long startIndex, Integer pageSize) &amp;#123;
+    // 查询用户数据
+    // 查询用户数据: 总共数量
+    Long totalSize = userDAO.countByCompany(companyId);
+    // 查询接口数据: 数据列表
+    List&amp;lt;UserVO&amp;gt; dataList = null;
+    if (NumberHelper.isPositive(totalSize)) &amp;#123;
+        dataList = userDAO.queryByCompany(companyId, startIndex, pageSize);
+    &amp;#125;
+
+    // 返回分页数据
+    return new PageDataVO&amp;lt;&amp;gt;(totalSize, dataList);
+&amp;#125;
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<h4>1.2.2. 集成测试用例</h4>
+<p>很多人认为，凡是用到JUnit测试框架的测试用例都是单元测试用例，于是就写出了下面的集成测试用例。</p>
+<pre><code>@Slf4j
+@RunWith(PandoraBootRunner.class)
+@DelegateTo(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = &#123;ExampleApplication.class&#125;)
+public class UserServiceTest &#123;
+    /** 用户服务 */
+    @Autowired
+    private UserService userService;
+
+<pre><code>/**
+ * 测试: 查询用户
+ */
+@Test
+public void testQueryUser() &amp;#123;
+    Long companyId = 123L;
+    Long startIndex = 90L;
+    Integer pageSize = 10;
+    PageDataVO&amp;lt;UserVO&amp;gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+    log.info(&quot;testQueryUser: pageData=&amp;#123;&amp;#125;&quot;, JSON.toJSONString(pageData));
+&amp;#125;
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p>集成测试用例主要有以下特点：</p>
+<ol>
+<li>依赖外部环境和数据；</li>
+<li>需要启动应用并初始化测试对象；</li>
+<li>直接使用@Autowired注入测试对象；</li>
+<li>有时候无法验证不确定的返回值，只能靠打印日志来人工核对。</li>
+</ol>
+<h4>1.2.3. 单元测试用例</h4>
+<p>采用JUnit+Mockito编写的单元测试用例如下：</p>
+<pre><code>@Slf4j
+@RunWith(MockitoJUnitRunner.class)
+public class UserServiceTest &#123;
+    /** 定义静态常量 */
+    /** 资源路径 */
+    private static final String RESOURCE_PATH = "testUserService/";
+
+<pre><code>/** 模拟依赖对象 */
+/** 用户DAO */
+@Mock
+private UserDAO userDAO;
+
+/** 定义测试对象 */
+/** 用户服务 */
+@InjectMocks
+private UserService userService;
+
+/**
+ * 测试: 查询用户-无数据
+ */
+@Test
+public void testQueryUserWithoutData() &amp;#123;
+    // 模拟依赖方法
+    // 模拟依赖方法: userDAO.countByCompany
+    Long companyId = 123L;
+    Long startIndex = 90L;
+    Integer pageSize = 10;
+    Mockito.doReturn(0L).when(userDAO).countByCompany(companyId);
+
+    // 调用测试方法
+    String path = RESOURCE_PATH + &quot;testQueryUserWithoutData/&quot;;
+    PageDataVO&amp;lt;UserVO&amp;gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+    String text = ResourceHelper.getResourceAsString(getClass(), path + &quot;pageData.json&quot;);
+    Assert.assertEquals(&quot;分页数据不一致&quot;, text, JSON.toJSONString(pageData));
+
+    // 验证依赖方法
+    // 验证依赖方法: userDAO.countByCompany
+    Mockito.verify(userDAO).countByCompany(companyId);
+
+    // 验证依赖对象
+    Mockito.verifyNoMoreInteractions(userDAO);
+&amp;#125;
+
+/**
+ * 测试: 查询用户-有数据
+ */
+@Test
+public void testQueryUserWithData() &amp;#123;
+    // 模拟依赖方法
+    String path = RESOURCE_PATH + &quot;testQueryUserWithData/&quot;;
+    // 模拟依赖方法: userDAO.countByCompany
+    Long companyId = 123L;
+    Mockito.doReturn(91L).when(userDAO).countByCompany(companyId);
+    // 模拟依赖方法: userDAO.queryByCompany
+    Long startIndex = 90L;
+    Integer pageSize = 10;
+    String text = ResourceHelper.getResourceAsString(getClass(), path + &quot;dataList.json&quot;);
+    List&amp;lt;UserVO&amp;gt; dataList = JSON.parseArray(text, UserVO.class);
+    Mockito.doReturn(dataList).when(userDAO).queryByCompany(companyId, startIndex, pageSize);
+
+    // 调用测试方法
+    PageDataVO&amp;lt;UserVO&amp;gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+    text = ResourceHelper.getResourceAsString(getClass(), path + &quot;pageData.json&quot;);
+    Assert.assertEquals(&quot;分页数据不一致&quot;, text, JSON.toJSONString(pageData));
+
+    // 验证依赖方法
+    // 验证依赖方法: userDAO.countByCompany
+    Mockito.verify(userDAO).countByCompany(companyId);
+    // 验证依赖方法: userDAO.queryByCompany
+    Mockito.verify(userDAO).queryByCompany(companyId, startIndex, pageSize);
+
+    // 验证依赖对象
+    Mockito.verifyNoMoreInteractions(userDAO);
+&amp;#125;
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p>单元测试用例主要有以下特点：</p>
+<ol>
+<li>不依赖外部环境和数据；</li>
+<li>不需要启动应用和初始化对象；</li>
+<li>需要用@Mock来初始化依赖对象，用@InjectMocks来初始化测试对象；</li>
+<li>需要自己模拟依赖方法，指定什么参数返回什么值或异常；</li>
+<li>因为测试方法返回值确定，可以直接用Assert相关方法进行断言；</li>
+<li>可以验证依赖方法的调用次数和参数值，还可以验证依赖对象的方法调用是否验证完毕。</li>
+</ol>
+<h3>1.3. 单元测试原则</h3>
+<p>为什么集成测试不算单元测试呢？我们可以从单元测试原则上来判断。在业界，常见的单元测试原则有AIR原则和FIRST原则。</p>
+<h4>1.3.1. AIR原则</h4>
+<p><strong>AIR原则</strong>内容如下：</p>
+<p><strong>1、A-Automatic（自动的）</strong></p>
+<p>单元测试应该是全自动执行的，并且非交互式的。测试用例通常是被定期执行的，执行过程必须完全自动化才有意义。输出结果需要人工检查的测试不是一个好的单元测试。单元测试中不准使用System.out来进行人肉验证，必须使用assert来验证。</p>
+<p><strong>2、I-Independent（独立的）</strong></p>
+<p>单元测试应该保持的独立性。为了保证单元测试稳定可靠且便于维护，单元测试用例之间决不能互相调用，也不能对外部资源有所依赖。</p>
+<p><strong>3、R-Repeatable（可重复的）</strong></p>
+<p>单元测试是可以重复执行的，不能受到外界环境的影响。单元测试通常会被放入持续集成中，每次有代码提交时单元测试都会被执行。</p>
+<h4>1.3.2. FIRST原则</h4>
+<p><strong>FIRST原则</strong>内容如下：</p>
+<p><strong>1、F-Fast（快速的）</strong></p>
+<p>单元测试应该是可以快速运行的，在各种测试方法中，单元测试的运行速度是最快的，大型项目的单元测试通常应该在几分钟内运行完毕。</p>
+<p><strong>2、I-Independent（独立的）</strong></p>
+<p>单元测试应该是可以独立运行的，单元测试用例互相之间无依赖，且对外部资源也无任何依赖。</p>
+<p><strong>3、R-Repeatable（可重复的）</strong></p>
+<p>单元测试应该可以稳定重复的运行，并且每次运行的结果都是稳定可靠的。</p>
+<p><strong>4、S-SelfValidating（自我验证的）</strong></p>
+<p>单元测试应该是用例自动进行验证的，不能依赖人工验证。</p>
+<p><strong>5、T-Timely（及时的）</strong></p>
+<p>单元测试必须及时进行编写，更新和维护，以保证用例可以随着业务代码的变化动态的保障质量。</p>
+<h4>1.3.3. ASCII原则</h4>
+<p>阿里的夕华先生也提出了一条<strong>ASCII原则</strong>：</p>
+<p><strong>1、A-Automatic（自动的）</strong></p>
+<p>单元测试应该是全自动执行的，并且非交互式的。</p>
+<p><strong>2、S-SelfValidating（自我验证的）</strong></p>
+<p>单元测试中必须使用断言方式来进行正确性验证，而不能根据输出进行人肉验证。</p>
+<p><strong>3、C-Consistent（一致的）</strong></p>
+<p>单元测试的参数和结果是确定且一致的。</p>
+<p><strong>4、I-Independent（独立的）</strong></p>
+<p>单元测试之间不能互相调用，也不能依赖执行的先后次序。</p>
+<p><strong>5、I-Isolated（隔离的）</strong></p>
+<p>单元测试需要是隔离的，不要依赖外部资源。</p>
+<h4>1.3.4. 对比集测和单测</h4>
+<p>根据上节中的单元测试原则，我们可以对比集成测试和单元测试的满足情况如下：</p>
+<p><img class="lazy" alt="1.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d29506fe5cd4545b9e83f02eb564d0c~tplv-k3u1fbpfcp-zoom-1.image" title="1.png"></p>
+<p>集成测试基本上不一定满足所有单元测试原则；通过上面表格的对比，可以得出以下结论：</p>
+<ol>
+<li>集成测试基本上不一定满足所有单元测试原则；</li>
+<li>单元测试基本上一定都满足所有单元测试原则。</li>
+</ol>
+<p>所以，根据这些单元测试原则，可以看出集成测试具有很大的不确定性，不能也不可能完全代替单元测试。另外，集成测试始终是集成测试，即便用于代替单元测试也还是集成测试，比如：利用H2内存数据库测试DAO方法。</p>
+<h2>无效单元测试</h2>
+<p>要想识别无效单元测试，就必须站在对方的角度思考——如何在保障单元测试覆盖率的前提下，能够更少地编写单元测试代码。那么，就必须从单元测试编写流程入手，看哪一阶段哪一方法可以偷工减料。</p>
+<h3>2.1. 单元测试覆盖率</h3>
+<p>在维基百科中是这样描述的：</p>
+<blockquote>
+<p>代码覆盖（Code Coverage）是软件测试中的一种度量，描述程序中源代码被测试的比例和程度，所得比例称为代码覆盖率。</p>
+</blockquote>
+<p>常用的单元测试覆盖率指标有：</p>
+<ol>
+<li><strong>行覆盖(Line Coverage)：</strong> 用于度量被测代码中每一行执行语句是否都被测试到了。</li>
+<li><strong>分支覆盖(Branch Coverage)：</strong> 用于度量被测代码中每一个代码分支是否都被测试到了。</li>
+<li><strong>条件覆盖(Condition Coverage)：</strong> 用于度量被测代码的条件中每一个子表达式（true和false）是否都被测试到了。</li>
+<li><strong>路径覆盖(Path Coverage)：</strong> 用于度量被测代码中的每一个代码分支组合是否都被测试到了。</li>
+</ol>
+<p>除此之外，还有方法覆盖（Method Coverage）、类覆盖（Class Coverage）等单元测试覆盖率指标。</p>
+<p>下面，用一个简单方法来分析各个单元测试覆盖率指标：</p>
+<pre><code>public static byte combine(boolean b0, boolean b1) &#123;
+    byte b = 0;
+    if (b0) &#123;
+        b |= 0b01;
+    &#125;
+    if (b1) &#123;
+        b |= 0b10;
+    &#125;
+    return b;
+&#125;
+</code></pre>
+<p><img class="lazy" alt="2.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95da14b7ef1a43ff89b4176f10c8808c~tplv-k3u1fbpfcp-zoom-1.image" title="2.png"></p>
+<p>单元测试覆盖率，只能代表被测代码的类、方法、执行语句、代码分支、条件子表达式等是否被执行，但是并不能代表这些代码是否被正确地执行并返回了正确的结果。所以，只看单元测试覆盖率，而不看单元测试有效性，是没有任何意义的。</p>
+<h3>2.2. 单元测试编写流程</h3>
+<p>首先，介绍一下作者总结的单元测试编写流程：</p>
+<p><img class="lazy" alt="3.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ced822b7721b4194b1125f39710d9e1c~tplv-k3u1fbpfcp-zoom-1.image" title="3.png"></p>
+<h4>2.2.1. 定义对象阶段</h4>
+<p>定义对象阶段主要包括：定义被测对象、模拟依赖对象（类成员）、注入依赖对象（类成员）。</p>
+<p><img class="lazy" alt="4.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/75255a6d1c52408b8bb7e80f70003ecd~tplv-k3u1fbpfcp-zoom-1.image" title="4.png"></p>
+<h4>2.2.2. 模拟方法阶段</h4>
+<p>模拟方法阶段主要包括：模拟依赖对象（参数、返回值和异常）、模拟依赖方法。</p>
+<p><img class="lazy" alt="5.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5de566a71f3843bdb6ee5b297722c8a8~tplv-k3u1fbpfcp-zoom-1.image" title="5.png"></p>
+<h4>2.2.3. 调用方法阶段</h4>
+<p>调用方法阶段主要包括：模拟依赖对象（参数）、调用被测方法、验证参数对象（返回值和异常）。</p>
+<p><img class="lazy" alt="6.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4efa2d447ec4472bb48ce5e0c282c09a~tplv-k3u1fbpfcp-zoom-1.image" title="6.png"></p>
+<h4>2.2.4. 验证方法阶段</h4>
+<p>验证方法阶段主要包括：验证依赖方法、验证数据对象（参数）、验证依赖对象 。</p>
+<p><img class="lazy" alt="7.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c9f1cb7b8b05442d9fe393376b119417~tplv-k3u1fbpfcp-zoom-1.image" title="7.png"></p>
+<h3>2.3. 是否可以偷工减料</h3>
+<p>针对单元测试编写流程的阶段和方法，在不影响单元测试覆盖率的情况，我们是否可以进行一些偷工减料。</p>
+<p><img class="lazy" alt="8.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/44318b5a7c104e12af2902f4572ad113~tplv-k3u1fbpfcp-zoom-1.image" title="8.png"></p>
+<h3>2.4. 最终可以得出结论</h3>
+<p>通过上表格，可以得出结论，偷工减料主要集中在验证阶段：</p>
+<ol>
+<li>调用方法阶段</li>
+</ol>
+<!-- -->
+<ol>
+<li>
+<ol>
+<li>验证数据对象（返回值和异常）</li>
+</ol>
+</li>
+</ol>
+<!-- -->
+<ol start="2">
+<li>验证方法阶段</li>
+</ol>
+<!-- -->
+<ol>
+<li>
+<ol>
+<li>验证依赖方法</li>
+<li>验证数据对象（参数）</li>
+<li>验证依赖对象</li>
+</ol>
+</li>
+</ol>
+<p>通过一些合并和拆分，后续将从以下三部分展开：</p>
+<ol>
+<li>验证数据对象（包括属性、参数和返回值）；</li>
+<li>验证抛出异常；</li>
+<li>验证依赖方法（包括依赖方法和依赖对象）。</li>
+</ol>
+<h2>验证数据对象</h2>
+<p>在单元测试中，验证数据对象是为了验证是否传入了期望的参数值、返回了期望的返回值、设置了期望的属性值。</p>
+<h3>3.1. 数据对象来源方式</h3>
+<p>在单元测试中，需要验证的数据对象主要有以下几种来源。</p>
+<h4>3.1.1. 来源于被测方法的返回值</h4>
+<p>数据对象来源于调用被测方法的返回值，例如：</p>
+<pre><code>PageDataVO&lt;UserVO&gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+</code></pre>
+<h4>3.1.2. 来源于依赖方法的参数捕获</h4>
+<p>数据对象来源于验证依赖方法的参数捕获，例如：</p>
+<pre><code>ArgumentCaptor&lt;UserDO&gt; userCreateCaptor = ArgumentCaptor.forClass(UserDO.class);
+Mockito.verify(userDAO).create(userCreateCaptor.capture());
+UserDO userCreate = userCreateCaptor.getValue();
+</code></pre>
+<h4>3.1.3. 来源于被测对象的属性值</h4>
+<p>数据对象来源于获取被测对象的属性值，例如：</p>
+<pre><code>userService.loadRoleMap();
+Map&lt;Long, String&gt; roleMap = Whitebox.getInternalState(userService, "roleMap");
+</code></pre>
+<h4>3.1.4. 来源于请求参数的属性值</h4>
+<p>数据对象来源于获取请求参数的属性值，例如：</p>
+<pre><code>OrderContext orderContext = new OrderContext();
+orderContext.setOrderId(12345L);
+orderService.supplyProducts(orderContext);
+List&lt;ProductDO&gt; productList = orderContext.getProductList();
+</code></pre>
+<p>当然，数据对象还有其它来源方式，这里就不再一一举例了。</p>
+<h3>3.2. 数据对象验证方式</h3>
+<p>在调用被测方法时，需要对返回值和异常进行验证；在验证方法调用时，也需要对捕获的参数值进行验证。</p>
+<h4>3.2.1. 验证数据对象空值</h4>
+<p>JUnit提供Assert.assertNull和Assert.assertNotNull方法来验证数据对象空值。</p>
+<pre><code>// 1. 验证数据对象为空
+Assert.assertNull("用户标识必须为空", userId);
+
+<p>&#x2F;&#x2F; 2. 验证数据对象非空<br>Assert.assertNotNull(“用户标识不能为空”, userId);<br></p></code></pre><p></p>
+<h4>3.2.2. 验证数据对象布尔值</h4>
+<p>JUnit提供Assert.assertTrue和Assert.assertFalse方法来验证数据对象布尔值的真假。</p>
+<pre><code>// 1. 验证数据对象为真
+Assert.assertTrue("返回值必须为真", NumberHelper.isPositive(1));
+
+<p>&#x2F;&#x2F; 2. 验证数据对象为假<br>Assert.assertFalse(“返回值必须为假”, NumberHelper.isPositive(-1));<br></p></code></pre><p></p>
+<h4>3.2.3. 验证数据对象引用</h4>
+<p>JUnit提供Assert.assertSame和Assert.assertNotSame方法来验证数据对象引用是否一致。</p>
+<pre><code>// 1. 验证数据对象一致
+Assert.assertSame("用户必须一致", expectedUser, actualUser);
+
+<p>&#x2F;&#x2F; 2. 验证数据对象不一致<br>Assert.assertNotSame(“用户不能一致”, expectedUser, actualUser);<br></p></code></pre><p></p>
+<h4>3.2.4. 验证数据对象取值</h4>
+<p>JUnit提供Assert.assertEquals、Assert.assertNotEquals、Assert.assertArrayEquals方法组，可以用来验证数据对象值是否相等。</p>
+<pre><code>// 1. 验证简单数据对象
+Assert.assertNotEquals("用户名称不一致", "admin", userName);
+Assert.assertEquals("账户金额不一致", 10000.0D, accountAmount, 1E-6D);
+
+<p>&#x2F;&#x2F; 2. 验证简单集合对象<br>Assert.assertArrayEquals(“用户标识列表不一致”, new Long[] &amp;#123;1L, 2L, 3L&amp;#125;, userIds);<br>Assert.assertEquals(“用户标识列表不一致”, Arrays.asList(1L, 2L, 3L), userIdList);</p>
+<p>&#x2F;&#x2F; 3. 验证复杂数据对象<br>Assert.assertEquals(“用户标识不一致”, Long.valueOf(1L), user.getId());<br>Assert.assertEquals(“用户名称不一致”, “admin”, user.getName());<br>…</p>
+<p>&#x2F;&#x2F; 4. 验证复杂集合对象<br>Assert.assertEquals(“用户列表长度不一致”, expectedUserList.size(), actualUserList.size());<br>UserDO[] expectedUsers &#x3D; expectedUserList.toArray(new UserDO[0]);<br>UserDO[] actualUsers &#x3D; actualUserList.toArray(new UserDO[0]);<br>for (int i &#x3D; 0; i &lt; actualUsers.length; i++) &amp;#123;<br>     Assert.assertEquals(String.format(“用户 (%s) 标识不一致”, i), expectedUsers[i].getId(), actualUsers[i].getId());<br>     Assert.assertEquals(String.format(“用户 (%s) 名称不一致”, i), expectedUsers[i].getName(), actualUsers[i].getName());<br>     …<br>&amp;#125;;</p>
+<p>&#x2F;&#x2F; 5. 通过序列化验证数据对象<br>String text &#x3D; ResourceHelper.getResourceAsString(getClass(), “userList.json”);<br>Assert.assertEquals(“用户列表不一致”, text, JSON.toJSONString(userList));;</p>
+<p>&#x2F;&#x2F; 6. 验证数据对象私有属性字段<br>Assert.assertEquals(“基础包不一致”, “com.alibaba.example”, Whitebox.getInternalState(configurer, “basePackage”));<br></p></code></pre><p></p>
+<p>当然，数据对象还有其它验证方法，这里就不再一一举例了。</p>
+<h3>3.3. 验证数据对象问题</h3>
+<p>这里，以分页查询公司用户为例，来说明验证数据对象时所存在的问题。</p>
+<p>代码案例：</p>
+<pre><code>public PageDataVO&lt;UserVO&gt; queryUser(Long companyId, Long startIndex, Integer pageSize) &#123;
+    // 查询用户数据
+    // 查询用户数据: 总共数量
+    Long totalSize = userDAO.countByCompany(companyId);
+    // 查询接口数据: 数据列表
+    List&lt;UserVO&gt; dataList = null;
+    if (NumberHelper.isPositive(totalSize)) &#123;
+        List&lt;UserDO&gt; userList = userDAO.queryByCompany(companyId, startIndex, pageSize);
+        dataList = userList.stream().map(UserService::convertUser)
+            .collect(Collectors.toList());
+    &#125;
+
+<pre><code>// 返回分页数据
+return new PageDataVO&amp;lt;&amp;gt;(totalSize, dataList);
+</code></pre>
+<p>&amp;#125;<br>private static UserVO convertUser(UserDO userDO) &amp;#123;<br>    UserVO userVO &#x3D; new UserVO();<br>    userVO.setId(userDO.getId());<br>    userVO.setName(userDO.getName());<br>    userVO.setDesc(userDO.getDesc());<br>    …<br>    return userVO;<br>&amp;#125;<br></p></code></pre><p></p>
+<h4>3.3.1. 不验证数据对象</h4>
+<p><strong>反面案例：</strong> 很多人为了偷懒，对数据对象不进行任何验证。</p>
+<pre><code>// 调用测试方法
+userService.queryUser(companyId, startIndex, pageSize);
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>无法验证数据对象是否正确，比如被测代码进行了以下修改：</p>
+<pre><code>// 返回分页数据
+return null;
+</code></pre>
+<h4>3.3.2. 验证数据对象非空</h4>
+<p><strong>反面案例：</strong></p>
+<p>既然不验证数据对象有问题，那么我就简单地验证一下数据对象非空。</p>
+<pre><code>// 调用测试方法
+PageDataVO&lt;UserVO&gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+Assert.assertNotNull("分页数据不为空", pageData);
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>无法验证数据对象是否正确，比如被测代码进行了以下修改：</p>
+<pre><code>// 返回分页数据
+return new PageDataVO&lt;&gt;();
+</code></pre>
+<h4>3.3.3. 验证数据对象部分属性</h4>
+<p><strong>反面案例：</strong></p>
+<p>既然简单地验证数据对象非空不行，那么我就验证数据对象的部分属性。</p>
+<pre><code>// 调用测试方法
+PageDataVO&lt;UserVO&gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+Assert.assertEquals("数据总量不为空", totalSize, pageData.getTotalSize());
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>无法验证数据对象是否正确，比如被测代码进行了以下修改：</p>
+<pre><code>// 返回分页数据
+return new PageDataVO&lt;&gt;(totalSize, null);
+</code></pre>
+<h4>3.3.4. 验证数据对象全部属性</h4>
+<p><strong>反面案例：</strong></p>
+<p>验证数据对象部分属性也不行，那我验证数据对象所有属性总行了吧。</p>
+<pre><code>// 调用测试方法
+PageDataVO&lt;UserVO&gt; pageData = userService.queryUser(companyId);
+Assert.assertEquals("数据总量不为空", totalSize, pageData.getTotalSize());
+Assert.assertEquals("数据列表不为空", dataList, pageData.getDataList());
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>上面的代码看起来很完美，验证了PageDataVO中两个属性值totalSize和dataList。但是，如果有一天在PageDataVO中添加了startIndex和pageSize，就无法验证这两个新属性是否赋值正确。代码如下：</p>
+<pre><code>// 返回分页数据
+return new PageDataVO&lt;&gt;(startIndex, pageSize, totalSize, dataList);
+</code></pre>
+<p><strong>备注：</strong> 本方法仅适用于属性字段不可变的数据对象</p>
+<h4>3.3.5. 完美地验证数据对象</h4>
+<p>对于数据对象属性字段新增，有没有完美的验证方案？有的！答案就是利用JSON序列化，然后比较JSON文本内容。如果数据对象新增了属性字段，必然会提示JSON字符串不一致。</p>
+<p><strong>完美案例：</strong></p>
+<pre><code>// 调用测试方法
+PageDataVO&lt;UserVO&gt; pageData = userService.queryUser(companyId, startIndex, pageSize);
+text = ResourceHelper.getResourceAsString(getClass(), path + "pageData.json");
+Assert.assertEquals("分页数据不一致", text, JSON.toJSONString(pageData));
+</code></pre>
+<p><strong>备注：</strong> 本方法仅适用于属性字段可变的数据对象。</p>
+<h3>3.4. 模拟数据对象准则</h3>
+<p>由于没有模拟数据对象章节，这里在验证数据对象章节中插入了模拟数据对象准则。</p>
+<h4>3.4.1. 除触发条件分支外，模拟对象所有属性值不能为空</h4>
+<p>在上一节中，我们展示了如何完美地验证数据对象。但是，这种方法真正完美吗？答案是否定。</p>
+<p>比如：我们把userDAO.queryByCompany方法返回的uesrList的所有UserDO对象的属性值name和desc赋值为空，再把convertUser方法的name和desc赋值做一下交换，上面的单元测试用例是无法验证出来的。</p>
+<pre><code>private static UserVO convertUser(UserDO userDO) &#123;
+    UserVO userVO = new UserVO();
+    userVO.setId(userDO.getId());
+    userVO.setName(userDO.getDesc());
+    userVO.setDesc(userDO.getName());
+    ...
+    return userVO;
+&#125;
+</code></pre>
+<p>所以，在单元测试中，除触发条件分支外，模拟对象所有属性值不能为空。</p>
+<h4>3.4.2. 新增数据类属性字段时，必须模拟数据对象的属性值</h4>
+<p>在上面的案例中，如果UserDO和UserVO新增了属性字段age（用户年龄），且新增了赋值语句如下：</p>
+<pre><code>userVO.setAge(userDO.getAge());
+</code></pre>
+<p>如果还是用原有的数据对象执行单元测试，我们会发现单元测试用例执行通过。这是因为，由于属性字段age为空，赋值不赋值没有任何差别。所以，新增属性类属性字段是，必须模拟数据对象的属性值。</p>
+<p><strong>注意：</strong> 如果用JSON字符串对比，且设置输出空字段，是可以触发单元测试用例执行失败的。</p>
+<h3>3.5. 验证数据对象准则</h3>
+<h4>3.5.1. 必须验证所有数据对象</h4>
+<p>在单元测试中，必须验证所有数据对象：</p>
+<ol>
+<li>来源于被测方法的返回值</li>
+<li>来源于依赖方法的参数捕获</li>
+<li>来源于被测对象的属性值</li>
+<li>来源于请求参数的属性值。</li>
+</ol>
+<p>具体案例可以参考《数据对象来源方式》章节。</p>
+<h4>3.5.2. 必须使用明确语义的断言</h4>
+<p>在使用断言验证数据对象时，必须使用确定语义的断言，不能使用不明确语义的断言。</p>
+<p><strong>正例：</strong></p>
+<pre><code>Assert.assertTrue("返回值不为真", NumberHelper.isPositive(1));
+Assert.assertEquals("用户不一致", user, userService.getUser(userId));
+</code></pre>
+<p><strong>反例：</strong></p>
+<pre><code>Assert.assertNotNull("用户不能为空", userService.getUser(userId));
+Assert.assertNotEquals("用户不能一致", user, userService.getUser(userId));
+</code></pre>
+<p>谨防一些试图绕过本条准则的案例，试图用明确语义的断言去做不明确语义的判断。</p>
+<pre><code>Assert.assertTrue("用户不能为空", Objects.nonNull(userService.getUser(userId)));
+</code></pre>
+<h4>3.5.3. 尽量采用整体验证方式</h4>
+<p>如果一个模型类，会根据业务需要新增字段。那么，针对这个模型类所对应的数据对象，尽量采用整体验证方式。</p>
+<p><strong>正例：</strong></p>
+<pre><code>UserVO user = userService.getUser(userId);
+String text = ResourceHelper.getResourceAsString(getClass(), path + "user.json");
+Assert.assertEquals("用户不一致", text, JSON.toJSONString(user));
+</code></pre>
+<p><strong>反例：</strong></p>
+<pre><code>UserVO user = userService.getUser(userId);
+Assert.assertEquals("用户标识不一致", Long.valueOf(123L), user.getId());
+Assert.assertEquals("用户名称不一致", "changyi", user.getName());
+...
+</code></pre>
+<p>上面这种数据验证方式，如果模型类删除了属性字段，是可以验证出来的。但是，如果模型类添加了字段，是无法验证出来的。所以，如果采用了这种验证方式，在新增了模型类属性字段后，需要梳理并补全测试用例。否则，在使用单元测试用例回归代码时，它将会告诉你这里<strong>没有任何问题</strong>。</p>
+<h2>验证抛出异常</h2>
+<p>异常作为Java语言的重要特性，是Java语言健壮性的重要体现。捕获并验证抛出异常，也是测试用例的一种。所以，在单元测试中，也需要对抛出异常进行验证。</p>
+<h3>4.1. 抛出异常来源方式</h3>
+<h4>4.1.1. 来源于属性字段的判断</h4>
+<p>判断属性字段是否非法，否则抛出异常。</p>
+<pre><code>private Map&lt;String, MessageHandler&gt; messageHandlerMap = ...;
+public void handleMessage(Message message) &#123;
+    ...
+    // 判断处理器映射非空
+    if (CollectionUtils.isEmpty(messageHandlerMap)) &#123;
+        throw new ExampleException("消息处理器映射不能为空");
+    &#125;
+    ...
+&#125;
+</code></pre>
+<h4>4.1.2. 来源于输入参数的判断</h4>
+<p>判断输入参数是否合法，否则抛出异常。</p>
+<pre><code>public void handleMessage(Message message) &#123;
+    ...
+    // 判断获取处理器非空
+    MessageHandler messageHandler = messageHandlerMap.get(message.getType());
+    if (CollectionUtils.isEmpty(messageHandler)) &#123;
+        throw new ExampleException("获取消息处理器不能为空");
+    &#125;
+    ...
+&#125;
+</code></pre>
+<p><strong>注意：</strong> 这里采用的是Spring框架提供的Assert类，跟if-throw语句的效果一样。</p>
+<h4>4.1.3. 来源于返回值的判断</h4>
+<p>判断返回值是否合法，否则抛出异常。</p>
+<pre><code>public void handleMessage(Message message) &#123;
+    ...
+    // 进行消息处理器处理
+    boolean result = messageHandler.handleMessage(message);
+    if (!reuslt) &#123;
+        throw new ExampleException("处理消息异常");
+    &#125;
+    ...
+&#125;
+</code></pre>
+<h4>4.1.4.来源于模拟方法的调用</h4>
+<p>调用模拟的依赖方法时，可能模拟的依赖方法会抛出异常。</p>
+<pre><code>public void handleMessage(Message message) &#123;
+    ...
+    // 进行消息处理器处理
+    boolean result = messageHandler.handleMessage(message); // 直接抛出异常
+    ...
+&#125;
+</code></pre>
+<p>这里，可以进行异常捕获处理，或打印输出日志，或继续抛出异常。</p>
+<h4>4.1.5. 来源于静态方法的调用</h4>
+<p>有时候，静态方法调用也有可能抛出异常。</p>
+<pre><code>// 可能会抛出IOException
+String response = HttpHelper.httpGet(url, parameterMap);
+</code></pre>
+<p>除此之外，还有别的抛出异常来源方式，这里不再累述。</p>
+<h3>4.2. 抛出异常验证方式</h3>
+<p>在单元测试中，通常存在四种验证抛出异常方法。</p>
+<h4>4.2.1. 通过try-catch语句验证抛出异常</h4>
+<p>Java单元测试用例中，最简单直接的异常捕获方式就是使用try-catch语句。</p>
+<pre><code>@Test
+public void testCreateUserWithException() &#123;
+    // 模拟依赖方法
+    Mockito.doReturn(true).when(userDAO).existName(Mockito.anyString());
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreate = new UserCreateVO();
+try &amp;#123;
+    userCreate.setName(&quot;changyi&quot;);
+    userCreate.setDescription(&quot;Java Programmer&quot;);
+    userService.createUser(userCreate);
+&amp;#125; catch (ExampleException e) &amp;#123;
+    Assert.assertEquals(&quot;异常编码不一致&quot;, ErrorCode.OBJECT_EXIST, e.getCode());
+    Assert.assertEquals(&quot;异常消息不一致&quot;, &quot;用户已存在&quot;, e.getMessage());
+&amp;#125;
+
+// 验证依赖方法
+Mockito.verify(userDAO).existName(userCreate.getName());
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<h4>4.2.2. 通过@Test注解验证抛出异常</h4>
+<p>JUnit的@Test注解提供了一个expected属性，可以指定一个期望的异常类型，用来捕获并验证异常。</p>
+<pre><code>@Test(expected = ExampleException.class)
+public void testCreateUserWithException() &#123;
+    // 模拟依赖方法
+    Mockito.doReturn(true).when(userDAO).existName(Mockito.anyString());
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreate = new UserCreateVO();
+userCreate.setName(&quot;changyi&quot;);
+userCreate.setDescription(&quot;Java Programmer&quot;);
+userService.createUser(userCreate);
+
+// 验证依赖方法(不会执行)
+Mockito.verify(userDAO).existName(userCreate.getName());
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p><strong>注意：</strong> 测试用例在执行到 userService.createUser方法后将跳出方法，导致后续验证语句无法执行。所以，这种方式无法验证异常编码、消息、原因等内容，也无法验证依赖方法及其参数。</p>
+<h4>4.2.3. 通过@Rule注解验证抛出异常</h4>
+<p>如果想要验证异常原因和消息，就需求采用@Rule注解定义ExpectedException对象，然后在测试方法的前面声明要捕获的异常类型、原因和消息。</p>
+<pre><code>@Rule
+public ExpectedException exception = ExpectedException.none();
+@Test
+public void testCreateUserWithException1() &#123;
+    // 模拟依赖方法
+    Mockito.doReturn(true).when(userDAO).existName(Mockito.anyString());
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreate = new UserCreateVO();
+userCreate.setName(&quot;changyi&quot;);
+userCreate.setDescription(&quot;Java Programmer&quot;);
+exception.expect(ExampleException.class);
+exception.expectMessage(&quot;用户已存在&quot;);
+userService.createUser(userCreate);
+
+// 验证依赖方法(不会执行)
+Mockito.verify(userDAO).existName(userCreate.getName());
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p><strong>注意：</strong> 测试用例在执行到 userService.createUser方法后将跳出方法，导致后续验证语句无法执行。所以，这种方式无法验证依赖方法及其参数。由于ExpectedException的验证方法只支持验证异常类型、原因和消息，无法验证异常的自定义属性字段值。目前，JUnit官方建议使用Assert.assertThrows替换。</p>
+<h4>4.2.4. 通过Assert.assertThrows方法验证抛出异常</h4>
+<p>在最新版的JUnit中，提供了一个更为简洁的异常验证方式——Assert.assertThrows方法。</p>
+<pre><code>@Test
+public void testCreateUserWithException() &#123;
+    // 模拟依赖方法
+    Mockito.doReturn(true).when(userDAO).existName(Mockito.anyString());
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreate = new UserCreateVO();
+userCreate.setName(&quot;changyi&quot;);
+userCreate.setDescription(&quot;Java Programmer&quot;);
+ExampleException exception = Assert.assertThrows(&quot;异常类型不一致&quot;, ExampleException.class, () -&amp;gt; userService.createUser(userCreate));
+Assert.assertEquals(&quot;异常编码不一致&quot;, ErrorCode.OBJECT_EXIST, exception.getCode());
+Assert.assertEquals(&quot;异常消息不一致&quot;, &quot;用户已存在&quot;, exception.getMessage());
+
+// 验证依赖方法
+Mockito.verify(userDAO).existName(userCreate.getName());
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<h4>4.2.5. 四种抛出异常验证方式对比</h4>
+<p>根据不同的验证异常功能项，对四种抛出异常验证方式对比。结果如下：</p>
+<p><img class="lazy" alt="9.png" referrerpolicy="no-referrer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d4e32b3d08345dca7b8b76956ad3205~tplv-k3u1fbpfcp-zoom-1.image" title="9.png"></p>
+<p>综上所述，采用Assert.assertThrows方法验证抛出异常是最佳的，也是JUnit官方推荐使用的。</p>
+<h3>4.3. 验证抛出异常问题</h3>
+<p>这里，以创建用户时抛出异常为例，来说明验证抛出异常时所存在的问题。代码案例：</p>
+<pre><code>private UserDAO userDAO;
+public void createUser(@Valid UserCreateVO userCreateVO) &#123;
+    try &#123;
+        UserDO userCreateDO = new UserDO();
+        userCreateDO.setName(userCreateVO.getName());
+        userCreateDO.setDesc(userCreateVO.getDesc());
+        userDAO.create(userCreateDO);
+    &#125; catch (RuntimeException e) &#123;
+        log.error("创建用户异常: userName=&#123;&#125;", userName, e)
+        throw new ExampleException(ErrorCode.DATABASE_ERROR, "创建用户异常", e);
+    &#125;
+&#125;
+</code></pre>
+<h4>4.3.1. 不验证抛出异常类型</h4>
+<p><strong>反面案例：</strong></p>
+<p>在验证抛出异常时，很多人使用@Test注解的expected属性，并且指定取值为Exception.class，主要原因是：</p>
+<ol>
+<li>单元测试用例的代码简洁，只有一行@Test注解；</li>
+<li>不管抛出什么异常，都能保证单元测试用例通过。</li>
+</ol>
+<pre><code>@Test(expected = Exception.class)
+public void testCreateUserWithException() &#123;
+    // 模拟依赖方法
+    Throwable e = new RuntimeException();
+    Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreateVO = ...;
+userService.createUser(userCreate);
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong> 上面用例指定了通用异常类型，没有对抛出异常类型进行验证。所以，如果把<strong>ExampleException异常</strong>改为<strong>RuntimeException异常</strong>，该单元测试用例是无法验证出来的。</p>
+<pre><code>throw new RuntimeException("创建用户异常", e);
+</code></pre>
+<h4>4.3.2. 不验证抛出异常属性</h4>
+<p><strong>反面案例：</strong> 既然需要验证异常类型，简单地指定@Test注解的expected属性为ExampleException.class即可。</p>
+<pre><code>@Test(expected = ExampleException.class)
+public void testCreateUserWithException() &#123;
+    // 模拟依赖方法
+    Throwable e = new RuntimeException();
+    Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<pre><code>// 调用测试方法
+UserCreateVO userCreateVO = ...;
+userService.createUser(userCreate);
+</code></pre>
+<p>&amp;#125;<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong></p>
+<p>上面用例只验证了异常类型，没有对抛出异常属性字段（异常消息、异常原因、错误编码等）进行验证。所以，如果把错误编码<strong>DATABASE_ERROR（数据库错误）</strong> 改为<strong>PARAMETER_ERROR（参数错误）</strong> ，该单元测试用例是无法验证出来的。</p>
+<pre><code>throw new ExampleException(ErrorCode.PARAMETER_ERROR, "创建用户异常", e);
+</code></pre>
+<h4>4.3.3. 只验证抛出异常部分属性</h4>
+<p><strong>反面案例：</strong></p>
+<p>如果要验证异常属性，就必须用Assert.assertThrows方法捕获异常，并对异常的常用属性进行验证。但是，有些人为了偷懒，只验证抛出异常部分属性。</p>
+<pre><code>// 模拟依赖方法
+Throwable e = new RuntimeException();
+Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<p>&#x2F;&#x2F; 调用测试方法<br>UserCreateVO userCreateVO &#x3D; …;<br>ExampleException exception &#x3D; Assert.assertThrows(“异常类型不一致”, ExampleException.class, () -&gt; userService.createUser(userCreateVO));<br>Assert.assertEquals(“异常编码不一致”, ErrorCode.DATABASE_ERROR, exception.getCode());<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong></p>
+<p>上面用例只验证了异常类型和错误编码，如果把错误消息 <strong>"创建用户异常"</strong> 改为 <strong>"创建用户错误"</strong> ，该单元测试用例是无法验证出来的。</p>
+<pre><code>throw new ExampleException(ErrorCode.DATABASE_ERROR, "创建用户错误", e);
+</code></pre>
+<h4>4.3.4. 不验证抛出异常原因</h4>
+<p><strong>反面案例：</strong></p>
+<p>先捕获抛出异常，再验证异常编码和异常消息，看起来很完美了。</p>
+<pre><code>// 模拟依赖方法
+Throwable e = new RuntimeException();
+Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<p>&#x2F;&#x2F; 调用测试方法<br>UserCreateVO userCreateVO &#x3D; …;<br>ExampleException exception &#x3D; Assert.assertThrows(“异常类型不一致”, ExampleException.class, () -&gt; userService.createUser(userCreateVO));<br>Assert.assertEquals(“异常编码不一致”, ErrorCode.OBJECT_EXIST, exception.getCode());<br>Assert.assertEquals(“异常消息不一致”, “创建用户异常”, exception.getMessage());<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong></p>
+<p>通过代码可以看出，在抛出ExampleException异常时，最后一个参数e是我们模拟的userService.createUser方法抛出的RuntimeException异常。但是，我们没有对抛出异常原因进行验证。如果修改代码，把最后一个参数e去掉，上面的单元测试用例是无法验证出来的。</p>
+<pre><code>throw new ExampleException(ErrorCode.DATABASE_ERROR, "创建用户异常");
+</code></pre>
+<h4>4.3.5. 不验证相关方法调用</h4>
+<p><strong>反面案例：</strong></p>
+<p>很多人认为，验证抛出异常就只验证抛出异常，验证依赖方法调用不是必须的。</p>
+<pre><code>// 模拟依赖方法
+Throwable e = new RuntimeException();
+Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<p>&#x2F;&#x2F; 调用测试方法<br>UserCreateVO userCreateVO &#x3D; …;<br>ExampleException exception &#x3D; Assert.assertThrows(“异常类型不一致”, ExampleException.class, () -&gt; userService.createUser(userCreateVO));<br>Assert.assertEquals(“异常编码不一致”, ErrorCode.OBJECT_EXIST, exception.getCode());<br>Assert.assertEquals(“异常消息不一致”, “创建用户异常”, exception.getMessage());<br>Assert.assertEquals(“异常原因不一致”, e, exception.getCause());<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong></p>
+<p>如果不验证相关方法调用，如何能证明代码走过这个分支？比如：我们在创建用户之前，检查用户名称无效并抛出异常。</p>
+<pre><code>// 检查用户名称有效
+String userName = userCreateVO.getName();
+if (StringUtils.length(userName) &lt; USER_NAME_LENGTH) &#123;
+    throw new ExampleException(ErrorCode.INVALID_USERNAME, "无效用户名称");
+&#125;
+</code></pre>
+<h4>4.3.6. 完美地验证抛出异常</h4>
+<p>一个完美的异常验证，除对异常类型、异常属性、异常原因等进行验证外，还需对抛出异常前的依赖方法调用进行验证。</p>
+<p><strong>完美案例：</strong></p>
+<pre><code>// 模拟依赖方法
+Throwable e = new RuntimeException();
+Mockito.doThrow(e).when(userDAO).create(Mockito.any(UserCreateVO.class));
+
+<p>&#x2F;&#x2F; 调用测试方法<br>String text &#x3D; ResourceHelper.getResourceAsString(getClass(), path + “userCreateVO.json”);<br>UserCreateVO userCreateVO &#x3D; JSON.parseObject(text, UserCreateVO.class);<br>ExampleException exception &#x3D; Assert.assertThrows(“异常类型不一致”, ExampleException.class, () -&gt; userService.createUser(userCreateVO));<br>Assert.assertEquals(“异常编码不一致”, ErrorCode.OBJECT_EXIST, exception.getCode());<br>Assert.assertEquals(“异常消息不一致”, “创建用户异常”, exception.getMessage());<br>Assert.assertEquals(“异常原因不一致”, e, exception.getCause());</p>
+<p>&#x2F;&#x2F; 验证依赖方法<br>ArgumentCaptor&lt;UserDO&gt; userCreateCaptor &#x3D; ArgumentCaptor.forClass(UserDO.class);<br>Mockito.verify(userDAO).create(userCreateCaptor.capture());<br>text &#x3D; ResourceHelper.getResourceAsString(getClass(), path + “userCreateDO.json”);<br>Assert.assertEquals(“用户创建不一致”, text, JSON.toJSONString(userCreateCaptor.getValue()));<br></p></code></pre><p></p>
+<h3>4.4. 验证抛出异常准则</h3>
+<h4>4.4.1. 必须验证所有抛出异常</h4>
+<p>在单元测试中，必须验证所有抛出异常：</p>
+<ol>
+<li>来源于属性字段的判断</li>
+<li>来源于输入参数的判断</li>
+<li>来源于返回值的判断</li>
+<li>来源于模拟方法的调用</li>
+<li>来源于静态方法的调用</li>
+</ol>
+<p>具体内容可以参考 <strong>《抛出异常来源方式》</strong> 章节。</p>
+<h4>4.4.2. 必须验证异常类型、异常属性、异常原因</h4>
+<p>在验证抛出异常时，必须验证异常类型、异常属性、异常原因等。</p>
+<p><strong>正例：</strong></p>
+<pre><code>ExampleException exception = Assert.assertThrows("异常类型不一致", ExampleException.class, () -&gt; userService.createUser(userCreateVO));
+Assert.assertEquals("异常编码不一致", ErrorCode.OBJECT_EXIST, exception.getCode());
+Assert.assertEquals("异常消息不一致", "用户已存在", exception.getMessage());
+Assert.assertEquals("异常原因不一致", e, exception.getCause());
+</code></pre>
+<p><strong>反例：</strong></p>
+<pre><code>@Test(expected = ExampleException.class)
+public void testCreateUserWithException() &#123;
+    ...
+    userService.createUser(userCreateVO);
+&#125;
+</code></pre>
+<h4>4.4.3. 验证抛出异常后，必须验证相关方法调用</h4>
+<p>在验证抛出异常后，必须验证相关方法调用，来保证单元测试用例走的是期望分支。</p>
+<p><strong>正例：</strong></p>
+<pre><code>/ 调用测试方法
+...
+
+<p>&#x2F;&#x2F; 验证依赖方法<br>ArgumentCaptor&lt;UserDO&gt; userCreateCaptor &#x3D; ArgumentCaptor.forClass(UserDO.class);<br>Mockito.verify(userDAO).create(userCreateCaptor.capture());<br>text &#x3D; ResourceHelper.getResourceAsString(getClass(), path + “userCreateDO.json”);<br>Assert.assertEquals(“用户创建不一致”, text, JSON.toJSONString(userCreateCaptor.getValue()));<br></p></code></pre><p></p>
+<h2>验证方法调用</h2>
+<p>在单元测试中，验证方法调用是为了验证依赖方法的调用次数和顺序以及是否传入了期望的参数值。</p>
+<h3>5.1. 方法调用来源方式</h3>
+<h4>5.1.1. 来源于注入对象的方法调用</h4>
+<p>最常见的方法调用就是对注入依赖对象的方法调用。</p>
+<pre><code>private UserDAO userDAO;
+public UserVO getUser(Long userId) &#123;
+    UserDO user = userDAO.get(userId); // 方法调用
+    return convertUser(user);
+&#125;
+</code></pre>
+<h4>5.1.2. 来源于输入参数的方法调用</h4>
+<p>有时候，也可以通过输入参数传入依赖对象，然后调用依赖对象的方法。</p>
+<pre><code>public &lt;T&gt; List&lt;T&gt; executeQuery(String sql, DataParser&lt;T&gt; dataParser) &#123;
+    List&lt;T&gt; dataList = new ArrayList&lt;&gt;();
+    List&lt;Record&gt; recordList = SQLTask.getResult(sql);
+    for (Record record : recordList) &#123;
+        T data = dataParser.parse(record); // 方法调用
+        if (Objects.nonNull(data)) &#123;
+            dataList.add(data);
+        &#125;
+    &#125;
+    return dataList;
+&#125;
+</code></pre>
+<h4>5.1.3. 来源于返回值的方法调用</h4>
+<pre><code>private UserHsfService userHsfService;
+public User getUser(Long userId) &#123;
+    Result&lt;User&gt; result = userHsfService.getUser(userId);
+    if (!result.isSuccess()) &#123; // 方法调用1
+        throw new ExampleException("获取用户异常");
+    &#125;
+    return result.getData(); // 方法调用2
+&#125;
+</code></pre>
+<h4>5.1.4. 来源于静态方法的调用</h4>
+<p>在Java中，静态方法是指被static修饰的成员方法，不需要通过对象实例就可以被调用。在日常代码中，静态方法调用一直占有一定的比例。</p>
+<pre><code>String text = JSON.toJSONString(user); // 方法调用
+</code></pre>
+<h3>5.2. 方法调用验证方式</h3>
+<p>在单元测试中，验证依赖方法调用是确认模拟对象的依赖方法是否被按照预期调用的过程。</p>
+<h4>5.2.1. 验证依赖方法的调用参数</h4>
+<pre><code>// 1.验证无参数依赖方法调用
+Mockito.verify(userDAO).deleteAll();
+
+<p>&#x2F;&#x2F; 2.验证指定参数依赖方法调用<br>Mockito.verify(userDAO).delete(userId);</p>
+<p>&#x2F;&#x2F; 3.验证任意参数依赖方法调用<br>Mockito.verify(userDAO).delete(Mockito.anyLong());</p>
+<p>&#x2F;&#x2F; 4.验证可空参数依赖方法调用<br>Mockito.verify(userDAO).queryCompany(Mockito.anyLong(), Mockito.nullable(Long.class));</p>
+<p>&#x2F;&#x2F; 5.验证必空参数依赖方法调用<br>Mockito.verify(userDAO).queryCompany(Mockito.anyLong(), Mockito.isNull());</p>
+<p>&#x2F;&#x2F; 6.验证可变参数依赖方法调用<br>Mockito.verify(userService).delete(1L, 2L, 3L);<br>Mockito.verify(userService).delete(Mockito.any(Long.class));  &#x2F;&#x2F; 匹配一个<br>Mockito.verify(userService).delete(Mockito.&lt;Long&gt;any()); &#x2F;&#x2F; 匹配多个<br></p></code></pre><p></p>
+<h4>5.2.2. 验证依赖方法的调用次数</h4>
+<pre><code>// 1.验证依赖方法默认调用1次
+Mockito.verify(userDAO).delete(userId);
+
+<p>&#x2F;&#x2F; 2.验证依赖方法从不调用<br>Mockito.verify(userDAO, Mockito.never()).delete(userId);</p>
+<p>&#x2F;&#x2F; 3.验证依赖方法调用n次<br>Mockito.verify(userDAO, Mockito.times(n)).delete(userId);</p>
+<p>&#x2F;&#x2F; 4.验证依赖方法调用至少1次<br>Mockito.verify(userDAO, Mockito.atLeastOnce()).delete(userId);</p>
+<p>&#x2F;&#x2F; 5.验证依赖方法调用至少n次<br>Mockito.verify(userDAO, Mockito.atLeast(n)).delete(userId);</p>
+<p>&#x2F;&#x2F; 6.验证依赖方法调用最多1次<br>Mockito.verify(userDAO, Mockito.atMostOnce()).delete(userId);</p>
+<p>&#x2F;&#x2F; 7.验证依赖方法调用最多n次<br>Mockito.verify(userDAO, Mockito.atMost(n)).delete(userId); </p>
+<p>&#x2F;&#x2F; 8.验证依赖方法调用指定n次<br>Mockito.verify(userDAO, Mockito.call(n)).delete(userId); &#x2F;&#x2F; 不会被标记为已验证</p>
+<p>&#x2F;&#x2F; 9.验证依赖对象及其方法仅调用1次<br>Mockito.verify(userDAO, Mockito.only()).delete(userId);<br></p></code></pre><p></p>
+<h4>5.2.3. 验证依赖方法并捕获参数值</h4>
+<pre><code>// 1.使用ArgumentCaptor.forClass方法定义参数捕获器
+ArgumentCaptor&lt;UserDO&gt; userCaptor = ArgumentCaptor.forClass(UserDO.class);
+Mockito.verify(userDAO).modify(userCaptor.capture());
+UserDO user = userCaptor.getValue();
+
+<p>&#x2F;&#x2F; 2.使用@Captor注解定义参数捕获器<br>@Captor<br>private ArgumentCaptor&lt;UserDO&gt; userCaptor;</p>
+<p>&#x2F;&#x2F; 3.捕获多次方法调用的参数值列表<br>ArgumentCaptor&lt;UserDO&gt; userCaptor &#x3D; ArgumentCaptor.forClass(UserDO.class);<br>Mockito.verify(userDAO, Mockito.atLeastOnce()).modify(userCaptor.capture());<br>List&lt;UserDO&gt; userList &#x3D; userCaptor.getAllValues();<br></p></code></pre><p></p>
+<h4>5.2.4. 验证其它类型的依赖方法调用</h4>
+<pre><code>// 1.验证 final 方法调用
+final方法的验证跟普通方法类似。
+
+<p>&#x2F;&#x2F; 2.验证私有方法调用<br>PowerMockito.verifyPrivate(mockClass, times(1)).invoke(“unload”, any(List.class));</p>
+<p>&#x2F;&#x2F; 3.验证构造方法调用<br>PowerMockito.verifyNew(MockClass.class).withNoArguments();<br>PowerMockito.verifyNew(MockClass.class).withArguments(someArgs);</p>
+<p>&#x2F;&#x2F; 4.验证静态方法调用<br>PowerMockito.verifyStatic(StringUtils.class);<br>StringUtils.isEmpty(string);<br></p></code></pre><p></p>
+<h4>5.2.5. 验证依赖对象没有更多方法调用</h4>
+<pre><code>// 1.验证模拟对象没有任何方法调用
+Mockito.verifyNoInteractions(idGenerator, userDAO);
+
+<p>&#x2F;&#x2F; 2.验证模拟对象没有更多方法调用<br>Mockito.verifyNoMoreInteractions(idGenerator, userDAO);<br></p></code></pre><p></p>
+<h3>5.3. 验证依赖方法问题</h3>
+<p>这里，以cacheUser（缓存用户）为例，来说明验证依赖方法时所存在的问题。</p>
+<p><strong>代码案例：</strong></p>
+<pre><code>private UserCache userCache;
+public boolean cacheUser(List&lt;User&gt; userList) &#123;
+    boolean result = true;
+    for (User user : userList) &#123;
+        result = result &amp;&amp; userCache.set(user.getId(), user);
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<h4>5.3.1. 不验证依赖方法调用</h4>
+<p><strong>反面案例：</strong></p>
+<p>有些人觉得，既然已经模拟了依赖方法，并且被测方法已经按照预期返回了值，就没有必要对依赖方法进行验证。</p>
+<pre><code>// 模拟依赖方法
+Mockito.doReturn(true).when(userCache).set(Mockito.anyLong(), Mockito.any(User.class));
+
+<p>&#x2F;&#x2F; 调用测试方法<br>List&lt;User&gt; userList &#x3D; …;<br>Assert.assertTrue(“处理结果不为真”, userService.cacheUser(userList));</p>
+<p>&#x2F;&#x2F; 不验证依赖方法<br></p></code></pre><p></p>
+<p><strong>存在问题：</strong></p>
+<p>模拟了依赖方法，并且被测方法已经按照预期返回了值，并不代表这个依赖方法被调用或者被正确地调用。比如：在for循环之前，把userList置为空列表，这个单元测试用例是无法验证出来的。</p>
+<pre><code>// 清除用户列表
+userList = Collections.emptyList();
+</code></pre>
+<h4>5.3.2. 不验证依赖方法调用次数</h4>
+<p><strong>反面案例：</strong></p>
+<p>有些很喜欢用Mockito.verify的验证至少一次和任意参数的组合，因为它可以适用于任何依赖方法调用的验证。</p>
+<pre><code>// 验证依赖方法
+Mockito.verify(userCache, Mockito.atLeastOnce()).set(Mockito.anyLong(), Mockito.any(User.class));
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>这种方法虽然适用于任何依赖方法调用的验证，但是基本上没有任何实质作用。</p>
+<p>比如：我们不小心，把缓存语句写了两次，这个单元测试用例是无法验证出来的。</p>
+<pre><code>// 写了两次缓存
+result = result &amp;&amp; userCache.set(user.getId(), user);
+result = result &amp;&amp; userCache.set(user.getId(), user);
+</code></pre>
+<h4>5.3.3. 不验证依赖方法调用参数</h4>
+<p><strong>反面案例：</strong></p>
+<p>既然说验证至少一次有问题，那我就指定一下验证次数。</p>
+<pre><code>// 验证依赖方法
+Mockito.verify(userCache, Mockito.times(userList.size())).set(Mockito.anyLong(), Mockito.any(User.class));
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>验证方法次数的问题虽然解决了，但是验证方法参数的问题任然存在。</p>
+<p>比如：我们不小心，把循环缓存每一个用户写成循环缓存第一个用户，这个单元测试用例是无法验证出来的。</p>
+<pre><code>User user = userList.get(0);
+for (int i = 0; i &lt; userList.size(); i++) &#123;
+    result = result &amp;&amp; userCache.set(user.getId(), user);
+&#125;
+</code></pre>
+<h4>5.3.4. 不验证所有依赖方法调用</h4>
+<p><strong>反面案例：</strong></p>
+<p>不能用任意参数验证方法，那只好用实际参数验证方法了。但是，验证所有依赖方法调用代码太多，所以验证一两个依赖方法调用意思意思就行了。</p>
+<pre><code>Mockito.verify(userCache).set(user1.getId(), user1);
+Mockito.verify(userCache).set(user2.getId(), user2);
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>如果只验证了一两个方法调用，只能保障这一两个方法调用没有问题。</p>
+<p>比如：我们不小心，在for循环之后，还进行了一个用户缓存。</p>
+<pre><code>// 缓存最后一个用户
+User user = userList.get(userList.size() - 1);
+userCache.set(user.getId(), user);
+</code></pre>
+<h4>5.3.5. 验证所有依赖方法调用</h4>
+<p><strong>反面案例：</strong></p>
+<p>既然不验证所有方法调用有问题，那我就把所有方法调用验证了吧。</p>
+<pre><code>for (User user : userList) &#123;
+    Mockito.verify(userCache).set(user.getId(), user);
+&#125;
+</code></pre>
+<p><strong>存在问题：</strong></p>
+<p>所有方法调用都被验证了，看起来应该没有问题了。但是，如果缓存用户方法中，存在别的方法调用。比如：我们在进入缓存用户方法之前，新增了清除所有用户缓存，这个单元测试用是无法验证的。</p>
+<pre><code>// 删除所有用户缓存
+userCache.clearAll();
+</code></pre>
+<h4>5.3.6. 完美地验证依赖方法调用</h4>
+<p>验证所有的方法调用，只能保证现在的逻辑没有问题。如果涉及新增方法调用，这个单元测试用例是无法验证出来的。所有，我们需要验证所有依赖对象没有更多方法调用。</p>
+<p><strong>完美案例：</strong></p>
+<pre><code>// 验证依赖方法
+ArgumentCaptor&lt;Long&gt; userIdCaptor = ArgumentCaptor.forClass(Long.class);
+ArgumentCaptor&lt;User&gt; userCaptor = ArgumentCaptor.forClass(User.class);
+Mockito.verify(userCache, Mockito.atLeastOnce()).set(userIdCaptor.capture(), userCaptor.capture());
+Assert.assertEquals("用户标识列表不一致", userIdList, userIdCaptor.getAllValues());
+Assert.assertEquals("用户信息列表不一致", userList, userCaptor.getAllValues());
+
+<p>&#x2F;&#x2F; 验证依赖对象<br>Mockito.verifyNoMoreInteractions(userCache);<br></p></code></pre><p></p>
+<p><strong>注意：</strong> 利用ArgumentCaptor（参数捕获器），不但可以验证参数，还可以验证调用次数和顺序。</p>
+<h3>5.4. 验证方法调用准则</h3>
+<h4>5.4.1. 必须验证所有的模拟方法调用</h4>
+<p>在单元测试中，涉及到的所有模拟方法都要被验证：</p>
+<ol>
+<li>来源于注入对象的方法调用</li>
+<li>来源于输入参数的方法调用</li>
+<li>来源于返回值的方法调用</li>
+<li>来源于静态方法的调用</li>
+</ol>
+<p>具体案例可以参考 <strong>《方法调用来源方式》</strong> 章节。</p>
+<h4>5.4.2. 必须验证所有的模拟对象没有更多方法调用</h4>
+<p>在单元测试中，为了防止被测方法中存在或新增别的方法调用，必须验证所有的模拟对象没有更多方法调用。</p>
+<p><strong>正例：</strong></p>
+<pre><code>// 验证依赖对象
+Mockito.verifyNoMoreInteractions(userDAO, userCache);
+</code></pre>
+<p><strong>备注：</strong></p>
+<p>作者喜欢在@After方法中对所有模拟对象进行验证，这样就不必在每个单元测试用例中验证模拟对象。</p>
+<pre><code>@After
+public void afterTest() &#123;
+    Mockito.verifyNoMoreInteractions(userDAO, userCache);
+&#125;
+</code></pre>
+<p>可惜Mockito.verifyNoMoreInteractions不支持无参数就验证所有模拟对象的功能，否则这段代码会变得更简洁。</p>
+<h4>5.4.3. 必须使用明确语义的参数值或匹配器</h4>
+<p>验证依赖方法时，必须使用明确语义的参数值或匹配器，不能使用任何不明确语义的匹配器，比如：any系列参数匹配器。</p>
+<p><strong>正例：</strong></p>
+<pre><code>Mockito.verify(userDAO).get(userId);
+Mockito.verify(userDAO).query(Mockito.eq(companyId), Mockito.isNull());
+</code></pre>
+<p><strong>反例：</strong></p>
+<pre><code>Mockito.verify(userDAO).get(Mockito.anyLong());
+Mockito.verify(userDAO).query(Mockito.anyLong(), Mockito.isNotNull());
+</code></pre>
+<h2>后记</h2>
+<p>最后，根据本文所表达的观点，即兴赋诗七言绝句一首：</p>
+<blockquote>
+<p>《单元测试》<br>
+单元测试分真假，<br>
+工匠精神贯始终。<br>
+覆盖追求非目的，<br>
+回归验证显奇功。</p>
+</blockquote>
+<p>意思是：</p>
+<blockquote>
+<p>一定要知道如何去分辨单元测试的真假，<br>
+一定要把工匠精神贯彻单元测试的始终。<br>
+追求单测覆盖率并不是单元测试的目的，<br>
+回归验证代码才能彰显单元测试的功效。</p>
+</blockquote>
+
+</div>
+
+<div>
+<div class="tag-plugin link dis-select"><a class="link-card plain" title="那些年，我们写过的无效单元测试" href="https://juejin.cn/post/7208088676853006396" target="_blank" rel="external nofollow noopener noreferrer"><div class="left"><span class="title">那些年，我们写过的无效单元测试</span><span class="desc fs12">https://juejin.cn/post/7208088676853006396</span></div><div class="right"><div class="lazy img" data-bg="rss/avatar.png"></div></div></a></div>
+</div>
+
+
+
+<div class="article-footer reveal fs14"><section id="license"><div class="header"><span>许可协议</span></div><div class="body"><p>本文采用 <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN">GLWT（Good Luck With That，祝你好运）公共许可证</a> 许可协议。</p>
+</div></section></div>
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><a id="next" href="/rss/7fd50f5c.html">程序员的边界是什么——圣光之愿礼拜堂系列<span class="note">较早</span></a><div class="line"></div><a id="prev" href="/rss/ff40efff.html">Dubbo 在 Proxyless Mesh 模式下的探索与改进<span class="note">较新</span></a></section></div>
+
+
+<div class="related-wrap reveal" id="related-posts">
+    <section class="header">
+      <div class="title cap theme">您可能感兴趣的文章</div>
+    </section>
+    <section class="body">
+    <div class="related-posts"><a class="item" href="/rss/9ea251e4.html" title="CNStack 多集群服务：基于 OCM 打造完善的集群管理能力"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/903ce0a5722b45fd85b5d95ff1dcf343~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">CNStack 多集群服务：基于 OCM 打造完善的集群管理能力</span></a><a class="item" href="/rss/ff40efff.html" title="Dubbo 在 Proxyless Mesh 模式下的探索与改进"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60fd992007a54b88a9a5f1a3a91a55ac~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">Dubbo 在 Proxyless Mesh 模式下的探索与改进</span></a><a class="item" href="/rss/f08e96c0.html" title="Express框架详解--- View 对象"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=1707"></div><span class="title">Express框架详解--- View 对象</span></a><a class="item" href="/rss/8a1ecc8a.html" title="【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/37bebf649be4454c8606ef7221380d6c~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">【拜占庭将军问题】这一计谋，可以让诸葛丞相兴复汉室</span></a><a class="item" href="/rss/68eaf2f4.html" title="为什么币圈充满“科技与狠活”与“400U KOL”?"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7b209392b2d649f6830bfd8f2d80972c~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">为什么币圈充满“科技与狠活”与“400U KOL”?</span></a><a class="item" href="/rss/ddbad3e6.html" title="产品经理需要了解的前后端技术知识"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/763a5e46c2184c08b8bc50d4a0e91d48~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">产品经理需要了解的前后端技术知识</span></a><a class="item" href="/rss/6ad53891.html" title="关于标签管理，知识管理工具的思考"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=9858"></div><span class="title">关于标签管理，知识管理工具的思考</span></a><a class="item" href="/rss/18998a0b.html" title="在 KubeSphere 中开启新一代云原生数仓 Databend"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://pek3b.qingstor.com/kubesphere-community/images/20233909141272.png"></div><span class="title">在 KubeSphere 中开启新一代云原生数仓 Databend</span></a><a class="item" href="/rss/437c7eee.html" title="如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=3188"></div><span class="title">如何规范 RESTful API 的业务错误处理、Signals 的演变 | 每日掘金第186期</span></a><a class="item" href="/rss/f1b3d3b2.html" title="安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a0310a681ad4534b520f7352e3883ea~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">安全顶会NDSS2023 | 针对安卓用户身份隐私泄露的分析研究</span></a><a class="item" href="/rss/aea6a2bb.html" title="微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fc9a7f2f0d94486d950a63f57c86e098~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">微信小游戏爆发式增长，如何保证小游戏的版本迭代又快又稳？</span></a><a class="item" href="/rss/cc697a15.html" title="技术型创业公司如何把握发展与管理的节奏感？"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picsum.photos/400/300?random=8948"></div><span class="title">技术型创业公司如何把握发展与管理的节奏感？</span></a><a class="item" href="/rss/7fd50f5c.html" title="程序员的边界是什么——圣光之愿礼拜堂系列"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c217616aef7e436ba4f726bb51c86586~tplv-k3u1fbpfcp-watermark.image?"></div><span class="title">程序员的边界是什么——圣光之愿礼拜堂系列</span></a><a class="item" href="/rss/453be8fd.html" title="阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产"><div class="img"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/?r=https://juejin.cn&url=https://juejin.cn/?r=https://juejin.cn&url=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8bd753aa366941c49f5118b3649d4932~tplv-k3u1fbpfcp-zoom-1.image"></div><span class="title">阿里云 ACK@Edge 助力元戎启行加速进入自动驾驶规模化生产</span></a></div></section></div>
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="sitemap"><div class="sitemap-group"><span class="fs14">RSS</span><a href="/rss/">近期</a><a href="/rss/categories/">分类</a><a href="/rss/tags/">标签</a><a href="/rss/archives/">归档</a></div></div><div class="text"><p>This is a test site.</p>
+</div></footer>
+
+      <div class="float-panel mobile-only blur" style="display:none">
+  <button type="button" class="sidebar-toggle mobile" onclick="sidebar.toggle()">
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"/><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"/></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class="scripts">
+    <script type="text/javascript">
+  stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.9.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://static.mhuig.top/npm/jquery@3.5.1/dist/jquery.min.js',
+    sitesjs: '/rss/js/plugins/sites.js',
+    friendsjs: '/rss/js/plugins/friends.js',
+  };
+
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@6/swiper-bundle.min.css","js":"https://unpkg.com/swiper@6/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://static.mhuig.top/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://static.mhuig.top/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://static.mhuig.top/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://static.mhuig.top/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img,article.content img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti/umd/heti.min.css","js":"https://unpkg.com/heti/umd/heti-addon.min.js"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/rss/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
