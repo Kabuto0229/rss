@@ -13,10 +13,10 @@ sidebar:
     page: [toc] # for pages using 'layout:page'
   widgets:
     # Recent update
-    recent:
-      layout: recent
-      rss: /atom.xml # npm i hexo-generator-feed
-      limit: 5 # Count of posts
+    # recent:
+    #   layout: recent
+    #   rss: /atom.xml # npm i hexo-generator-feed
+    #   limit: 5 # Count of posts
     # TOC (valid only in layout:post/wiki)
     toc:
       layout: toc
@@ -30,6 +30,12 @@ sidebar:
     #   title: Welcome
     #   content: | # support markdown
     #     欢迎来到 MHuiGのRSS订阅
+    welcome
+    welcome:
+      layout: markdown
+      title: Welcome
+      content: |
+        This is a test site.
 
 ######## Article ########
 article:
@@ -158,7 +164,7 @@ style:
     scrollbar: 4px
 
 default:
-  avatar: https://static.mhuig.top/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg
-  link: https://static.mhuig.top/gh/cdn-x/placeholder@1.0.1/link/8f277b4ee0ecd.svg
-  cover: https://static.mhuig.top/gh/cdn-x/placeholder@1.0.1/cover/76b86c0226ffd.svg
-  image: https://static.mhuig.top/gh/cdn-x/placeholder@1.0.1/image/2659360.svg
+  avatar: rss/avatar.png
+  link: rss/avatar.png
+  cover: https://source.unsplash.com/random/1920x1080
+  image: rss/avatar.png 
