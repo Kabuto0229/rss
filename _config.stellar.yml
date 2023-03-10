@@ -24,17 +24,11 @@ sidebar:
       min_depth: 2
       max_depth: 5
       fallback: recent # Use a backup widget when toc does not exist.
-    # welcome
-    # welcome:
-    #   layout: markdown
-    #   title: Welcome
-    #   content: | # support markdown
-    #     欢迎来到 MHuiGのRSS订阅
     welcome
     welcome:
       layout: markdown
       title: Welcome
-      content: |
+      content: | # support markdown
         This is a test site.
 
 ######## Article ########
